@@ -2,27 +2,22 @@
 
 The front end part of rookcode, a website providing algorithm practice and problem discussion services.
 
-
-
-## Project setup
+### 构建项目依赖
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 在开发环境启动项目
 ```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+npm run serve-dev
 ```
 
-### Lints and fixes files
+### 打包项目
+```
+npm run build-dev
+```
+
+### 代码校验
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
