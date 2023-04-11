@@ -32,8 +32,8 @@ axios.interceptors.response.use(function (response) {
 const app = createApp(App)
 app.use(store).use(router).use(Antd).mount('#app')
 
-// 全局使用图标
-const icons: any = Icons;
-for(const i in icons){
-    app.component(i, icons[i])
-}
+// // 全局使用图标
+// const icons: any = Icons;
+// for(const i in icons){
+//     app.component(i, icons[i])
+// }
