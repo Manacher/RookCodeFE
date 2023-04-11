@@ -1,13 +1,22 @@
 <template>
+  <rook-header/>
   <router-view/>
+  <rook-footer/>
 </template>
 
 
 <script lang="ts">
 import axios from "axios";
 import {defineComponent, onMounted} from "vue";
+import RookHeader from "@/components/rook-header.vue";
+import RookFooter from "@/components/rook-footer.vue";
 
 export default defineComponent({
+  name: 'app',
+  components:{
+    RookHeader,
+    RookFooter,
+  },
   setup() {
 
     onMounted(() => {
