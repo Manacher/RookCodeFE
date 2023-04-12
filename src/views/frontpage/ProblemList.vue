@@ -13,7 +13,6 @@ export default {
 <style scoped>
 
 .problem-list{
-  margin-top: 5rem;
   background-color: lightseagreen;
   height: 50rem;
 }

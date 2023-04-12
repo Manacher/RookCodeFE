@@ -31,49 +31,47 @@
 
             <a-card hoverable class="center-card" v-show="cardShow" id="center-card">
 
-              <a-card-meta title="AgarthaSF" description="这是一段个人简介" class="center-card-header">
+              <a-card-meta title="AgarthaSF" description="1426887306@qq.com" class="center-card-header">
                 <template #avatar>
                   <a-avatar :size="32"
                             src="https://assets.leetcode.cn/aliyun-lc-upload/users/elated-villaniw8c/avatar_1645749344.png"/>
                 </template>
               </a-card-meta>
 
-              <a-list style="margin-top: 0.7rem;">
-                <a-list-item class="card-list-item">
+              <template #actions id="center-card-action">
 
-                  <a href="/setting" style="color:inherit">
-                    <img src="../assets/setting.png" class="center-card-item-img"/>
-                    个人设置
-                  </a>
-
-                </a-list-item>
-
-                <a-list-item class="card-list-item">
+                <div>
                   <a href="/home" style="color:inherit">
                     <img src="../assets/center.png" class="center-card-item-img"/>
-                    个人主页
+                    主页
                   </a>
-                </a-list-item>
+                </div>
 
-              </a-list>
+                <div>
+                  <a href="/setting" style="color:inherit">
+                    <img src="../assets/setting.png" class="center-card-item-img"/>
+                    设置
+                  </a>
+                </div>
 
-              <template #actions>
                 <div>
                   <a-popconfirm title="确认退出登陆吗？" ok-text="是" cancel-text="否">
-                    <a href="#">退出登陆</a>
+                    <a href="#" style="margin-right: 1rem">
+                      <img src="../assets/exit.png" style="height: 1rem; width: 1rem; margin-bottom: 0.2rem"/>
+                      退出
+                    </a>
                   </a-popconfirm>
                 </div>
               </template>
+
             </a-card>
 
           </transition>
-
         </div>
 
       </a-menu-item>
 
     </a-menu>
-
   </a-layout-header>
 
 
@@ -89,34 +87,28 @@ export default {
   setup() {
     let navKeys = ref(['/']);
     let cardShow = ref(false);
-    let centerCard : any;
-    let centerAvatar : any;
+    let centerCard: any;
 
     // dom元素加载完毕后获取节点
-    onMounted(() =>{
-      centerCard =  document.querySelector('#center-card')
-      centerAvatar =  document.querySelector('#avatar')
+    onMounted(() => {
+      centerCard = document.querySelector('#center-card')
     })
 
-    // 个人页面点击时间
+    // 个人头像点击事件，当卡片未显示时，点击头像让卡片出现，并添加鼠标监听事件
     let onCenterClicked = () => {
-      cardShow.value = !cardShow.value;
-      // 设置100ms延迟，防止当前点击也被捕捉
-      setTimeout(()=>{
-        if(cardShow.value){
+      if (!cardShow.value) {
+        cardShow.value = true;
+        setTimeout(() => {
           document.addEventListener('click', watchNextClick)
-        }else{
-          document.removeEventListener('click', watchNextClick)
-        }
-      }, 100)
+        }, 100)
+      }
     }
 
-    // 监听点开个人中心卡片后的下一次点击事件，若点击的不是个人中心卡片内容或右上角头像则令卡片消失，并移除监听事件
-    let watchNextClick = (e:any) =>{
-      let target = e.target
-      if(centerCard || target !== centerAvatar){
-        let contain = centerCard.contains(target)
-        if(!contain){
+    // 监听点开个人中心卡片后的下一次点击事件，若点击的不是个人中心卡片内容则令卡片消失，并移除监听事件
+    let watchNextClick = (e: any) => {
+      if (centerCard) {
+        console.log(e.target)
+        if (!centerCard.contains(e.target)) {
           cardShow.value = false;
           document.removeEventListener('click', watchNextClick)
         }
@@ -178,10 +170,7 @@ export default {
   border-radius: 15px;
   padding-bottom: 0.7rem;
   animation: slide-up 0.3s;
-}
-
-.card-list-item {
-  color: #595959;
+  cursor: default;
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -191,17 +180,13 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-.center-card-header{
-  background-color: #f3f3f3;
-  /*padding: 2rem;*/
+
+.center-card-header {
+  font-size: 0.8rem;
 }
 
 .center-card-item-img {
-  margin-left: 0.4rem;
-  margin-right: 0.5rem;
   height: 1rem;
   width: 1rem;
 }
-
-
 </style>

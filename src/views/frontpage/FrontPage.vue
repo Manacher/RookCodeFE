@@ -9,11 +9,11 @@
 
         <a-col :span="18" >
           <FrontBanner/>
-          <ProblemList/>
+          <ProblemList style="margin-top: 3rem"/>
         </a-col>
 
         <a-col :span="6">
-          <ProgressChart/>
+          <ProgressChart style="margin-left: 3rem"/>
         </a-col>
       </a-row>
 
