@@ -1,11 +1,9 @@
 <template>
 
-  <div id="nav">
-    <router-link to="/">Home</router-link>
-    |
-    <router-link to="/about">About</router-link>
-  </div>
-  <a-button type="primary">Primary Button</a-button>
+    <div id="main">
+   <Register></Register>
+    </div>
+
   <router-view/>
 </template>
 
@@ -13,16 +11,23 @@
 <script lang="ts">
 import axios from "axios";
 import {defineComponent, onMounted} from "vue";
+import Login from '@/views/Login.vue'
+import Register from '@/views/Register.vue'
 
 export default defineComponent({
+  name:'App',
+  // eslint-disable-next-line vue/no-unused-components
+  components: {Login,Register},
+
+
   setup() {
 
-    onMounted(() => {
+    /*onMounted(() => {
       console.log("axios test");
       axios.get("/").then((res) => {
         console.log("get resp:", res)
       })
-    })
+    })*/
   }
 })
 
@@ -38,16 +43,5 @@ export default defineComponent({
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
-}
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
