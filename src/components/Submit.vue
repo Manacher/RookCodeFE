@@ -23,7 +23,6 @@
             ref="select"
             v-model:value="language"
             style="width: 100px"
-            @focus="focus"
             @change="handleLangChange">
           <a-select-option value="cpp">cpp</a-select-option>
           <a-select-option value="c">c</a-select-option>
@@ -36,7 +35,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Codemirror } from "vue-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { python } from "@codemirror/lang-python";
@@ -44,41 +43,45 @@ import { java } from "@codemirror/lang-java";
 import { oneDark } from "@codemirror/theme-one-dark";
 import {reactive, ref} from "vue";
 
+interface DelayLoading{
+  delay: number;
+}
+
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
   name: "Submit",
   components:{Codemirror,},
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(){
     const code = ref("");  // 用户编写的代码
-    let language = "cpp";  // 选择的代码语言
-    const options = reactive({
-      style: { height: "400px" },
+    let language = ref("cpp");  // 选择的代码语言
+    const options = {
+      style: { height: "600px" },
       mode: "text/x-c++src",
       spellcheck: true,
       autofocus: true,
       indentWithTab: true,
       tabSize: 2,
       extensions: [cpp(), oneDark], // 传递给CodeMirror EditorState。创建({扩展})
-    });
+    }
+    const loading = ref<boolean | DelayLoading>(false);
 
 
     // 监听代码语言的选择
-    const handleLangChange = (lang) => {
+    const handleLangChange = (lang: string) => {
       console.log(lang)
-      language = lang
-      if(language === "cpp" || language === "c"){
+      language.value = lang
+      if(language.value === "cpp" || language.value === "c"){
         // eslint-disable-next-line no-undef
         options.extensions = [cpp(), oneDark]
-        if(language === "cpp") options.mode = "text/x-c++src";
-        else if(language === "c") options.mode = "text/x-csrc";
+        if(language.value === "cpp") options.mode = "text/x-c++src";
+        else if(language.value === "c") options.mode = "text/x-csrc";
       }
-      else if(language === "python"){
+      else if(language.value === "python"){
         // eslint-disable-next-line no-undef
         options.extensions = [python(), oneDark]
         options.mode = "text/x-python";
       }
-      else if(language === "java"){
+      else if(language.value === "java"){
         // eslint-disable-next-line no-undef
         options.extensions = [java(), oneDark]
         options.mode = "text/x-java";
@@ -86,6 +89,11 @@ export default {
       else{
         console.log("unknown language")
       }
+    }
+
+    // 监听提交按钮
+    const handleButtonClick = () =>{
+      // TODO
     }
 
     return {
@@ -102,7 +110,7 @@ export default {
 
 <style scoped>
   .submitView{
-    width: 800px;
+    min-width: 600px;
   }
   .code{
     text-align: left;
@@ -112,5 +120,4 @@ export default {
     float: right;
     padding: 10px;
   }
-
 </style>

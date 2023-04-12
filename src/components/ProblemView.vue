@@ -4,7 +4,6 @@
     <span style="color: lightgray">难度 </span><span :style="{color: diffColor}">{{difficulty}}</span>
     <a-divider style="height: 1px; background-color: lightgray" />
     <Editor
-        style="min-height: 700px"
         v-model="content"
         :defaultConfig="editorConfig"
         :mode="mode"
@@ -13,7 +12,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
@@ -24,9 +23,9 @@ import markdownModule from '@wangeditor/plugin-md'
 Boot.registerModule(markdownModule)
 
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
   name: "Problem",
   components: { Editor},
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef()
@@ -83,7 +82,7 @@ export default {
     })
 
     // 创建编辑器后
-    const handleCreated = (editor) => {
+    const handleCreated = (editor: any) => {
       editorRef.value = editor // 记录 editor 实例，重要！
 
     }
@@ -107,7 +106,7 @@ export default {
 
 <style scoped>
   .problemView{
-    width: 500px;
+    min-width: 500px;
     overflow-y: hidden;
     text-align: left
   }
