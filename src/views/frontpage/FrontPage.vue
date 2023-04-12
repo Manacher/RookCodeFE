@@ -8,15 +8,14 @@
       <a-row>
 
         <a-col :span="18" >
-          <div :style="{ background: 'lightgrey', minHeight: '880px' }">left</div>
+          <FrontBanner/>
+          <ProblemList/>
         </a-col>
 
         <a-col :span="6">
-          <div :style="{ background: '#d4e4ff', minHeight: '280px' }">right</div>
+          <ProgressChart/>
         </a-col>
-
       </a-row>
-
 
     </a-layout-content>
 
@@ -27,8 +26,16 @@
 </template>
 <script lang="ts">
 import {defineComponent, ref} from 'vue';
+import FrontBanner from "@/views/frontpage/FrontBanner.vue";
+import ProblemList from "@/views/frontpage/ProblemList.vue";
+import ProgressChart from "@/views/frontpage/ProgressChart.vue";
 
 export default defineComponent({
+  components:{
+    FrontBanner,
+    ProblemList,
+    ProgressChart,
+  },
   setup() {
     return {
 
@@ -38,6 +45,9 @@ export default defineComponent({
 </script>
 <style>
 
+.layout{
+  /*background-color: white;*/
+}
 
 .layout-content{
   padding: 2rem 4rem 0 4rem
