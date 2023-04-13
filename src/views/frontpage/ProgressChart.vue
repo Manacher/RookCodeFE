@@ -14,7 +14,7 @@ export default {
 
 .progress-chart{
   background-color: lightslategrey;
-  height: 50rem;
+  height: 48rem;
 }
 
 </style>
