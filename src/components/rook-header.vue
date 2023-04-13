@@ -7,6 +7,56 @@
         </span>
     </div>
 
+    <div class="right-item">
+      <div>
+        <a-avatar :size="32"
+                  src="https://assets.leetcode.cn/aliyun-lc-upload/users/elated-villaniw8c/avatar_1645749344.png"
+                  @click="onCenterClicked"
+                  id="center-avatar"/>
+
+        <transition name='fade'>
+
+          <a-card hoverable class="center-card" v-show="cardShow" id="center-card">
+
+            <a-card-meta title="AgarthaSF" description="1426887306@qq.com" class="center-card-header">
+              <template #avatar>
+                <a-avatar :size="32"
+                          src="https://assets.leetcode.cn/aliyun-lc-upload/users/elated-villaniw8c/avatar_1645749344.png"/>
+              </template>
+            </a-card-meta>
+
+            <template #actions id="center-card-action">
+
+              <div>
+                <a href="/home" style="color:inherit">
+                  <img src="../assets/center.png" class="center-card-item-img"/>
+                  主页
+                </a>
+              </div>
+
+              <div>
+                <a href="/setting" style="color:inherit">
+                  <img src="../assets/setting.png" class="center-card-item-img"/>
+                  设置
+                </a>
+              </div>
+
+              <div>
+                <a-popconfirm title="确认退出登陆吗？" ok-text="是" cancel-text="否">
+                  <a href="#" style="margin-right: 1rem">
+                    <img src="../assets/exit.png" style="height: 1rem; width: 1rem; margin-bottom: 0.2rem"/>
+                    退出
+                  </a>
+                </a-popconfirm>
+              </div>
+            </template>
+
+          </a-card>
+
+        </transition>
+      </div>
+    </div>
+
     <a-menu
         v-model:selectedKeys="navKeys"
         mode="horizontal"
@@ -19,58 +69,6 @@
       <a-menu-item key="discussion">
         <router-link to="/">讨论</router-link>
       </a-menu-item>
-
-      <a-menu-item style="margin-left: auto">
-        <div>
-          <a-avatar :size="32"
-                    src="https://assets.leetcode.cn/aliyun-lc-upload/users/elated-villaniw8c/avatar_1645749344.png"
-                    @click="onCenterClicked"
-                    id="center-avatar"/>
-
-          <transition name='fade'>
-
-            <a-card hoverable class="center-card" v-show="cardShow" id="center-card">
-
-              <a-card-meta title="AgarthaSF" description="1426887306@qq.com" class="center-card-header">
-                <template #avatar>
-                  <a-avatar :size="32"
-                            src="https://assets.leetcode.cn/aliyun-lc-upload/users/elated-villaniw8c/avatar_1645749344.png"/>
-                </template>
-              </a-card-meta>
-
-              <template #actions id="center-card-action">
-
-                <div>
-                  <a href="/home" style="color:inherit">
-                    <img src="../assets/center.png" class="center-card-item-img"/>
-                    主页
-                  </a>
-                </div>
-
-                <div>
-                  <a href="/setting" style="color:inherit">
-                    <img src="../assets/setting.png" class="center-card-item-img"/>
-                    设置
-                  </a>
-                </div>
-
-                <div>
-                  <a-popconfirm title="确认退出登陆吗？" ok-text="是" cancel-text="否">
-                    <a href="#" style="margin-right: 1rem">
-                      <img src="../assets/exit.png" style="height: 1rem; width: 1rem; margin-bottom: 0.2rem"/>
-                      退出
-                    </a>
-                  </a-popconfirm>
-                </div>
-              </template>
-
-            </a-card>
-
-          </transition>
-        </div>
-
-      </a-menu-item>
-
     </a-menu>
   </a-layout-header>
 
@@ -92,6 +90,9 @@ export default {
     // dom元素加载完毕后获取节点
     onMounted(() => {
       centerCard = document.querySelector('#center-card')
+      // 设置card样式s
+      let cardDetail = document.querySelector('.ant-card-meta-detail') as HTMLElement
+      cardDetail.style.paddingLeft = '0.5rem'
     })
 
     // 个人头像点击事件，当卡片未显示时，点击头像让卡片出现，并添加鼠标监听事件
@@ -171,6 +172,7 @@ export default {
   padding-bottom: 0.7rem;
   animation: slide-up 0.3s;
   cursor: default;
+  text-align: left;
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -189,4 +191,12 @@ export default {
   height: 1rem;
   width: 1rem;
 }
+
+.right-item{
+  position: absolute;
+  right: 5rem;
+  width: 3rem;
+  height: 3rem;
+}
+
 </style>
