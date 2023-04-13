@@ -29,7 +29,7 @@
           <a-select-option value="python">python</a-select-option>
           <a-select-option value="java">java</a-select-option>
         </a-select>
-        <a-button type="primary">提交</a-button>
+        <a-button type="primary" :loading="loading" @click="handleButtonClick">提交</a-button>
       </a-space>
     </div>
   </div>
@@ -41,7 +41,7 @@ import { cpp } from "@codemirror/lang-cpp";
 import { python } from "@codemirror/lang-python";
 import { java } from "@codemirror/lang-java";
 import { oneDark } from "@codemirror/theme-one-dark";
-import {reactive, ref} from "vue";
+import {ref} from "vue";
 
 interface DelayLoading{
   delay: number;
@@ -50,8 +50,9 @@ interface DelayLoading{
 export default {
   name: "Submit",
   components:{Codemirror,},
+  emits: ['submit'],  // 自定义component事件
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  setup(){
+  setup(props: any, context: any){
     const code = ref("");  // 用户编写的代码
     let language = ref("cpp");  // 选择的代码语言
     const options = {
@@ -63,7 +64,7 @@ export default {
       tabSize: 2,
       extensions: [cpp(), oneDark], // 传递给CodeMirror EditorState。创建({扩展})
     }
-    const loading = ref<boolean | DelayLoading>(false);
+    const loading = ref<boolean | DelayLoading>(false);  // 用于控制提交按钮状态
 
 
     // 监听代码语言的选择
@@ -93,15 +94,25 @@ export default {
 
     // 监听提交按钮
     const handleButtonClick = () =>{
-      // TODO
+      //TODO
+      loading.value = { delay: 0 }
+
+      setTimeout(() => {
+        loading.value = false;
+      }, 5000);
+
+      debugger
+      context.emit("submit", 1)
     }
 
     return {
       code,
       options,
       language,
+      loading,
       log: console.log,
       handleLangChange,
+      handleButtonClick,
     };
   }
 
