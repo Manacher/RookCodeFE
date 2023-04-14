@@ -1,8 +1,8 @@
 <template>
 
-    <div id="main">
+<!--    <div id="main">
    <Register></Register>
-    </div>
+    </div>-->
 
   <router-view/>
 </template>
@@ -10,24 +10,43 @@
 
 <script lang="ts">
 import axios from "axios";
-import {defineComponent, onMounted} from "vue";
-import Login from '@/views/Login.vue'
+import {defineComponent, onMounted,computed} from "vue";
 import Register from '@/views/Register.vue'
+import Login from "@/views/Login.vue";
+import request from "@/utils/request";
+import store  from "@/store";
 
 export default defineComponent({
   name:'App',
   // eslint-disable-next-line vue/no-unused-components
-  components: {Login,Register},
+  components: {Register,Login},
 
 
   setup() {
 
-    /*onMounted(() => {
-      console.log("axios test");
-      axios.get("/").then((res) => {
-        console.log("get resp:", res)
-      })
-    })*/
+
+
+
+    onMounted(() => {
+      const token = store.state.token
+      //token存在的话自动登录
+      if(token) {
+        store.dispatch('fetchCurrentUser')
+      }
+
+
+    })
+
+
+    /*这里存疑*/
+    const currentToken = computed(() => {
+      return store.state.token
+    })
+
+    return{
+      currentToken,
+    }
+
   }
 })
 
@@ -42,6 +61,5 @@ export default defineComponent({
   text-align: center;
   color: #2c3e50;
 }
-
 
 </style>
