@@ -2,24 +2,26 @@
   <a-layout class="layout">
 
 
-
     <a-layout-content class="layout-content">
 
       <a-row>
 
-        <a-col :span="18" >
+        <a-col :span="18">
           <FrontBanner/>
           <ProblemList style="margin-top: 3rem"/>
         </a-col>
 
         <a-col :span="6">
-          <ProgressChart style="margin-left: 3rem"/>
+          <div class="right-side">
+            <ProgressDisplay />
+            <CheckInCalendar style="margin-top: 2rem"/>
+          </div>
+
         </a-col>
+
       </a-row>
 
     </a-layout-content>
-
-
 
 
   </a-layout>
@@ -28,29 +30,37 @@
 import {defineComponent, ref} from 'vue';
 import FrontBanner from "@/views/frontpage/FrontBanner.vue";
 import ProblemList from "@/views/frontpage/ProblemList.vue";
-import ProgressChart from "@/views/frontpage/ProgressChart.vue";
+import ProgressDisplay from "@/views/frontpage/ProgressDisplay.vue";
+import CheckInCalendar from "@/views/frontpage/CheckInCalendar.vue";
 
 export default defineComponent({
-  components:{
+  components: {
     FrontBanner,
     ProblemList,
-    ProgressChart,
+    ProgressDisplay,
+    CheckInCalendar,
   },
   setup() {
-    return {
-
-    };
+    return {};
   },
 });
 </script>
 <style>
 
-.layout{
+.layout {
   /*background-color: white;*/
 }
 
-.layout-content{
+.layout-content {
   padding: 2rem 4rem 0 4rem
+}
+
+.right-side{
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 2rem;
 }
 
 </style>
