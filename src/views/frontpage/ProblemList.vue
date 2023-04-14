@@ -38,7 +38,7 @@
           placeholder="筛选标签"
           allow-clear
           multiple
-          :maxTagPlaceholder = onTagNumOverMaxi
+          :maxTagPlaceholder=onTagNumOverMaxi
           :treeDefaultExpandedKeys=defaultExpand
           :tree-data="treeData"
           :field-names="{
@@ -67,12 +67,12 @@
                   size="small"
                   style="margin-top: 0.2rem"
                   @click="onSearchClicked">
-          搜索</a-button>
+          搜索
+        </a-button>
       </div>
 
 
     </div>
-
 
 
   </div>
@@ -138,7 +138,7 @@
 
 <script lang="ts">
 import {ref} from "vue";
-import { message } from 'ant-design-vue';
+import {message} from 'ant-design-vue';
 
 const listColumns = [
   {
@@ -261,12 +261,12 @@ const treeData = [
 
 ]
 
-let diffSelected = ref('')
-let stateSelected = ref('')
+let diffSelected = ref('none')
+let stateSelected = ref('none')
 let tagSelected = ref([])
 let inputContent = ref('')
 let defaultExpand = ref(['basic', 'algorithm'])
-
+let tagNumMaxi = ref(3);
 
 let diffOptions = [
   {
@@ -280,7 +280,10 @@ let diffOptions = [
   {
     value: 'hard',
     label: '困难',
-  },
+  }, {
+    value: 'none',
+    label: '默认',
+  }
 ]
 let stateOptions = [
   {
@@ -294,21 +297,23 @@ let stateOptions = [
   {
     value: 'tried',
     label: '尝试过',
-  },
+  }, {
+    value: 'none',
+    label: '默认',
+  }
 ]
 
-let tagNumMaxi = ref(3);
 
 export default {
   name: "problem-list",
   setup() {
 
-    let onTagNumOverMaxi = (e: any) =>{
+    let onTagNumOverMaxi = (e: any) => {
       tagSelected.value = tagSelected.value.slice(0, tagNumMaxi.value)
       message.info('最多可以选择3个标签');
     }
 
-    let onSearchClicked = () =>{
+    let onSearchClicked = () => {
       console.log("search clicked")
     }
 
