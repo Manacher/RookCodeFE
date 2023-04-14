@@ -2,7 +2,7 @@
   <div class = "problemView">
     <h3>P{{id}} {{title}}</h3>
     <span style="color: lightgray">难度 </span><span :style="{color: diffColor}">{{difficulty}}</span>
-    <a-divider style="height: 1px; background-color: lightgray" />
+    <a-divider style="height: 0.1rem; background-color: lightgray" />
     <Editor
         v-model="content"
         :defaultConfig="editorConfig"
@@ -106,7 +106,6 @@ export default {
 
 <style scoped>
   .problemView{
-    min-width: 500px;
     overflow-y: hidden;
     text-align: left
   }

@@ -70,20 +70,23 @@ export default {
 
 <style scoped>
   .problem{
-    width: 1rem;
+    width: 100%;
+    height: 50rem;
   }
   .leftStyle{
+    width: 40%;
+    height: 100%;
     display: inline-block;
     vertical-align: top;
-    padding: 0;
+    padding: 2rem;
     /*max-height: 1rem;*/
     overflow-y: auto;
-    background: #ff0000;
   }
   .rightStyle{
+    width: 60%;
+    height: 100%;
     display: inline-block;
-    padding: 0;
-    background: #42b983;
+    padding: 2rem;
   }
 
 

@@ -2,7 +2,6 @@
   <a-input-search
       v-model:value="searchText"
       placeholder="搜索题解"
-      style="width: 200px"
       @search="onSearch"
   />
 </template>

@@ -22,7 +22,7 @@
         <a-select
             ref="select"
             v-model:value="language"
-            style="width: 100px"
+            style="width: 6rem"
             @change="handleLangChange">
           <a-select-option value="cpp">cpp</a-select-option>
           <a-select-option value="c">c</a-select-option>
@@ -56,7 +56,7 @@ export default {
     const code = ref("");  // 用户编写的代码
     let language = ref("cpp");  // 选择的代码语言
     const options = {
-      style: { height: "600px" },
+      style: { height: "100%" },
       mode: "text/x-c++src",
       spellcheck: true,
       autofocus: true,
@@ -121,14 +121,15 @@ export default {
 
 <style scoped>
   .submitView{
-    min-width: 600px;
+    height: 100%;
   }
   .code{
+    height: 95%;
     text-align: left;
     overflow-y: hidden;
   }
   .submit{
     float: right;
-    padding: 10px;
+    padding: 1rem;
   }
 </style>
