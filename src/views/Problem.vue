@@ -55,6 +55,7 @@ export default {
     const handleSubmit = (val: number) => {
       //TODO
       console.log(val)
+      leftComp.value = 'SubmissionList'
     }
 
     return {

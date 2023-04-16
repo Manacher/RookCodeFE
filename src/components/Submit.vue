@@ -14,8 +14,7 @@
           @ready="log('ready', $event)"
           @change="log('change', $event)"
           @focus="log('focus', $event)"
-          @blur="log('blur', $event)"
-      />
+          @blur="log('blur', $event)"/>
     </div>
     <div class="submit">
       <a-space>
