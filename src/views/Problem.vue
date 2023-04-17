@@ -11,7 +11,7 @@
         <a-menu-item key="submission">
           提交记录
         </a-menu-item>
-      </a-menu>
+      </a-menu><br>
       <component :is="leftComp"></component>
     </div>
     <component class="rightStyle" :is="rightComp" @submit="handleSubmit"></component>
