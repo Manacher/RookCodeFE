@@ -1,9 +1,7 @@
 <template>
 
-<!--    <div id="main">
-   <Register></Register>
-    </div>-->
-
+  <router-link to="/login">登录</router-link>|
+  <router-link to="/register">注册</router-link>
   <router-view/>
 </template>
 
@@ -23,10 +21,6 @@ export default defineComponent({
 
 
   setup() {
-
-
-
-
     onMounted(() => {
       const token = store.state.token
       //token存在的话自动登录

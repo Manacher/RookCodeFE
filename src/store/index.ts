@@ -2,6 +2,8 @@ import { createStore } from 'vuex'
 
 
 
+/*存储token 和一些其他的全局信息*/
+
 export interface GlobalDataProps {
   token: string;
 }
