@@ -13,7 +13,7 @@
 
         <a-col :span="6">
           <div class="right-side">
-            <ProgressDisplay style="width: 20rem"/>
+            <ProgressDisplay style="width: 20rem" :value="statisticsData"/>
             <CheckInCalendar style="width: 20rem; margin-top: 2rem"/>
           </div>
 
@@ -33,6 +33,7 @@ import ProblemList from "@/views/frontpage/ProblemList.vue";
 import ProgressDisplay from "@/views/frontpage/ProgressDisplay.vue";
 import CheckInCalendar from "@/views/frontpage/CheckInCalendar.vue";
 
+
 export default defineComponent({
   components: {
     FrontBanner,
@@ -40,8 +41,21 @@ export default defineComponent({
     ProgressDisplay,
     CheckInCalendar,
   },
+
   setup() {
-    return {};
+
+    let statisticsData = ref({
+      easyTotal: 765,
+      mediumTotal: 651,
+      hardTotal: 1599,
+      easySolved: 45,
+      mediumSolved: 25,
+      hardSolved: 91
+    })
+
+    return {
+      statisticsData
+    };
   },
 });
 </script>
@@ -55,7 +69,7 @@ export default defineComponent({
   padding: 2rem 4rem 0 4rem
 }
 
-.right-side{
+.right-side {
 
   display: flex;
   flex-direction: column;

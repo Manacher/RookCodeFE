@@ -1,7 +1,6 @@
 <template>
 
   <div class="main-area">
-
     <div class="text-area">
       当前进度
     </div>
@@ -28,29 +27,32 @@
         <a-row :gutter="12">
 
           <a-col :span="8">
-            <span style="float: left; color: #00af9b">简单</span>
+            <span class="dif-text" style="color: #00af9b">简单</span>
             <div>
-              <span class="static-solve-span">{{ easySolved }}</span>
+              <span class="static-solve-span">{{ value.easySolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ easyTotal }}</span>
+              <span class="static-total-span">{{ value.easyTotal }}</span>
             </div>
           </a-col>
 
           <a-col :span="8">
-            <span style="float: left; color: #ffb800">中等</span>
             <div>
-              <span class="static-solve-span">{{ mediumSolved }}</span>
+              <span class="dif-text" style="color: #ffb800">中等</span>
+            </div>
+
+            <div>
+              <span class="static-solve-span">{{ value.mediumSolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ mediumTotal }}</span>
+              <span class="static-total-span">{{ value.mediumTotal }}</span>
             </div>
           </a-col>
 
           <a-col :span="8">
-            <span style="float: left; color: #ff2d55">困难</span>
+            <span class="dif-text" style="color: #ff2d55">困难</span>
             <div>
-              <span class="static-solve-span">{{ hardSolved }}</span>
+              <span class="static-solve-span">{{ value.hardSolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ hardTotal }}</span>
+              <span class="static-total-span">{{ value.hardTotal }}</span>
             </div>
           </a-col>
 
@@ -68,26 +70,30 @@
 
 <script lang="ts">
 
-import {ref} from "vue";
+import {ref, defineProps} from "vue";
 
-let easyTotal = ref(765);
-let mediumTotal = ref(651);
-let hardTotal = ref(1599);
+let easyTotal = ref(75);
+let mediumTotal = ref(61);
+let hardTotal = ref(19);
+let easySolved = ref(0);
+let mediumSolved = ref(0);
+let hardSolved = ref(0);
 
-let easySolved = ref(45);
-let mediumSolved = ref(25);
-let hardSolved = ref(91);
+interface itf{
+  easyTotal: number;
+  mediumTotal: number;
+  hardTotal: number;
+  easySolved: number;
+  mediumSolved: number;
+  hardSolved: number;
+}
 
 export default {
+  props:['value'],
   name: "progress-display",
   setup() {
     return {
-      easyTotal,
-      mediumTotal,
-      hardTotal,
-      easySolved,
-      mediumSolved,
-      hardSolved,
+
     }
   }
 }
@@ -104,7 +110,6 @@ export default {
 
 .text-area {
   position: absolute;
-
 }
 
 .progress-display {
@@ -117,7 +122,7 @@ export default {
 
 .progress-chart {
   width: 8rem;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
 }
 
 .progress-statistics {
@@ -128,11 +133,18 @@ export default {
   margin-top: 0.5rem;
   float: left;
   color: #5c5c5c;
+  display: block
 }
 
 .static-total-span {
   float: left;
   color: #c4c4c6;
+  display: block
+}
+
+.dif-text{
+  float: left;
+  padding-right: 0.5rem
 }
 
 .easy-sta .ant-statistic-title {
