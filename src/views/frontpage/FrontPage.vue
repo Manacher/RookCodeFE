@@ -13,8 +13,8 @@
 
         <a-col :span="6">
           <div class="right-side">
-            <ProgressDisplay />
-            <CheckInCalendar style="margin-top: 2rem"/>
+            <ProgressDisplay style="width: 20rem"/>
+            <CheckInCalendar style="width: 20rem; margin-top: 2rem"/>
           </div>
 
         </a-col>
