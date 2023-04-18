@@ -71,7 +71,7 @@ export default {
     return{
       searchText,
       data,
-      blank: '🎉',
+      blank: '🎉RookCode',
       onSearch,
     }
   }
