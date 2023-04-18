@@ -1,100 +1,106 @@
 <template>
 
-  <div id="register-box" class="register-box">
-    <h1 style="font-family: 'Times New Roman',serif">RookCode注册</h1>
-    <a-form
-        class="register-form"
-        ref="formRef"
-        name="form_register"
-        :model="formState"
-        :rules="rules"
-        v-bind="layout"
-        :wrapper-col="{ span: 18 }"
-        @finish="handleFinish"
-        @validate="handleValidate"
-        @finishFailed="handleFinishFailed"
-    >
+<!--  主页视图-->
+  <a-layout class="register-main-box">
+    <a-layout id="register-box" class="register-box">
+      <h1 style="font-family: 'Times New Roman',serif;font-size: 27px">RookCode注册</h1>
+      <a-form
+          class="register-form"
+          ref="formRef"
+          name="form_register"
+          :model="formState"
+          :rules="rules"
+          v-bind="layout"
+          :wrapper-col="{ span: 18 }"
+          @finish="handleFinish"
+          @validate="handleValidate"
+          @finishFailed="handleFinishFailed"
+      >
 
 
-      <!--  输入邮箱    -->
-      <h4
-          style="text-align: left ;
+        <!--  输入邮箱    -->
+        <h4
+            style="text-align: left ;
           padding-left: 4px;
       font-family:'宋体',serif;
-      color: cornflowerblue;font-size: 17px">邮箱</h4>
-      <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}">
-        <a-input v-model:value="formState.email" />
-      </a-form-item>
+      font-weight: bold;font-size: 17px">邮箱</h4>
+        <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}">
+          <a-input v-model:value="formState.email" />
+        </a-form-item>
 
-      <h4  style="text-align: left ;
+        <h4  style="text-align: left ;
           padding-left: 4px;
       font-family:'宋体',serif;
-      color: cornflowerblue;font-size: 17px">验证码</h4>
-      <a-row>
-        <a-col :span="15">
-          <a-form-item
-              name="VerificationCode"
-              :wrapper-col="{ offset: 0 ,span:24}"
-              :rules="[{ required: true, message: '请输入验证码!' }]"
-          >
-            <a-input v-model:value="formState.VerificationCode" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="8">
-          <!--    发送验证码，然后设置倒计时    -->
-          <a-form-item>
-            <!--    绑定事件      -->
-            <a-button
-                type="primary"
-                block
-                @click="sendCode">{{ counter === 0 ? '发送验证码' : counter+'秒之后再试' }}</a-button>
-          </a-form-item>
-        </a-col>
+      font-weight: bold;font-size: 17px">验证码</h4>
+        <a-row>
+          <a-col :span="15">
+            <a-form-item
+                name="VerificationCode"
+                :wrapper-col="{ offset: 0 ,span:24}"
+                :rules="[{ required: true, message: '请输入验证码!' }]"
+            >
+              <a-input v-model:value="formState.VerificationCode" />
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <!--    发送验证码，然后设置倒计时    -->
+            <a-form-item>
+              <!--    绑定事件      -->
+              <a-button
+                  type="primary"
+                  block
+                  @click="sendCode">{{ counter === 0 ? '发送验证码' : counter+'秒之后再试' }}</a-button>
+            </a-form-item>
+          </a-col>
 
-      </a-row>
+        </a-row>
 
-      <!--  有反馈吗  -->
-      <h4  style="text-align: left ;
+        <!--  有反馈吗  -->
+        <h4  style="text-align: left ;
           padding-left: 4px;
       font-family:'宋体',serif;
-      color: cornflowerblue;font-size: 17px">密码</h4>
-      <a-form-item has-feedback   name="pass" :wrapper-col="{ offset: 0 ,span:21}">
-        <a-input-password v-model:value="formState.pass" />
-      </a-form-item>
+      font-weight: bold;font-size: 17px">密码</h4>
+        <a-form-item has-feedback   name="pass" :wrapper-col="{ offset: 0 ,span:21}">
+          <a-input-password v-model:value="formState.pass" />
+        </a-form-item>
 
-      <h4  style="text-align: left ;
+        <h4  style="text-align: left ;
           padding-left: 4px;
       font-family:'宋体',serif;
-      color: cornflowerblue;font-size: 17px">确认密码</h4>
-      <a-form-item has-feedback name="checkPass" :wrapper-col="{ offset: 0 ,span:21}">
-        <a-input-password v-model:value="formState.checkPass" />
-      </a-form-item>
+      font-weight: bold;font-size: 17px">确认密码</h4>
+        <a-form-item has-feedback name="checkPass" :wrapper-col="{ offset: 0 ,span:21}">
+          <a-input-password v-model:value="formState.checkPass" />
+        </a-form-item>
 
 
 
-    <!-- 提交按钮     -->
-      <a-row>
-        <a-col :span="12">
-          <a-form-item>
-            <a-button
-                block
-                @click="() => formRef.resetFields()">重置</a-button>
-          </a-form-item>
-        </a-col>
+        <!-- 提交按钮     -->
+        <a-row>
+          <a-col :span="12">
+            <a-form-item>
+              <a-button
+                  block
+                  @click="() => formRef.resetFields()">重置</a-button>
+            </a-form-item>
+          </a-col>
 
-        <a-col :span="12">
-          <a-form-item>
-          <a-button
-              block
-              type="primary"
-              html-type="submit">注册</a-button>
-          </a-form-item>
-        </a-col>
-      </a-row>
+          <a-col :span="12">
+            <a-form-item>
+              <a-button
+                  block
+                  type="primary"
+                  html-type="submit">注册</a-button>
+            </a-form-item>
+          </a-col>
+        </a-row>
 
 
-    </a-form>
-  </div>
+      </a-form>
+    </a-layout>
+  </a-layout>
+
+
+
 
 </template>
 
@@ -253,9 +259,28 @@ export default defineComponent({
 
 
 <style scoped>
+
+
+.register-main-box{
+
+  background-image: url("../assets/bg01.jpg");
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 100%;
+
+  /*display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 800px;
+
+  background-size: 100% 100%;*/
+
+}
+
 .register-box {
   width: 50%;
-  height: 465px;
+  height: 470px;
   /* background-color: #fff; */
   background-color: #d1c2d3;
   border-radius: 5px;

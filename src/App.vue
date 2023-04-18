@@ -23,9 +23,11 @@ export default defineComponent({
   setup() {
     onMounted(() => {
       const token = store.state.token
-      //token存在的话自动登录
-      if(token) {
-        store.dispatch('fetchCurrentUser')
+      //token不存在的话自动登录
+      if(token=="") {
+        //跳转到登录界面
+      }else{
+        //跳转到主页
       }
 
 

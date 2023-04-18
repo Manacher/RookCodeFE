@@ -1,7 +1,8 @@
 <template>
 
-  <a-layout class="register-main-box">
-    <a-layout id="register-box" class="login-box">
+<!--登录主页  -->
+  <a-layout class="login-main-box">
+    <a-layout id="login-box" class="login-box">
       <h1 style="font-family: 'Times New Roman',serif;font-size: 27px">RookCode</h1>
       <a-form
           class="login-form"
@@ -17,8 +18,8 @@
         <h4
             style="text-align: left ;
           padding-left: 4px;
-      font-family:'宋体',serif;
-      color: cornflowerblue;font-size: 17px">邮箱</h4>
+          font-weight: bold;
+      font-family:'宋体',serif;font-size: 17px">邮箱</h4>
         <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}">
           <a-input v-model:value="formState_login.email" />
         </a-form-item>
@@ -28,9 +29,10 @@
         <!--密码      -->
         <h4
             style="text-align: left ;
+            font-weight: bold;
           padding-left: 4px;
       font-family:'宋体',serif;
-      color: cornflowerblue;font-size: 17px">密码</h4>
+     font-size: 17px">密码</h4>
         <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}"
                      :rules="[{ required: true, message: '请输入密码!' }]">
           <a-input-password v-model:value="formState_login.pass" />
@@ -40,8 +42,9 @@
         <!-- 图片验证码     -->
         <h4  style="text-align: left ;
           padding-left: 4px;
+          font-weight: bold;
       font-family:'宋体',serif;
-      color: cornflowerblue;font-size: 17px">验证码</h4>
+      font-size: 17px">验证码</h4>
         <a-row>
           <a-col :span="15">
             <a-form-item
@@ -231,14 +234,21 @@ export default defineComponent({
 
 <style scoped>
 
-.register-main-box{
-  display: flex;
+.login-main-box{
+
+  background-image: url("../assets/bg01.jpg");
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 100%;
+
+  /*display: flex;
   width: 100%;
   height: 100%;
   min-height: 800px;
 
-  background-size: 100% 100%;
-  background-image: url("../assets/login_bg.jpg");
+  background-size: 100% 100%;*/
+
 }
 
 .login-box {
