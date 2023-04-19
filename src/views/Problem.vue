@@ -1,20 +1,15 @@
 <template>
   <div class="problem">
     <div class="leftStyle">
-      <a-menu v-model:selectedKeys="menuKey" mode="horizontal" @select="handleMenuChange">
-        <a-menu-item key="problem">
-          题目描述
-        </a-menu-item>
-        <a-menu-item key="solution">
-          题解
-        </a-menu-item>
-        <a-menu-item key="submission">
-          提交记录
-        </a-menu-item>
-      </a-menu><br>
-      <component :is="leftComp"></component>
+      <a-tabs v-model:activeKey="tabKey">
+        <a-tab-pane key="problem" tab="题目描述"><ProblemView/></a-tab-pane>
+        <a-tab-pane key="solution" tab="题解"><SolutionList/></a-tab-pane>
+        <a-tab-pane key="submission" tab="提交记录"><SubmissionList v-if="tabKey==='submission'"/></a-tab-pane>
+      </a-tabs>
     </div>
-    <component class="rightStyle" :is="rightComp" @submit="handleSubmit"></component>
+    <div class="rightStyle">
+      <Submit @submit="handleSubmit"/>
+    </div>
   </div>
 </template>
 
@@ -30,39 +25,19 @@ export default {
   components:{ProblemView, Submit, SolutionList,SubmissionList},
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(){
+    // 菜单栏key
+    const tabKey = ref('problem');
 
-    let leftComp = shallowRef('ProblemView');
-    let rightComp = shallowRef('Submit');
-    const menuKey = ref<string[]>(['problem']);
-
-    // 题目描述、题解、提交详情切换
-    const handleMenuChange = (response: any) => {
-      if(response.key === "problem"){
-        leftComp.value = 'ProblemView'
-      }
-      else if(response.key === "solution"){
-        leftComp.value = 'SolutionList'
-      }
-      else if(response.key === "submission"){
-        leftComp.value = 'SubmissionList'
-      }
-      else{
-        console.log("unknown menu item")
-      }
-    }
 
     // 监听题目提交
     const handleSubmit = (val: number) => {
       //TODO
       console.log(val)
-      leftComp.value = 'SubmissionList'
+      tabKey.value = 'submission'
     }
 
     return {
-      leftComp,
-      rightComp,
-      menuKey,
-      handleMenuChange,
+      tabKey,
       handleSubmit,
     }
   }
@@ -89,7 +64,5 @@ export default {
     display: inline-block;
     padding: 2rem;
   }
-
-
 
 </style>

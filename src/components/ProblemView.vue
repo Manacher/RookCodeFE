@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-
+import axios from 'axios'
 import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
 import { Editor} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
@@ -31,47 +31,69 @@ export default {
     const editorRef = shallowRef()
     // 编辑器，工具栏配置
     const toolbarConfig = {}
-    const editorConfig = {readOnly :true, scroll: true}
+    const editorConfig = {readOnly :true, scroll: true, autoFocus: false}
     // 题目内容
     const id = "0000"  // 题号
     const title = "A+B 问题"  // 题目标题
     const difficulty = "简单"  // 题目难度
     let diffColor = "#63ec0c"  // ”难度“颜色
-    const content = ref("<p>给你一个字符串 <code>s</code> ，请你统计并返回这个字符串中 <strong>回文子串</strong> 的数目。</p><p><strong>回文字符串</strong> 是正着读和倒过来读一样的字符串。</p>\n" +
+    const content = ref("<p>给你一个整数 <code>x</code> ，如果 <code>x</code> 是一个回文整数，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>\n" +
         "\n" +
-        "<p><strong>子字符串</strong> 是字符串中的由连续字符组成的一个序列。</p>\n" +
+        "<p>回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。</p>\n" +
         "\n" +
-        "<p>具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被视作不同的子串。</p>\n" +
+        "<ul>\n" +
+        "\t<li>例如，<code>121</code> 是回文，而 <code>123</code> 不是。</li>\n" +
+        "</ul>\n" +
         "\n" +
         "<p>&nbsp;</p>\n" +
         "\n" +
         "<p><strong>示例 1：</strong></p>\n" +
         "\n" +
-        "<pre><strong>输入：</strong>s = \"abc\"\n" +
-        "<strong>输出：</strong>3\n" +
-        "<strong>解释：</strong>三个回文子串: \"a\", \"b\", \"c\"\n" +
+        "<pre><strong>输入：</strong>x = 121\n" +
+        "<strong>输出：</strong>true\n" +
         "</pre>\n" +
         "\n" +
-        "<p><strong>示例 2：</strong></p>\n" +
+        "<p><strong>示例&nbsp;2：</strong></p>\n" +
         "\n" +
-        "<pre><strong>输入：</strong>s = \"aaa\"\n" +
-        "<strong>输出：</strong>6\n" +
-        "<strong>解释：</strong>6个回文子串: \"a\", \"a\", \"a\", \"aa\", \"aa\", \"aaa\"</pre>\n" +
+        "<pre><strong>输入：</strong>x = -121\n" +
+        "<strong>输出：</strong>false\n" +
+        "<strong>解释：</strong>从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。\n" +
+        "</pre>\n" +
+        "\n" +
+        "<p><strong>示例 3：</strong></p>\n" +
+        "\n" +
+        "<pre><strong>输入：</strong>x = 10\n" +
+        "<strong>输出：</strong>false\n" +
+        "<strong>解释：</strong>从右向左读, 为 01 。因此它不是一个回文数。\n" +
+        "</pre>\n" +
         "\n" +
         "<p>&nbsp;</p>\n" +
         "\n" +
         "<p><strong>提示：</strong></p>\n" +
         "\n" +
         "<ul>\n" +
-        "\t<li><code>1 &lt;= s.length &lt;= 1000</code></li>\n" +
-        "\t<li><code>s</code> 由小写英文字母组成</li>\n" +
-        "</ul>")
+        "\t<li><code>-2<sup>31</sup>&nbsp;&lt;= x &lt;= 2<sup>31</sup>&nbsp;- 1</code></li>\n" +
+        "</ul>\n" +
+        "\n" +
+        "<p>&nbsp;</p>\n" +
+        "\n" +
+        "<p><strong>进阶：</strong>你能不将整数转为字符串来解决这个问题吗？</p>")
 
 
     // ajax 异步获取后端数据
     onMounted(() => {
-      console.log("get data")
-
+      axios({
+        url: "http://175.178.221.165:8081/",
+        params:{
+          id: 1,
+        }
+      }).then(res=>{
+        debugger
+        console.log(res.data)
+      },err=>{
+        debugger
+        console.log(err.data)
+      })
     })
 
     // 组件销毁时，也及时销毁编辑器

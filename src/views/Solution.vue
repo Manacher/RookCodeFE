@@ -166,9 +166,14 @@ export default {
     // commentList的分页设置
     const pagination = {
       onChange: (page: number) => {
+        //TODO
         console.log(page);
+        commentList.length = 0;
+
       },
       pageSize: 10,
+      total: 100,
+      showSizeChanger: false,
     };
 
     // 组件销毁时，也及时销毁编辑器
@@ -191,7 +196,9 @@ export default {
       commentRef.value = editor // 记录 editor 实例，重要！
     }
 
+    // 编辑自己的题解
     const onEdit = () => {
+      //TODO
       console.log(commentRef.value.getHtml())
     }
 
