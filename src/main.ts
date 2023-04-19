@@ -6,6 +6,8 @@ import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 import * as Icons from '@ant-design/icons-vue'
 import axios from "axios";
+import { Calendar, DatePicker } from 'v-calendar';
+import 'v-calendar/dist/style.css';
 
 // 运行环境监测
 console.log('current env:', process.env.NODE_ENV);
@@ -31,6 +33,10 @@ axios.interceptors.response.use(function (response) {
 
 const app = createApp(App)
 app.use(store).use(router).use(Antd).mount('#app')
+
+// Use the components
+app.component('VCalendar', Calendar)
+app.component('VDatePicker', DatePicker)
 
 // // 全局使用图标
 const icons: any = Icons;
