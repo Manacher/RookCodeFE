@@ -9,20 +9,29 @@
     <a-layout-content class="content-area">
 
       <div class="content-top">
-        <a-row :gutter="16">
-          <a-col class="gutter-row" :span="8">
-            <div style="width: 100%; height: 12rem; background-color: #42b983; margin-right: 1rem">
-              <UserStatistics/>
-            </div>
-          </a-col>
-          <a-col class="gutter-row" :span="16">
-            <div style="width: 100%; height: 12rem; background-color: lightblue">
-              <UserHeatMap/>
-            </div>
-          </a-col>
-        </a-row>
-      </div>
 
+        <div class="statistics">
+          <UserStatistics :value="statisticsData"/>
+        </div>
+
+        <div class="heatmap">
+          <UserHeatMap/>
+        </div>
+
+<!--        <a-row>-->
+<!--          <a-col class="gutter-row" :span="9">-->
+<!--            <div style="width: 100%; height: 12rem; margin-right: 1rem">-->
+<!--              <UserStatistics :value="statisticsData"/>-->
+<!--            </div>-->
+<!--          </a-col>-->
+<!--          <a-col class="gutter-row" :span="15">-->
+<!--            <div style="width: 100%; height: 12rem; background-color: lightblue">-->
+<!--              <UserHeatMap/>-->
+<!--            </div>-->
+<!--          </a-col>-->
+<!--        </a-row>-->
+
+      </div>
 
       <div class="content-bottom">
         <UserList/>
@@ -36,7 +45,7 @@
 
 <script lang="ts">
 
-import {defineComponent} from "vue";
+import {defineComponent, ref} from "vue";
 import router from "@/router";
 
 import UserInfoCard from './UserInfoCard.vue'
@@ -59,9 +68,19 @@ export default defineComponent({
       return router.currentRoute.value.params.id === ''
     }
 
+    let statisticsData = ref({
+      easyTotal: 765,
+      mediumTotal: 651,
+      hardTotal: 1599,
+      easySolved: 45,
+      mediumSolved: 25,
+      hardSolved: 91
+    })
+
 
     return {
       isSelfPage,
+      statisticsData,
     };
   },
 });
@@ -82,6 +101,20 @@ export default defineComponent({
 
 .content-area {
   margin-top: 1rem;
+}
+
+.content-top{
+  display: flex;
+  flex-direction: row;
+}
+
+.statistics{
+  margin-right: 1rem;
+}
+
+.heatmap{
+  flex: 1;
+  background-color: lightblue;
 }
 
 .content-bottom{
