@@ -1,6 +1,5 @@
 <template>
-  <a-layout class="layout">
-
+  <a-layout>
 
     <a-layout-content class="layout-content">
 
@@ -59,16 +58,12 @@ export default defineComponent({
 </script>
 <style scoped>
 
-.layout {
-  /*background-color: white;*/
-}
 
 .layout-content {
   padding: 2rem 10rem 0 10rem
 }
 
 .right-side {
-
   display: flex;
   flex-direction: column;
   align-items: center;
