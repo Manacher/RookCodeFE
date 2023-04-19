@@ -174,7 +174,7 @@ export default {
   z-index: 1;
   width: 19rem;
   right: 1rem;
-  top: 5rem;
+  top: 4.2rem;
   border-radius: 15px;
   padding-bottom: 0.7rem;
   animation: slide-up 0.3s;
