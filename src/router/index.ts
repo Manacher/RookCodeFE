@@ -11,8 +11,15 @@ const routes: Array<RouteRecordRaw> = [
     path:'/register',
     name:'Register',
     /*下面为登录限制,是否需要登录验证，当根目录被限制时，其子模块也将被限制*/
-    meta:{requiresAuth:true},
+   /* meta:{requiresAuth:true},*/
     component:()=>import("@/views/Register.vue")
+  },
+  {
+    path:'/solutions',
+    name:'Solutions',
+    /*下面为登录限制,是否需要登录验证，当根目录被限制时，其子模块也将被限制*/
+    //meta:{requiresAuth:false},
+    component:()=>import("@/views/Solutions.vue")
   }
 ]
 
@@ -30,11 +37,10 @@ router.beforeEach((to,from,next)=>{
     const token = store.state.token
     if(token=="") {
       //没有token 跳到登录界面，然后再跳回去
-      alert("登录限制，跳转回到登录")
-      next({name:"login",query:{redirect:to.fullPath}})
-    }
-    else{
-      next()
+      alert(to.fullPath)
+
+      router.push({ path: '/login' });
+      //next({name:"login",query:{redirect:to.fullPath}})
     }
   }
   next()

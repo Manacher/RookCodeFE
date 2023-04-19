@@ -89,7 +89,8 @@
               <a-button
                   block
                   type="primary"
-                  html-type="submit">注册</a-button>
+                  html-type="submit"
+                  @click="tryRegister">注册</a-button>
             </a-form-item>
           </a-col>
         </a-row>
@@ -112,10 +113,11 @@
 
 import axios from "axios";
 import type { Rule } from 'ant-design-vue/es/form';
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref ,h} from 'vue';
 import type { FormInstance } from 'ant-design-vue';
 import { notification } from 'ant-design-vue';
-
+import { SmileOutlined } from '@ant-design/icons-vue';
+import router from "@/router";
 
 //计时器
 const counter = ref(0)
@@ -163,6 +165,11 @@ export default defineComponent({
         return Promise.reject('请输入密码！');
       } else {
         if (formState.checkPass !== '') {
+
+          let pass=new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,15}$/);
+          if(!pass.test(value)){
+            return Promise.reject('密码长度需为6到15位，且应该为数字加字母的组合！');
+          }
           /*formRef.value.validateFields('checkPass');*/
         }
         return Promise.resolve();
@@ -220,6 +227,8 @@ export default defineComponent({
             }
           },1000)
 
+          //
+
         }catch (e) {
           notification.open({
             message: '提示！',
@@ -231,10 +240,78 @@ export default defineComponent({
           });
         }
 
-        alert("验证码发送成功!");
+        //发送验证码请求
+        axios.post("http://175.178.221.165:8081/users/registerCode",{
+          'email':formState.email,
+        },{
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // withCredentials:true
+        }).then((res:any)=>{
+          //提示消息发送成功
+          if(res.data.success===true){
+            notification.open({
+              message: '验证码已发送',
+              description:
+                  '验证码已发送到对应的邮箱，验证码五分钟内有效!',
+              icon: () => h(SmileOutlined, { style: 'color: #108ee9' }),
+            });
+          }
+          else{
+            notification['error']({
+              message: '验证码已发送',
+              description:
+                  '验证码发送失败',
+            });
+          }
+        });
+      }
+    };
+
+    //注册函数
+    const tryRegister=()=>{
+      //首先得保证内容不为空
+      if(formState.email!=''&&formState.VerificationCode!=''
+          &&formState.pass!=''&&formState.checkPass!=''){
+        axios.post("http://175.178.221.165:8081/users/register",{
+          account:formState.email,
+          password:formState.pass,
+          code:formState.VerificationCode,
+
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then((res:any)=>{
+          //提示消息发送成功
+          console.log(res.data.message)
+          if(res.data.success===true){
+            //跳转到登录界面，使得用户进行登录
+            notification.open({
+              message: '注册状态',
+              description:
+                  '注册成功，请登录!',
+              icon: () => h(SmileOutlined, { style: 'color: #108ee9' }),
+            });
+            router.push({ path: '/login' });
+          }
+          //否则给出错误的提示信息
+          else{
+            notification['error']({
+              message: '提示',
+              description:
+              res.data.message,
+            });
+          }
+        });
       }
 
-    };
+
+
+
+    }
+
 
 
     return {
@@ -245,8 +322,10 @@ export default defineComponent({
       layout,
 
 
-
+      //发送验证吗函数
       sendCode,
+      //注册函数
+      tryRegister,
       handleFinishFailed,
       handleFinish,
       resetForm,

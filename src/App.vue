@@ -1,7 +1,8 @@
 <template>
 
   <router-link to="/login">登录</router-link>|
-  <router-link to="/register">注册</router-link>
+  <router-link to="/register">注册</router-link>|
+  <router-link to="/solutions">题解</router-link>
   <router-view/>
 </template>
 
@@ -11,7 +12,6 @@ import axios from "axios";
 import {defineComponent, onMounted,computed} from "vue";
 import Register from '@/views/Register.vue'
 import Login from "@/views/Login.vue";
-import request from "@/utils/request";
 import store  from "@/store";
 
 export default defineComponent({
@@ -23,12 +23,13 @@ export default defineComponent({
   setup() {
     onMounted(() => {
       const token = store.state.token
+      alert(token)
       //token不存在的话自动登录
-      if(token=="") {
+      /*if(token=="") {
         //跳转到登录界面
       }else{
         //跳转到主页
-      }
+      }*/
 
 
     })

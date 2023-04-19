@@ -58,7 +58,7 @@
           <a-col :span="8">
             <!--    发送验证码，然后设置倒计时    -->
             <a-form-item>
-              <img :src="imgUrl" alt="验证码" class="picture" @click="changeCaptcha">
+              <img :src="imgUrl" alt="验证码" @click="changeCaptcha">
             </a-form-item>
           </a-col>
 
@@ -105,11 +105,10 @@
 <script lang="ts">
 import axios from "axios";
 import type { Rule } from 'ant-design-vue/es/form';
-import { defineComponent, reactive, ref } from 'vue';
+import {defineComponent, onMounted, reactive, ref} from 'vue';
 import type { FormInstance } from 'ant-design-vue';
 import router from "@/router";
 import { notification } from 'ant-design-vue';
-import {login} from "@/api/user";
 import store from "@/store";
 
 //登录界面的表单
@@ -121,22 +120,25 @@ interface FormState_login {
 
 export default defineComponent({
 
-
-
   setup(){
     //验证码的地址
-    let imgUrl = ref('你的验证码地址');
+    let imgUrl = ref('');
+    onMounted(()=>{
+      changeCaptcha()
+    })
 
 
     // 更换验证码
     const changeCaptcha = () => {
-      const num = Math.ceil(Math.random() * 10) // 生成一个随机数（防止缓存）
       //发送一个请求
-      axios.get("http://www.dmoe.cc/random.php?return=json&"+num).then((res) => {
-        imgUrl.value = res.data.imgurl;
-        console.log(res)
+      axios.get("http://175.178.221.165:8081/users/captcha",{
+        responseType:'blob'
+      }).then((res) => {
+        let blob = new Blob([res.data], { type: 'image/jpeg' })
+        console.log(blob)
+        const qrUrl = window.URL.createObjectURL(blob)
+        imgUrl.value = qrUrl;
       })
-
     };
 
 
@@ -154,28 +156,31 @@ export default defineComponent({
     const try_login = () => {
 
 
-      axios.get("http://jsonplaceholder.typicode.com/posts").then((res) => {
-        imgUrl.value = res.data.imgurl;
+      axios.post("http://175.178.221.165:8081/users/login",{
+        "account": formState_login.email,
+        "code": formState_login.VerificationCode,
+        "password": formState_login.pass
+      },{
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => {
         console.log(res.data)
-      })
-
-      /*//首先尝试登录
-      const res_data=login(formState_login).then((res)=>{
-        if(!res.data.success){
-          alert("登录信息有误")
-        }
-        else {
-
-
-          //跳转到主页
+        //判断登录是否成功
+        if(res.data.success==true){
 
           //保存token
-          store.commit("login","");
+          store.commit("login",res.data.data.token);
+          //跳转到主页
 
+        }else{
+          notification['error']({
+            message: '登录失败',
+            description:
+                '请检查账号密码',
+          });
         }
-        return res.data
-      });*/
-
+      })
     };
 
 

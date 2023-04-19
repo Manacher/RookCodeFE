@@ -11,7 +11,7 @@ import axios from "axios";
 console.log('current env:', process.env.NODE_ENV);
 
 // 配置axios默认请求地址
-axios.defaults.baseURL = process.env.VUE_APP_SERVER;
+//axios.defaults.baseURL ='http://175.178.221.165:8081';
 
 // axios拦截器配置
 axios.interceptors.request.use(function (config) {
@@ -20,7 +20,6 @@ axios.interceptors.request.use(function (config) {
 }, error => {
     return Promise.reject(error)
 });
-
 axios.interceptors.response.use(function (response) {
     console.log("return response: ", response)
     return response;
