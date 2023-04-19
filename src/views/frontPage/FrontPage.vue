@@ -42,12 +42,12 @@ export default defineComponent({
 
   setup() {
     let statisticsData = ref({
-      easyTotal: 765,
-      mediumTotal: 651,
-      hardTotal: 1599,
+      easyTotal: 200,
+      mediumTotal: 150,
+      hardTotal: 100,
       easySolved: 45,
       mediumSolved: 25,
-      hardSolved: 91
+      hardSolved: 31
     })
 
     return {

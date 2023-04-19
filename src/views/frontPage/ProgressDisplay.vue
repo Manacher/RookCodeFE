@@ -9,15 +9,15 @@
 
       <div class="progress-chart">
         <a-tooltip title="简单">
-          <a-progress :percent="30" size="small" strokeColor="#00af9b" :showInfo="false"/>
+          <a-progress :percent="value.easySolved / value.easyTotal * 100" size="small" strokeColor="#00af9b" :showInfo="false"/>
         </a-tooltip>
 
         <a-tooltip title="中等">
-          <a-progress :percent="20" size="small" strokeColor="#ffb800" :showInfo="false"/>
+          <a-progress :percent="value.mediumSolved / value.mediumTotal * 100" size="small" strokeColor="#ffb800" :showInfo="false"/>
         </a-tooltip>
 
         <a-tooltip title="困难">
-          <a-progress :percent="10" size="small" strokeColor="#ff5064" :showInfo="false"/>
+          <a-progress :percent="value.hardSolved / value.hardTotal * 100" size="small" strokeColor="#ff5064" :showInfo="false"/>
         </a-tooltip>
 
       </div>
@@ -70,17 +70,10 @@
 
 <script lang="ts">
 
-import {ref, defineProps} from "vue";
-
 
 export default {
   props:['value'],
   name: "progress-display",
-  setup() {
-    return {
-
-    }
-  }
 }
 </script>
 
