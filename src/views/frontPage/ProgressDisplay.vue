@@ -72,21 +72,6 @@
 
 import {ref, defineProps} from "vue";
 
-let easyTotal = ref(75);
-let mediumTotal = ref(61);
-let hardTotal = ref(19);
-let easySolved = ref(0);
-let mediumSolved = ref(0);
-let hardSolved = ref(0);
-
-interface itf{
-  easyTotal: number;
-  mediumTotal: number;
-  hardTotal: number;
-  easySolved: number;
-  mediumSolved: number;
-  hardSolved: number;
-}
 
 export default {
   props:['value'],

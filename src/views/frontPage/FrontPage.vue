@@ -28,11 +28,10 @@
 </template>
 <script lang="ts">
 import {defineComponent, ref} from 'vue';
-import FrontBanner from "@/views/frontpage/FrontBanner.vue";
-import ProblemList from "@/views/frontpage/ProblemList.vue";
-import ProgressDisplay from "@/views/frontpage/ProgressDisplay.vue";
-import CheckInCalendar from "@/views/frontpage/CheckInCalendar.vue";
-
+import FrontBanner from "@/views/frontPage/FrontBanner.vue";
+import ProblemList from "@/views/frontPage/ProblemList.vue";
+import ProgressDisplay from "@/views/frontPage/ProgressDisplay.vue";
+import CheckInCalendar from "@/views/frontPage/CheckInCalendar.vue";
 
 export default defineComponent({
   components: {
@@ -43,7 +42,6 @@ export default defineComponent({
   },
 
   setup() {
-
     let statisticsData = ref({
       easyTotal: 765,
       mediumTotal: 651,
@@ -59,14 +57,14 @@ export default defineComponent({
   },
 });
 </script>
-<style>
+<style scoped>
 
 .layout {
   /*background-color: white;*/
 }
 
 .layout-content {
-  padding: 2rem 4rem 0 4rem
+  padding: 2rem 10rem 0 10rem
 }
 
 .right-side {

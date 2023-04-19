@@ -28,7 +28,7 @@
             <template #actions>
 
               <div class="center-card-action-item">
-                <a href="/home" style="color:inherit">
+                <a href="/user" style="color:inherit">
                   <img src="../assets/center.png" class="center-card-item-img"/>
                   <span>主页</span>
                 </a>
@@ -150,7 +150,7 @@ export default {
 
 .logo {
   float: left;
-  margin-left: 2rem;
+  margin-left: 7rem;
   margin-right: 1rem;
   font-style: italic;
   font-size: 1.5rem;
@@ -196,7 +196,7 @@ export default {
 
 .right-item{
   position: absolute;
-  right: 5rem;
+  right: 9.5rem;
   width: 3rem;
   height: 3rem;
 }
