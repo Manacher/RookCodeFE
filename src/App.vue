@@ -23,7 +23,7 @@ export default defineComponent({
   setup() {
     onMounted(() => {
       const token = store.state.token
-      alert(token)
+      console.log(token)
       //token不存在的话自动登录
       /*if(token=="") {
         //跳转到登录界面
