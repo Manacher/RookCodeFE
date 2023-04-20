@@ -9,7 +9,6 @@ import axios from "axios";
 import { Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/dist/style.css';
 
-// 运行环境监测
 console.log('current env:', process.env.NODE_ENV);
 
 // 配置axios默认请求地址

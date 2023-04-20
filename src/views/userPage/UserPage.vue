@@ -8,30 +8,30 @@
 
     <a-layout-content class="content-area">
 
-      <div class="content-top">
+      <a-row :gutter="12">
+        <a-col >
+            <UserStatistics :value="statisticsData" style="height: 20vh"/>
+        </a-col>
 
-        <div class="statistics">
-          <UserStatistics :value="statisticsData"/>
-        </div>
+        <a-col >
+            <UserHeatMap style="height: 20vh"/>
+        </a-col>
 
-        <div class="heatmap">
-          <UserHeatMap/>
-        </div>
+      </a-row>
 
-<!--        <a-row>-->
-<!--          <a-col class="gutter-row" :span="9">-->
-<!--            <div style="width: 100%; height: 12rem; margin-right: 1rem">-->
-<!--              <UserStatistics :value="statisticsData"/>-->
-<!--            </div>-->
-<!--          </a-col>-->
-<!--          <a-col class="gutter-row" :span="15">-->
-<!--            <div style="width: 100%; height: 12rem; background-color: lightblue">-->
-<!--              <UserHeatMap/>-->
-<!--            </div>-->
-<!--          </a-col>-->
-<!--        </a-row>-->
 
-      </div>
+
+
+<!--      <div class="content-top">-->
+
+<!--        <div class="statistics">-->
+<!--          <UserStatistics :value="statisticsData"/>-->
+<!--        </div>-->
+
+<!--        <div class="heatmap">-->
+<!--          <UserHeatMap/>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <div class="content-bottom">
         <UserList/>
@@ -72,11 +72,10 @@ export default defineComponent({
       easyTotal: 765,
       mediumTotal: 651,
       hardTotal: 1599,
-      easySolved: 45,
+      easySolved: 43,
       mediumSolved: 25,
       hardSolved: 91
     })
-
 
     return {
       isSelfPage,
@@ -103,19 +102,6 @@ export default defineComponent({
   margin-top: 1rem;
 }
 
-.content-top{
-  display: flex;
-  flex-direction: row;
-}
-
-.statistics{
-  margin-right: 1rem;
-}
-
-.heatmap{
-  flex: 1;
-  background-color: lightblue;
-}
 
 .content-bottom{
   width: 100%;

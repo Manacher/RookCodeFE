@@ -5,7 +5,7 @@
       解题数量
     </div>
 
-    <div id="echarts-container" />
+    <div id="echarts-container"/>
 
     <div class="progress-display">
       <div class="progress-line-chart">
@@ -14,7 +14,7 @@
                       size="large"
                       strokeColor="#00af9b"
                       :showInfo="false"
-                      style="padding-bottom: 0.8rem"/>
+                      style="padding-bottom: 0.8rem; padding-top: 1.1rem"/>
         </a-tooltip>
 
         <a-tooltip title="中等">
@@ -29,8 +29,7 @@
           <a-progress :percent="value.hardSolved / value.hardTotal * 100"
                       size="large"
                       strokeColor="#ff5064"
-                      :showInfo="false"
-                      style="padding-bottom: 0.4rem"/>
+                      :showInfo="false"/>
         </a-tooltip>
 
       </div>
@@ -73,9 +72,7 @@
 
 
       </div>
-  </div>
-
-
+    </div>
 
 
   </div>
@@ -88,16 +85,18 @@ import * as echarts from 'echarts';
 import {onMounted} from "vue";
 
 export default {
-  props:['value'],
+  props: ['value'],
   name: "user-statistics",
   components: {},
 
-  setup() {
+  setup(props: any, context: any) {
     onMounted(() => {
+      console.log("value", props.value.easySolved)
+
       let myChart = echarts.init(document.getElementById('echarts-container') as HTMLElement);
       myChart.setOption({
         title: {
-          text: '161\n解决问题',
+          text: props.value.easySolved+props.value.mediumSolved+props.value.hardSolved + '\n解决问题',
           color: 'grey',
           left: 'center',
           top: 'center'
@@ -105,7 +104,7 @@ export default {
         series: [
           {
             type: 'pie',
-            radius: ['80%', '90%'],
+            radius: ['90%', '100%'],
             avoidLabelOverlap: false,
             label: {
               show: false,
@@ -115,10 +114,12 @@ export default {
               show: false
             },
             data: [
-              { value: 50, itemStyle: {color:'#00af9b'} },
-              { value: 30, itemStyle: {color:'#ffb800'} },
-              { value: 20, itemStyle: {color:'#ff2d55'} },
-              { value: 300, itemStyle: {color:'#dfd6d7'} },
+              {value: props.value.easySolved, itemStyle: {color: '#00af9b'}},
+              {value: props.value.mediumSolved, itemStyle: {color: '#ffb800'}},
+              {value: props.value.hardSolved, itemStyle: {color: '#ff2d55'}},
+              {value: props.value.easyTotal - props.value.easySolved
+                    + props.value.mediumTotal - props.value.mediumSolved
+                    + props.value.hardTotal - props.value.hardSolved, itemStyle: {color: '#dfd6d7'}},
             ]
           }
         ]
@@ -131,7 +132,7 @@ export default {
 </script>
 
 <style scoped>
-.user-statistics{
+.user-statistics {
   background-color: white;
   border-radius: 1rem;
   display: flex;
@@ -139,16 +140,15 @@ export default {
   padding: 1rem;
 }
 
-.text-area{
+.text-area {
   color: #8a8a8e;
   position: absolute;
 }
 
-#echarts-container{
-  width: 8rem;
-  height: 8rem;
-  margin-left: 1.7rem;
-  margin-top: 1rem;
+#echarts-container {
+  width: 7rem;
+  height: 7rem;
+  margin-top: 2.5rem;
 }
 
 .progress-display {
@@ -158,18 +158,19 @@ export default {
   justify-content: center;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .progress-line-chart {
   width: 8rem;
-  margin-right: 1.5rem;
+  margin-right: 0.8rem;
   margin-left: 1.5rem;
 }
 
 .progress-statistics {
   flex: 1;
-  line-height: 100%;
+  line-height: 130%;
+  margin-top: 1.2rem;
 }
 
 .static-solve-span {
@@ -187,7 +188,7 @@ export default {
   display: block
 }
 
-.dif-text{
+.dif-text {
   float: left;
   padding-right: 0.5rem
 }
