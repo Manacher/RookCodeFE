@@ -1,8 +1,12 @@
 <template>
   <div class = "problemView">
-    <h3>P{{id}} {{title}}</h3>
-    <span style="color: lightgray">难度 </span><span :style="{color: diffColor}">{{difficulty}}</span>
-    <a-divider style="height: 0.1rem; background-color: lightgray" />
+    <h3>P{{(Array(4).join('0')+String(id)).slice(-4)}} {{title}}</h3>
+    <a-space>
+      <span style="color: gray">难度</span>
+      <span :style="{color: diffColor}">{{difficulty}}</span>
+      <a-tag v-for="tag in tagList" :key="tag">{{tag}}</a-tag>
+    </a-space>
+    <a-divider style="background-color: lightgray" />
     <Editor
         v-model="content"
         :defaultConfig="editorConfig"
@@ -25,73 +29,49 @@ Boot.registerModule(markdownModule)
 export default {
   name: "Problem",
   components: { Editor},
+  props:["id"], // Number
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  setup() {
+  setup(props: any, context: any) {
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef()
     // 编辑器，工具栏配置
     const toolbarConfig = {}
     const editorConfig = {readOnly :true, scroll: true, autoFocus: false}
     // 题目内容
-    const id = "0000"  // 题号
-    const title = "A+B 问题"  // 题目标题
-    const difficulty = "简单"  // 题目难度
-    let diffColor = "#63ec0c"  // ”难度“颜色
-    const content = ref("<p>给你一个整数 <code>x</code> ，如果 <code>x</code> 是一个回文整数，返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>\n" +
-        "\n" +
-        "<p>回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。</p>\n" +
-        "\n" +
-        "<ul>\n" +
-        "\t<li>例如，<code>121</code> 是回文，而 <code>123</code> 不是。</li>\n" +
-        "</ul>\n" +
-        "\n" +
-        "<p>&nbsp;</p>\n" +
-        "\n" +
-        "<p><strong>示例 1：</strong></p>\n" +
-        "\n" +
-        "<pre><strong>输入：</strong>x = 121\n" +
-        "<strong>输出：</strong>true\n" +
-        "</pre>\n" +
-        "\n" +
-        "<p><strong>示例&nbsp;2：</strong></p>\n" +
-        "\n" +
-        "<pre><strong>输入：</strong>x = -121\n" +
-        "<strong>输出：</strong>false\n" +
-        "<strong>解释：</strong>从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。\n" +
-        "</pre>\n" +
-        "\n" +
-        "<p><strong>示例 3：</strong></p>\n" +
-        "\n" +
-        "<pre><strong>输入：</strong>x = 10\n" +
-        "<strong>输出：</strong>false\n" +
-        "<strong>解释：</strong>从右向左读, 为 01 。因此它不是一个回文数。\n" +
-        "</pre>\n" +
-        "\n" +
-        "<p>&nbsp;</p>\n" +
-        "\n" +
-        "<p><strong>提示：</strong></p>\n" +
-        "\n" +
-        "<ul>\n" +
-        "\t<li><code>-2<sup>31</sup>&nbsp;&lt;= x &lt;= 2<sup>31</sup>&nbsp;- 1</code></li>\n" +
-        "</ul>\n" +
-        "\n" +
-        "<p>&nbsp;</p>\n" +
-        "\n" +
-        "<p><strong>进阶：</strong>你能不将整数转为字符串来解决这个问题吗？</p>")
+    const title = ref("这是标题")  // 题目标题
+    const difficulty = ref("这是难度")  // 题目难度
+    const diffColor = ref("#63ec0c")  // ”难度“颜色
+    const content = ref("")  // 题目内容html格式
+    const tagList = ref([])  // 题目标签
 
 
     // ajax 异步获取后端数据
     onMounted(() => {
-      axios({
-        url: "http://175.178.221.165:8081/",
-        params:{
-          id: 1,
+      axios.post("http://175.178.221.165:8081/questions/getQuestion",
+          {
+            id: props.id,
+          }
+       ).then(res=>{
+        const success = res.data.success
+        const message = res.data.message
+        const data = res.data.data
+        title.value = data.title
+        if (data.level == 1) {  // 简单
+          difficulty.value = "简单"
+          diffColor.value = "#008000"
+        } else if (data.level == 2) {  // 中等
+          difficulty.value = "中等"
+          diffColor.value = "#FFA500"
+        } else if (data.level == 3) {  // 困难
+          difficulty.value = "困难"
+          diffColor.value = "#FF0000"
         }
-      }).then(res=>{
-        debugger
-        console.log(res.data)
+        else{
+          console.log("error difficulty")
+        }
+        content.value = data.content
+        tagList.value = data.tags
       },err=>{
-        debugger
         console.log(err.data)
       })
     })
@@ -111,11 +91,11 @@ export default {
 
     return {
       editorRef,
-      id,
       title,
       difficulty,
       diffColor,  // ”难度“字体颜色
       content,
+      tagList,
       mode: 'default', // 或 'simple'
       toolbarConfig,
       editorConfig,

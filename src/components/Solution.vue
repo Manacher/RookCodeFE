@@ -1,6 +1,7 @@
 <template>
   <div class="solution">
     <div class="title">
+      <router-link :to="'/problems/'+params.pro_id"><a-button size="small">关闭</a-button></router-link><br>
       <a-space>
         <a-avatar :size="32" :src="avatar"/>
         <span style="font-size: x-large">{{ title }}</span>
@@ -78,6 +79,7 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 import {onBeforeUnmount, shallowRef, ref} from "vue";
+import {useRoute, useRouter} from 'vue-router';
 
 Boot.registerModule(markdownModule)
 
@@ -94,6 +96,9 @@ export default {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(){
+    // 获取路由参数
+    const { query, params } = useRoute()
+    debugger
     // 题解包含的信息
     const avatar = "https://tse2-mm.cn.bing.net/th/id/OIP-C.Y5AKy_ThdGknRFLuqJmdtwHaEo?pid=ImgDet&rs=1"
     const title = "A+B 题解"
@@ -203,6 +208,8 @@ export default {
     }
 
     return{
+      query,
+      params,
       avatar,
       title,
       nickname,
@@ -210,7 +217,7 @@ export default {
       viewNum,
       date,
       tagList,
-      mode: 'default',  // 编辑器模式，也可以是simple
+      mode: 'simple',  // 编辑器模式，也可以是simple
       contentConfig,
       contentRef,
       content,
@@ -230,9 +237,9 @@ export default {
 
 <style scoped>
   .solution{
-    width: 60%;
-    margin: auto;
     text-align: left;
+    overflow-y: hidden;
+    background: white;
   }
   .title{
 

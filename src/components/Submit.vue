@@ -100,7 +100,6 @@ export default {
         loading.value = false;
       }, 5000);
 
-      debugger
       context.emit("submit", 1)
     }
 

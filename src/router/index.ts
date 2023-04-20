@@ -16,6 +16,18 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
+    path: '/problems/:pro_id',
+    name: 'problems',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Problem.vue'),
+    children: [
+      {
+        path: 'solution/:sln_id',
+        name: 'solution',
+        component: () => import(/* webpackChunkName: "about" */ '../components/Solution.vue'),
+      },
+    ]
+  },
+  {
     path: '/problemView',
     name: 'problemView',
     component: () => import(/* webpackChunkName: "about" */ '../components/ProblemView.vue')
@@ -26,19 +38,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '../components/Submit.vue')
   },
   {
-    path: '/problem',
-    name: 'problem',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Problem.vue')
-  },
-  {
     path: '/submission',
     name: 'submission',
     component: () => import(/* webpackChunkName: "about" */ '../views/Submission.vue')
-  },
-  {
-    path: '/solution',
-    name: 'solution',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Solution.vue')
   },
   {
     path: '/create-solution',
