@@ -93,7 +93,7 @@
 
     <a-pagination
         v-model:current="current"
-        :total="500"
+        :total="total_cnt"
         style="padding-bottom: 1rem;padding-top: 1rem"
         @change="tableChange">
       <template #itemRender="{ type, originalElement }">
@@ -115,36 +115,16 @@
 <script lang="ts">
 
 import {defineComponent, onMounted, ref} from 'vue';
-interface DataItem {
-  title: string;
-}
-const data: DataItem[] = [
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-  {
-    title: 'Ant Design Title 3',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-  {
-    title: 'Ant Design Title 3',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-];
 
+type solutionType={
+  ID:number,
+  title:string,
+  descrp:string,
+  avatar_src:string,
+  like_cnt:number,
+  view_cnt:number,
+  com_cnt:number
+}
 
 
 export default defineComponent({
@@ -160,6 +140,18 @@ export default defineComponent({
 
 
     })
+
+    //当前的页码
+    const current=ref(1)
+    //当前页码大小
+    const current_size=ref(10)
+    //当前总的题解数目
+    const total_cnt=ref(500)
+    //当前的题解字符串
+    const tag_str=ref("")
+
+
+
 
 
 
@@ -179,101 +171,115 @@ export default defineComponent({
 
     /*创建题解的数组*/
     let solution_info_list=ref([
-        {title:"测试标题1",descrp:"测试内容1哈哈哈哈哈哈哈",
+        {ID:1,title:"测试标题1",descrp:"测试内容1哈哈哈哈哈哈哈",
           avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题2",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:2,title:"测试标题2",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题3",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:3,title:"测试标题3",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题4",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:4,title:"测试标题4",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题5",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:5,title:"测试标题5",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题6",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:6,title:"测试标题6",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题7",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:7,title:"测试标题7",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题8",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:8,title:"测试标题8",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题9",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:9,title:"测试标题9",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题10",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:10,title:"测试标题10",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},
-      {title:"测试标题11",descrp:"测试内容1哈哈哈哈哈哈哈",
+      {ID:11,title:"测试标题11",descrp:"测试内容1哈哈哈哈哈哈哈",
         avatar_src:"https://joeschmoe.io/api/v1/random", like_cnt:0,view_cnt:0,com_cnt:0},])
-
-
-
-
-
 
 
 
     //搜索题解函数
     const onSearch = (searchValue: string) => {
-      alert("搜索")
-      console.log(myStyle)
+      console.log(searchValue)
+
+      //调用函数
+
     };
     /*按钮点击事件*/
     const choosetag=(item:number)=>{
 
       console.log("item0 click status ", tag_btn_list.value[0].isChoosed)
+      tag_btn_list.value[item].isChoosed=!tag_btn_list.value[item].isChoosed;
+      //获得当前的题解字符串
 
-      if(tag_btn_list.value[item].isChoosed){
-        tag_btn_list.value[item].isChoosed=!tag_btn_list.value[item].isChoosed;
-        //都需要发生变化
-      }else{
-        //都需要发生变化
-        tag_btn_list.value[item].isChoosed=!tag_btn_list.value[item].isChoosed;
+
+      var str=""
+      //调用函数
+      for (var i=0;i<tag_btn_list.value.length;i++){
+
+        if(tag_btn_list.value[i].isChoosed){
+          if(i!=(tag_btn_list.value.length-1)){
+            str+=tag_btn_list.value[i].tag+"_"
+          }else{
+            str+=tag_btn_list.value[i].tag
+          }
+        }
       }
+      tag_str.value=str
+      alert(tag_str.value)
 
     }
     //跳转到写题解界面
     const writeSolution=()=>{
-      //
+      //路由
+
     };
 
 
-    //当前的页码
-    const current=ref(1)
     //页码改变的事件
     const tableChange=(page:number,pageSize:number)=>{
 
-      //请求新的题解，做填充
-      //发送的类型为页码加数目
+      current.value=page
+      current_size.value=pageSize
 
-      //将数组清空之后填充
-      
+      //重新请求数据
 
     };
 
+
+    //核心函数，对数据进行渲染
+    const getDataAndLoad=(page:number,pageSize:number,searchValue:string,tag_str:string)=>{
+
+      //发送请求
+    }
 
 
 
     return{
-
       //获取屏幕高度
       myStyle,
       //题解的数组
       solution_info_list,
-
-      //测试
-      data,
-
-      //写题解函数
-      writeSolution,
-      //当前的页码
-      current,
-      //页码改变的事件
-      tableChange,
+      //总题解数目
+      total_cnt,
       //所有的标签按钮
       tag_btn_list,
-      //点击按钮事件
-      choosetag,
-      //下拉选择标签
+      //当前的页码
+      current,
+      //当前的页码大小
+      current_size,
+      //当前的题解字符串
+      tag_str,
 
-      //搜索函数
+      //搜索题解函数
       onSearch,
+      //核心函数，对数据进行渲染
+      getDataAndLoad,
+      //写题解函数：跳转路由
+      writeSolution,
+      //页码改变的事件
+      tableChange,
+      //点击按钮选择标签事件
+      choosetag,
+
     };
   }
 
