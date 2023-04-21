@@ -2,7 +2,7 @@
 
   <a-layout class="main-area">
 
-    <div class="user-info" style="width: 20rem; height: 6rem; background-color: lightslategrey;">
+    <div class="user-info">
       <UserInfoCard/>
     </div>
 
@@ -11,7 +11,7 @@
       <a-row :gutter="12">
 
         <a-col flex="16rem">
-          <UserInfoDetail style="height: 50rem; width:100%"/>
+          <UserInfoDetail style="width:100%"/>
         </a-col>
 
         <a-col flex="auto">
@@ -101,6 +101,7 @@ export default defineComponent({
 .main-area {
   padding: 2rem 10rem 0 10rem;
   width: 99vw;
+  min-width: 85rem;
 }
 
 @media screen and (min-width: 101rem) and (max-width: 105rem) {
@@ -140,7 +141,7 @@ export default defineComponent({
 }
 
 .content-area {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 
