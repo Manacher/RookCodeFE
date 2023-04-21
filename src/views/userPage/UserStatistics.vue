@@ -143,6 +143,7 @@ export default {
   display: flex;
   flex-direction: row;
   padding: 1rem;
+  box-shadow: 0 2px 8px lightgrey;
 }
 
 .text-area {
