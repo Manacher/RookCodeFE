@@ -13,6 +13,7 @@
 <script lang="ts">
 import axios from "axios";
 import {defineComponent, onMounted} from "vue";
+import store from "@/store";
 
 export default defineComponent({
   setup() {
@@ -23,6 +24,14 @@ export default defineComponent({
         console.log("get resp:", res)
       })
     })
+
+    const userInfo={
+      token: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNjI0MzA5MzIxQHFxLmNvbSIsImNyZWF0ZWQiOjE2ODIwODk5Njg5MzgsImV4cCI6MTY4MjEyNTk2OH0.rZbeymzH7TAzhEKLoYbwqvTrO0wFqhLXfY9i3QmfQl2IHra4f7C0nLzGxDTT9WOh1nbTDA-221yFCWkCAdYUeA",
+      id: 28
+    }
+    //±£´ætoken
+    store.commit("login",userInfo);
+
   }
 })
 

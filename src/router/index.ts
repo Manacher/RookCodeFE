@@ -25,6 +25,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'solution',
         component: () => import(/* webpackChunkName: "about" */ '../components/Solution.vue'),
       },
+      {
+        path: 'create-solution',
+        name: 'create-solution',
+        component: () => import(/* webpackChunkName: "about" */ '../views/CreateSolution.vue'),
+      }
     ]
   },
   {
@@ -41,11 +46,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/submission',
     name: 'submission',
     component: () => import(/* webpackChunkName: "about" */ '../views/Submission.vue')
-  },
-  {
-    path: '/create-solution',
-    name: 'create-solution',
-    component: () => import(/* webpackChunkName: "about" */ '../views/CreateSolution.vue')
   },
   {
     path: '/edit-solution',

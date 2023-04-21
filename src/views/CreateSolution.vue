@@ -1,9 +1,9 @@
 <template>
   <div class="create-solution">
-    <a-input v-model:value="title" placeholder="此处输入标题" :bordered="false" style="font-size: xx-large"/>
+    <a-input v-model:value="title" placeholder="此处输入标题" :bordered="false" style="font-size: xx-large;"/>
     <a-select
         v-model:value="selectTags"
-        mode="tags"
+        mode="multiple"
         style="width: 100%"
         placeholder="添加编程语言、方法、知识点等标签"
         :options="tagList"
@@ -33,19 +33,25 @@
             @cancel="cancel">
           <a-button>取消发布</a-button>
         </a-popconfirm>
-        <a-button type="primary">发布题解</a-button>
+        <a-button type="primary" @click="onPublish">发布题解</a-button>
       </a-space>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {onBeforeUnmount, ref, shallowRef} from "vue";
+import {onBeforeUnmount, ref, shallowRef, h} from "vue";
 import type { SelectProps } from 'ant-design-vue';
+import { notification } from 'ant-design-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
+import {useRoute} from 'vue-router';
+import router from "@/router";
+import axios from "axios";
+import store from "@/store";
+import {CheckCircleOutlined} from "@ant-design/icons-vue"
 
 Boot.registerModule(markdownModule)
 
@@ -55,24 +61,18 @@ export default {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(){
+    // 获取路由参数
+    const {params} = useRoute()
     const title = ref("")
     const selectTags = ref([])
     const tagList = ref<SelectProps['options']>([
       {
-        value: 'dfs',
-        label: 'dfs',
+        value: 'C',
+        label: 'C',
       },
       {
-        value: 'bfs',
-        label: 'bfs',
-      },
-      {
-        value: '回溯',
-        label: '回溯',
-      },
-      {
-        value: '动态规划',
-        label: '动态规划',
+        value: 'Java',
+        label: 'Java',
       },
     ])
     // 编辑器实例，必须用 shallowRef
@@ -80,8 +80,6 @@ export default {
     // 编辑器，工具栏配置
     const editorConfig = {readOnly :false, scroll: true}
     const content = ref("")
-
-
 
 
     // 组件销毁时，也及时销毁编辑器
@@ -101,8 +99,7 @@ export default {
 
     // 确定取消发布
     const confirm = (e: MouseEvent) => {
-      //TODO
-
+      router.push('/problems/'+params.pro_id)
     }
 
     // 继续发布
@@ -110,7 +107,41 @@ export default {
       console.log(e);
     }
 
+    // 发布题解
+    const onPublish = () => {
+      const List2String = (list: never[]) => {
+        let str = ""
+        for(let data of list){
+          str += data + '_'
+        }
+        return str
+      }
+
+      axios.post("http://175.178.221.165:8081/solutions/PubSolution",
+          {
+            'content': editorRef.value.getHtml(),
+            'questionId': Number(params.pro_id),
+            'tags': List2String(selectTags.value),
+            'title': title.value,
+            'userId': store.state.id,
+          },
+          {
+            headers: {'Authorization': store.state.token}
+          }
+      ).then(res => {  // 发布成功
+        notification.open({
+          message: '题解发布成功',
+          description: '',
+          icon: () => h(CheckCircleOutlined, { style: 'color: #008000' }),
+        });
+        router.push('/problems/'+params.pro_id)
+      }, err => {  // 发布失败
+        console.log(err.data)
+      })
+    }
+
     return {
+      params,
       title,
       selectTags,
       tagList,
@@ -121,6 +152,7 @@ export default {
       editorCreated,
       confirm,
       cancel,
+      onPublish,
     }
   }
 
@@ -129,9 +161,9 @@ export default {
 
 <style scoped>
   .create-solution{
-    width: 60%;
     margin: auto;
     text-align: left;
+    background: white;
   }
   .editor{
     border: solid 0.1rem lightgray;

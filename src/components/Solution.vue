@@ -79,7 +79,7 @@ import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 import {onBeforeUnmount, shallowRef, ref} from "vue";
-import {useRoute, useRouter} from 'vue-router';
+import {useRoute} from 'vue-router';
 
 Boot.registerModule(markdownModule)
 

@@ -49,7 +49,7 @@ export default {
     onMounted(() => {
       axios.post("http://175.178.221.165:8081/questions/getQuestion",
           {
-            id: props.id,
+            'id': props.id,
           }
        ).then(res=>{
         const success = res.data.success
