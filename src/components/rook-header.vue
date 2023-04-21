@@ -28,18 +28,14 @@
             <template #actions>
 
               <div class="center-card-action-item">
-                <a href="/user" style="color:inherit">
+
+                <router-link to="/user" v-on:click="onCardClicked">
                   <img src="../assets/center.png" class="center-card-item-img"/>
                   <span>主页</span>
-                </a>
+                </router-link>
+
               </div>
 
-              <div class="center-card-action-item">
-                <a href="/setting" style="color:inherit">
-                  <img src="../assets/setting.png" class="center-card-item-img"/>
-                  <span>设置</span>
-                </a>
-              </div>
 
               <div>
                 <a-popconfirm title="确认退出登陆吗？" ok-text="是" cancel-text="否">
@@ -64,13 +60,14 @@
         class="menu"
     >
       <a-menu-item key="/">
-        <router-link to="/">题库</router-link>
+        <router-link to="/">首页</router-link>
       </a-menu-item>
 
       <a-menu-item key="discussion">
-        <router-link to="/">讨论</router-link>
+        <router-link to="/discussion">讨论</router-link>
       </a-menu-item>
     </a-menu>
+
   </a-layout-header>
 
 
@@ -84,6 +81,9 @@ import {onMounted, ref} from "vue";
 export default {
   name: "rook-header",
   setup() {
+
+    console.log("header init")
+
     let navKeys = ref(['/']);
     let cardShow = ref(false);
     let centerCard: any;
@@ -91,13 +91,9 @@ export default {
     // dom元素加载完毕后获取节点
     onMounted(() => {
       centerCard = document.querySelector('#center-card')
-      // 设置card样式s
+      // 设置card样式
       let cardDetail = document.querySelector('.ant-card-meta-detail') as HTMLElement
       cardDetail.style.paddingLeft = '0.5rem'
-
-      // 去除antd原生header的padding元素
-      let header = document.querySelector('ant-layout-header header') as HTMLElement
-
     })
 
     // 个人头像点击事件，当卡片未显示时，点击头像让卡片出现，并添加鼠标监听事件
@@ -115,8 +111,7 @@ export default {
       if (centerCard) {
 
         if (!centerCard.contains(e.target)) {
-          // 该逻辑之后可完善，即点击弹出卡片的非是、否区域也会直接令卡片消失的问题
-
+          // todo 该逻辑之后可完善，即点击弹出卡片的非是、否区域也会直接令卡片消失的问题
           // let popCard = document.querySelector('.ant-popover-inner-content')
           // if(popCard && popCard.contains(e.target)){
           //   return
@@ -127,10 +122,16 @@ export default {
       }
     }
 
+    let onCardClicked = () =>{
+      cardShow.value = false;
+      navKeys.value = ['/user']
+    }
+
     return {
       navKeys,
       cardShow,
       onCenterClicked,
+      onCardClicked,
     }
   }
 }
