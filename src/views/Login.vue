@@ -169,8 +169,12 @@ export default defineComponent({
         //判断登录是否成功
         if(res.data.success==true){
 
+          const userInfo={
+            token:res.data.data.token,
+            id:res.data.data.users.id
+          }
           //保存token
-          store.commit("login",res.data.data.token);
+          store.commit("login",userInfo);
           //跳转到主页
 
         }else{
