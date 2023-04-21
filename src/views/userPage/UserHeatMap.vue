@@ -1,12 +1,25 @@
 <template>
   <div class="heatmap-main">
 
-    <div>
-      过去一年提交69次
+    <div class="text-area">
+      <div>
+        过去一年共提交
+        <span style="font-size: 1.1rem; color: #262626">{{totalNum}}</span>
+        次
+      </div>
+
+      <div style="margin-left: auto; color: #8a8a8e">
+        累积提交天数:
+        <span style="color: #5c5c5c">{{totalDay}}</span>
+        <a-select v-model:value="yearSelected" style="width: 6.5rem; margin-left: 1.5rem;" >
+          <a-select-option value="lastYear">过去一年</a-select-option>
+        </a-select>
+      </div>
+
     </div>
 
-    <div>
-      <div id="heatmap" style="width: 55rem; height: 12rem"></div>
+    <div class="heatmap-container">
+      <div id="heatmap" style="width: 40rem; height: 7rem"></div>
     </div>
   </div>
 </template>
@@ -14,7 +27,7 @@
 <script lang="ts">
 
 import * as echarts from 'echarts';
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 
 export default {
   name: "user-heat-map",
@@ -22,7 +35,18 @@ export default {
 
   setup() {
 
-    function getVirtualData() {
+    let totalNum = ref(128);
+    let totalDay = ref(67);
+    let yearSelected = ref('lastYear');
+    let changeSelectorStyle = () =>{
+      let selector = document.getElementsByClassName('ant-select-selector')[0] as HTMLElement;
+      selector.style.border = 'none';
+      selector.style.background = '#f2f3f4';
+      selector.style.borderRadius =  '0.3rem';
+      selector.style.color = '#595959';
+    }
+
+    let getVirtualData = () => {
       let today = Number(echarts.number.parseDate(new Date()));
       let dayTime = 3600 * 24 * 1000;
       let thatday = today - dayTime * 365;
@@ -39,9 +63,7 @@ export default {
         thatday: echarts.format.formatTime('yyyy-MM-dd', thatday)
       };
     }
-
-    onMounted(() => {
-
+    let renderChart = () => {
       let myChart = echarts.init(document.getElementById('heatmap') as HTMLElement);
       let option = {
         //todo 根据从后端获取到的最大值设置max
@@ -51,7 +73,7 @@ export default {
           inRange: {
             color: ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196027', '#175b2f']
           },
-          show: false
+          show: false,
         },
 
         // 显示提交数量与日期
@@ -69,6 +91,8 @@ export default {
         },
         backgroundColor: '#fff',
         calendar: {
+          top: 0,
+          left: 0,
           cellSize: [12, 12],
           range: [getVirtualData()['thatday'], getVirtualData()['today']],
           itemStyle: {
@@ -80,24 +104,38 @@ export default {
           },
           yearLabel: {show: false},
           //x轴坐标
-          monthLabel:{
-            nameMap: ['', '', '', '', '', '', '','','','','','']
+          monthLabel: {
+            position: 'bottom',
+            textStyle: {
+              color: '#afb4bd'
+            },
+            padding: [3, 0, 0, 0]
           },
           //y轴坐标
-          dayLabel:{
-            nameMap: ['', '', '', '', '', '', '']
+          dayLabel: {
+            show: false,
           }
         },
         series: {
           type: 'heatmap',
           coordinateSystem: 'calendar',
           data: getVirtualData()['data'],
-          top: 0,
         },
       };
 
       myChart.setOption(option);
+    }
+
+    onMounted(() => {
+      renderChart();
+      changeSelectorStyle();
     })
+
+    return{
+      totalNum,
+      totalDay,
+      yearSelected,
+    }
 
   }
 
@@ -110,6 +148,21 @@ export default {
   background-color: white;
   border-radius: 1rem;
   padding: 1rem;
+  font-family: 微软雅黑;
+}
+
+.text-area{
+  text-align: left;
+  color: #5c5c5c;
+  font-size: 0.9rem;
+  padding-bottom: 0.8rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.heatmap-container{
+  overflow-x: auto;
+  display: inline-block;
 }
 
 </style>

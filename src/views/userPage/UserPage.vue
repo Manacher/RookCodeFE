@@ -9,35 +9,40 @@
     <a-layout-content class="content-area">
 
       <a-row :gutter="12">
-        <a-col >
-            <UserStatistics :value="statisticsData" style="height: 20vh"/>
+
+        <a-col flex="16rem">
+          <UserInfoDetail style="height: 50rem; width:100%"/>
         </a-col>
 
-        <a-col >
-            <UserHeatMap style="height: 20vh"/>
+        <a-col flex="auto">
+          <a-layout-content>
+            <a-row :gutter="12">
+
+              <a-col flex="26rem">
+                <UserStatistics :value="statisticsData" style="height: 11rem"/>
+              </a-col>
+
+              <a-col flex="auto">
+                <UserHeatMap style="height: 11rem"/>
+              </a-col>
+
+            </a-row>
+
+
+          </a-layout-content>
+          <a-row class="content-bottom">
+            <a-col flex="0"/>
+            <a-col flex="auto">
+              <UserList/>
+            </a-col>
+          </a-row>
         </a-col>
 
       </a-row>
 
 
-
-
-<!--      <div class="content-top">-->
-
-<!--        <div class="statistics">-->
-<!--          <UserStatistics :value="statisticsData"/>-->
-<!--        </div>-->
-
-<!--        <div class="heatmap">-->
-<!--          <UserHeatMap/>-->
-<!--        </div>-->
-<!--      </div>-->
-
-      <div class="content-bottom">
-        <UserList/>
-      </div>
-
     </a-layout-content>
+
   </a-layout>
 
 
@@ -52,9 +57,11 @@ import UserInfoCard from './UserInfoCard.vue'
 import UserStatistics from './UserStatistics.vue'
 import UserHeatMap from './UserHeatMap.vue'
 import UserList from './UserList.vue'
+import UserInfoDetail from "@/views/userPage/UserInfoDetail.vue";
 
 export default defineComponent({
   components: {
+    UserInfoDetail,
     UserInfoCard,
     UserStatistics,
     UserHeatMap,
@@ -77,6 +84,8 @@ export default defineComponent({
       hardSolved: 91
     })
 
+    console.log(window.innerWidth)
+
     return {
       isSelfPage,
       statisticsData,
@@ -91,8 +100,40 @@ export default defineComponent({
 
 .main-area {
   padding: 2rem 10rem 0 10rem;
-  width: 100vw;
+  width: 99vw;
 }
+
+@media screen and (min-width: 101rem) and (max-width: 105rem) {
+  .main-area {
+    padding: 2rem 8rem 0 8rem;
+  }
+}
+
+@media screen and (min-width: 97rem) and (max-width: 101rem) {
+  .main-area {
+    padding: 2rem 6rem 0 6rem;
+  }
+}
+
+@media screen and (min-width: 93rem) and (max-width: 97rem) {
+  .main-area {
+    padding: 2rem 4rem 0 4rem;
+  }
+}
+
+@media screen and (min-width: 89rem) and (max-width: 93rem) {
+  .main-area {
+    padding: 2rem 2rem 0 2rem;
+  }
+}
+
+@media screen and (max-width: 89rem) {
+  .main-area {
+    padding: 2rem 0 0 0;
+  }
+}
+
+
 
 .user-info {
 
@@ -103,11 +144,8 @@ export default defineComponent({
 }
 
 
-.content-bottom{
-  width: 100%;
-  height: 30rem;
+.content-bottom {
   margin-top: 1rem;
-  background-color: lightseagreen;
 }
 
 

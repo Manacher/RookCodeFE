@@ -369,7 +369,7 @@ export default {
 
 .search-bar-item span {
   font-size: 1rem;
-  margin-top: 0.3rem;
+  margin-top: 0.2rem;
   margin-right: 0.5rem;
 }
 

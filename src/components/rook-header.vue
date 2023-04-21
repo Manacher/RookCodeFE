@@ -94,6 +94,10 @@ export default {
       // 设置card样式s
       let cardDetail = document.querySelector('.ant-card-meta-detail') as HTMLElement
       cardDetail.style.paddingLeft = '0.5rem'
+
+      // 去除antd原生header的padding元素
+      let header = document.querySelector('ant-layout-header header') as HTMLElement
+
     })
 
     // 个人头像点击事件，当卡片未显示时，点击头像让卡片出现，并添加鼠标监听事件
@@ -210,6 +214,52 @@ export default {
 
 .center-card-action-item span{
   vertical-align: middle;
+}
+
+
+@media screen and (min-width: 101rem) and (max-width: 105rem) {
+  .logo {
+    margin-left: 5rem;
+  }
+  .right-item{
+    right: 7.5rem;
+  }
+}
+
+@media screen and (min-width: 97rem) and (max-width: 101rem) {
+  .logo {
+    margin-left: 4rem;
+  }
+  .right-item{
+    right: 5.5rem;
+  }
+}
+
+@media screen and (min-width: 93rem) and (max-width: 97rem) {
+  .logo {
+    margin-left: 3rem;
+  }
+  .right-item{
+    right: 3.5rem;
+  }
+}
+
+@media screen and (min-width: 89rem) and (max-width: 93rem) {
+  .logo {
+    margin-left: 2rem;
+  }
+  .right-item{
+    right: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 89rem) {
+  .logo {
+    margin-left: 1rem;
+  }
+  .right-item{
+    right: 0;
+  }
 }
 
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <a-layout>
+  <a-layout class="front-page-main-area">
 
     <a-layout-content class="layout-content">
 
@@ -69,5 +69,36 @@ export default defineComponent({
   align-items: center;
   margin-left: 2rem;
 }
+
+@media screen and (min-width: 101rem) and (max-width: 105rem) {
+  .layout-content {
+    padding: 2rem 8rem 0 8rem;
+  }
+}
+
+@media screen and (min-width: 97rem) and (max-width: 101rem) {
+  .layout-content {
+    padding: 2rem 6rem 0 6rem;
+  }
+}
+
+@media screen and (min-width: 93rem) and (max-width: 97rem) {
+  .layout-content {
+    padding: 2rem 4rem 0 4rem;
+  }
+}
+
+@media screen and (min-width: 89rem) and (max-width: 93rem) {
+  .layout-content {
+    padding: 2rem 2rem 0 2rem;
+  }
+}
+
+@media screen and (max-width: 89rem) {
+  .layout-content {
+    padding: 2rem 0 0 0;
+  }
+}
+
 
 </style>

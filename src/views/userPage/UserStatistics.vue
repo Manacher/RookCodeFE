@@ -9,12 +9,13 @@
 
     <div class="progress-display">
       <div class="progress-line-chart">
+
         <a-tooltip title="简单">
           <a-progress :percent="value.easySolved / value.easyTotal * 100"
                       size="large"
                       strokeColor="#00af9b"
                       :showInfo="false"
-                      style="padding-bottom: 0.8rem; padding-top: 1.1rem"/>
+                      style="padding-bottom: 0.8rem"/>
         </a-tooltip>
 
         <a-tooltip title="中等">
@@ -39,7 +40,7 @@
         <a-row :gutter="12">
 
           <a-col :span="8">
-            <span class="dif-text" style="color: #00af9b; padding-bottom: 0.5rem">简单</span>
+            <span class="dif-text" style="color: #00af9b;">简单</span>
             <div>
               <span class="static-solve-span">{{ value.easySolved }}</span>
               <a-divider style="margin:0"/>
@@ -49,7 +50,7 @@
 
           <a-col :span="8">
             <div>
-              <span class="dif-text" style="color: #ffb800; padding-bottom: 0.5rem">中等</span>
+              <span class="dif-text" style="color: #ffb800;">中等</span>
             </div>
 
             <div>
@@ -60,7 +61,7 @@
           </a-col>
 
           <a-col :span="8">
-            <span class="dif-text" style="color: #ff2d55; padding-bottom: 0.5rem">困难</span>
+            <span class="dif-text" style="color: #ff2d55;">困难</span>
             <div>
               <span class="static-solve-span">{{ value.hardSolved }}</span>
               <a-divider style="margin:0"/>
@@ -99,7 +100,10 @@ export default {
           text: props.value.easySolved+props.value.mediumSolved+props.value.hardSolved + '\n解决问题',
           color: 'grey',
           left: 'center',
-          top: 'center'
+          top: 'center',
+          textStyle:{
+            fontSize:15
+          }
         },
         series: [
           {
@@ -113,6 +117,7 @@ export default {
             labelLine: {
               show: false
             },
+            silent: true,
             data: [
               {value: props.value.easySolved, itemStyle: {color: '#00af9b'}},
               {value: props.value.mediumSolved, itemStyle: {color: '#ffb800'}},
@@ -146,9 +151,9 @@ export default {
 }
 
 #echarts-container {
-  width: 7rem;
-  height: 7rem;
-  margin-top: 2.5rem;
+  width: 6rem;
+  height: 6rem;
+  margin-top: 2rem;
 }
 
 .progress-display {
@@ -156,21 +161,20 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 0.9rem;
 }
 
 .progress-line-chart {
-  width: 8rem;
+  width: 6rem;
   margin-right: 0.8rem;
   margin-left: 1.5rem;
+  font-size: 0.5rem;
 }
 
 .progress-statistics {
   flex: 1;
-  line-height: 130%;
-  margin-top: 1.2rem;
 }
 
 .static-solve-span {
