@@ -4,7 +4,7 @@
     <div class="text-area">
       <div>
         过去一年共提交
-        <span style="font-size: 1.1rem; color: #262626">{{totalNum}}</span>
+        <span style="font-size: 1.1rem; color: #262626; font-weight: bold">{{totalNum}}</span>
         次
       </div>
 
@@ -149,6 +149,7 @@ export default {
   border-radius: 1rem;
   padding: 1rem;
   font-family: 微软雅黑;
+  box-shadow: 0 2px 8px lightgrey;
 }
 
 .text-area{
