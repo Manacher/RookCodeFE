@@ -33,7 +33,7 @@
           v-model:value="tagSelected"
           :maxTagCount="tagNumMaxi"
           show-search
-          style="width: 20rem; text-align: left; height: 2rem"
+          style="width: 20rem; text-align: left; height: 2rem; margin-right: 1.2rem"
           :dropdown-style="{ maxHeight: '40rem', overflow: 'auto' }"
           placeholder="筛选标签"
           allow-clear
@@ -55,7 +55,7 @@
           v-model:value="inputContent"
           placeholder="搜索题目或编号"
           size="small"
-          style="height: 2rem; margin-left: 2rem;width: 15rem">
+          style=" height: 1.9rem; margin: auto;width: 14rem">
 
         <template #prefix>
           <search-outlined style="color: #959595"/>
@@ -65,7 +65,7 @@
       <div>
         <a-button type="primary"
                   size="small"
-                  style="margin-top: 0.2rem"
+                  style="margin-top: 0.1rem; margin-left: 1rem; height: 1.8rem;width: 4rem"
                   @click="onSearchClicked">
           搜索
         </a-button>
@@ -368,15 +368,15 @@ export default {
 }
 
 .search-bar-item span {
-  margin: auto;
-  margin-right: 1rem;
   font-size: 1rem;
+  margin-top: 0.3rem;
+  margin-right: 0.5rem;
 }
 
 .search-bar-item-select {
   width: 6rem;
   height: 2rem;
-  margin-right: 1.5rem;
+  margin-right: 1.2rem;
   text-align: left;
   color: #2c3e50;
 }

@@ -60,7 +60,7 @@ export default defineComponent({
 
 
 .layout-content {
-  padding: 2rem 10rem 0 10rem
+  padding: 2rem 10rem 0 10rem;
 }
 
 .right-side {
