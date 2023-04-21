@@ -1,23 +1,31 @@
 <template>
-  <a-list item-layout="vertical" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
+    <a-list item-layout="horizontal" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
 
-    <template #renderItem="{ item }">
-      <a-list-item key="item.title">
-        <div>
-          <a :href= "`/submission/${item.id}`" style="color: #262626">{{ item.title }}</a>
-          <span style="float: right">{{ item.date }}</span>
-        </div>
+      <template #renderItem="{ item }">
+        <a-list-item key="item.title">
+          <template #actions>
+            <div>
+              <span style="margin-right: 1rem">提交时间</span>
+              <span>{{ item.date }}</span>
+            </div>
 
-      </a-list-item>
-    </template>
-  </a-list>
+          </template>
+
+          <div>
+            <a @click="onTitleClicked(item.id)" style="color: #262626">{{ item.title }}</a>
+          </div>
+
+        </a-list-item>
+      </template>
+    </a-list>
+
 </template>
 
 <script lang="ts">
 
 let listData: { title: string; date: string; id: number; }[] = [];
 
-for (let i = 0; i < 23; i++) {
+for (let i = 0; i < 100; i++) {
   listData.push({
     title: `剑指Offer 12.矩阵中的路径 ${i}`,
     date: '2021-05-01',
@@ -28,16 +36,22 @@ for (let i = 0; i < 23; i++) {
 export default {
   name: "UserRecentPassList",
   setup() {
+
+    let onTitleClicked = (id : number) => {
+      window.open(`/solution/${id}`)
+    }
+
     const pagination = {
       onChange: (page: number) => {
         console.log(page);
       },
-      pageSize: 3,
+      pageSize: 15,
     };
 
     return {
       listData,
       pagination,
+      onTitleClicked,
     };
   },
 }

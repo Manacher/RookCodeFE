@@ -7,15 +7,13 @@
         <template #tab>
         <span>
           <field-time-outlined />
-          最近通过
+          最近提交
         </span>
         </template>
 
         <div style="display: inline-block;">
           <UserRecentPassList/>
         </div>
-
-
 
 
 
@@ -29,8 +27,9 @@
         </span>
         </template>
 
-        <!--    todo 题解发布列表-->
-        <UserPublishList style="width: 50rem"/>
+        <div style="display: inline-block;">
+          <UserPublishList/>
+        </div>
 
       </a-tab-pane>
 
@@ -62,6 +61,7 @@ export default {
   border-radius: 1rem;
   text-align: left;
   width: 100%;
+  box-shadow: 0 2px 8px lightgrey;
 }
 
 </style>

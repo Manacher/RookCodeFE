@@ -1,15 +1,84 @@
 <template>
-  <div>
-    近期题解发布列表
-  </div>
+  <a-list item-layout="horizontal" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
+
+    <template #renderItem="{ item }">
+
+      <a-list-item key="item.title">
+        <template #actions>
+            <span class="publish-list-action-item">
+              <like-outlined style="margin-right: 0.3rem"/>{{ item.like }}</span>
+
+          <span class="publish-list-action-item">
+              <eye-outlined style="margin-right: 0.3rem"/>{{ item.view }}</span>
+
+
+          <span class="publish-list-action-item">
+              {{ item.date }}</span>
+
+          <a @click="onEditClicked(item.id)">编辑</a>
+
+        </template>
+
+        <div>
+          <a style="color: #262626" @click="onTitleClicked(item.id)">{{ item.title }}</a>
+        </div>
+
+      </a-list-item>
+    </template>
+  </a-list>
+
 </template>
 
-<script>
+<script lang="ts">
+
+let listData: { title: string; date: string; id: number; like: number; view: number; }[] = [];
+
+for (let i = 0; i < 100; i++) {
+  listData.push({
+    title: `93. 复原 IP 地址 - C++ 时间击败100% ${i}`,
+    date: '2021-05-01',
+    id: i,
+    like: 13,
+    view: 123,
+  });
+}
+
 export default {
-  name: "UserPublishList"
+  name: "UserPublishList",
+  setup() {
+
+    let onTitleClicked = (id: number) => {
+      window.open(`/solution/${id}`)
+    }
+
+    let onEditClicked = (id: number) => {
+      window.open(`/solution/edit/${id}`)
+    }
+
+    console.log(window.innerWidth)
+    const pagination = {
+      onChange: (page: number) => {
+        console.log(page);
+      },
+      pageSize: 15,
+    };
+
+    return {
+      listData,
+      pagination,
+      onTitleClicked,
+      onEditClicked,
+    };
+  },
 }
 </script>
 
 <style scoped>
+
+.publish-list-action-item {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem
+}
+
 
 </style>
