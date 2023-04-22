@@ -1,29 +1,30 @@
 <template>
   <a-list item-layout="horizontal" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
 
-    <template #renderItem="{ item }">
+    <template #renderItem="{item, index}">
 
-      <a-list-item key="item.title">
+      <a-list-item key="item.title"
+                   :style= "{'background-color':(index%2 === 1 ? '#fff' : '#f7f7f8'),
+                   'border-radius': (index%2 === 1 ? '0' : '0.35rem')}">
+
         <template #actions>
             <span class="publish-list-action-item">
               <like-outlined style="margin-right: 0.3rem"/>{{ item.like }}</span>
-
           <span class="publish-list-action-item">
               <eye-outlined style="margin-right: 0.3rem"/>{{ item.view }}</span>
-
-
           <span class="publish-list-action-item">
               {{ item.date }}</span>
-
           <a @click="onEditClicked(item.id)">编辑</a>
-
         </template>
-
         <div>
           <a style="color: #262626" @click="onTitleClicked(item.id)">{{ item.title }}</a>
         </div>
 
       </a-list-item>
+
+
+
+
     </template>
   </a-list>
 

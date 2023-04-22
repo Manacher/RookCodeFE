@@ -1,8 +1,10 @@
 <template>
     <a-list item-layout="horizontal" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
 
-      <template #renderItem="{ item }">
-        <a-list-item key="item.title">
+      <template #renderItem="{item, index}">
+        <a-list-item key="item.title"
+                     :style= "{'background-color':(index%2 === 1 ? '#fff' : '#f7f7f8'),
+                   'border-radius': (index%2 === 1 ? '0' : '0.35rem')}">
           <template #actions>
             <div>
               <span style="margin-right: 1rem">提交时间</span>
@@ -10,7 +12,6 @@
             </div>
 
           </template>
-
           <div>
             <a @click="onTitleClicked(item.id)" style="color: #262626">{{ item.title }}</a>
           </div>
