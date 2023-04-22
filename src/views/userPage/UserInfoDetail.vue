@@ -120,7 +120,7 @@ export default {
   name: "UserInfoDetail",
   setup() {
 
-    let modalVisible = ref(true)
+    let modalVisible = ref(false)
     let modalLoading = ref(false)
     let handleModalOK = () => {
       location.reload()

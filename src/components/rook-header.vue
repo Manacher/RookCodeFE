@@ -71,6 +71,10 @@
 
   </a-layout-header>
 
+  <div class="header-placeholder">
+
+  </div>
+
 
 </template>
 
@@ -227,6 +231,12 @@ export default {
   vertical-align: middle;
 }
 
+.header-placeholder{
+  height: 0.1rem;
+  width: 100%;
+  background-color: #f0f0f0;
+}
+
 
 @media screen and (min-width: 101rem) and (max-width: 105rem) {
   .logo {
@@ -277,5 +287,6 @@ export default {
     right: 0;
   }
 }
+
 
 </style>
