@@ -1,8 +1,9 @@
 <template>
-    <a-list item-layout="horizontal" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
+    <a-list item-layout="horizontal" id="pass-list" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
 
       <template #renderItem="{item, index}">
         <a-list-item key="item.title"
+                     @click="onTitleClicked(item.id)"
                      :style= "{'background-color':(index%2 === 1 ? '#fff' : '#f7f7f8'),
                    'border-radius': (index%2 === 1 ? '0' : '0.35rem')}">
           <template #actions>
@@ -13,7 +14,7 @@
 
           </template>
           <div>
-            <a @click="onTitleClicked(item.id)" style="color: #262626">{{ item.title }}</a>
+            <a  style="color: #262626">{{ item.title }}</a>
           </div>
 
         </a-list-item>
@@ -59,5 +60,9 @@ export default {
 </script>
 
 <style scoped>
+
+#pass-list .ant-list-item{
+  cursor: pointer;
+}
 
 </style>

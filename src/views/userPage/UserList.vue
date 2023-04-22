@@ -1,13 +1,13 @@
 <template>
   <div class="user-list-area">
     <a-tabs v-model:activeKey="activeKey"
-            style="padding: 0.5rem 1rem;">
+            style="padding: 0.5rem 1.5rem;">
 
       <a-tab-pane key="1">
         <template #tab>
         <span>
           <field-time-outlined />
-          最近提交
+          最近通过
         </span>
         </template>
 
