@@ -271,7 +271,7 @@ export default defineComponent({
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-15%, -35%);
+  transform: translate(-50%, -40%);
 }
 
 .login-form {

@@ -3,7 +3,7 @@
   <router-link to="/login">登录</router-link>|
   <router-link to="/register">注册</router-link>|
   <router-link to="/solutions">题解</router-link>|
-  <router-link to="/qtestcases">上传测试用例</router-link>
+  <router-link to="/qtestcases">测试用例</router-link>
   <router-view/>
 </template>
 
@@ -13,7 +13,7 @@ import axios from "axios";
 import {defineComponent, onMounted,computed} from "vue";
 import Register from '@/views/Register.vue'
 import Login from "@/views/Login.vue";
-import QTestCases from "@/components/QTestCases.vue"
+import QTestCases from "@/views/QTestCases.vue"
 import store  from "@/store";
 
 export default defineComponent({

@@ -26,7 +26,7 @@ const routes: Array<RouteRecordRaw> = [
     name:'QTestcases',
     /*下面为登录限制,是否需要登录验证，当根目录被限制时，其子模块也将被限制*/
     //meta:{requiresAuth:false},
-    component:()=>import("@/components/QTestCases.vue")
+    component:()=>import("@/views/QTestCases.vue")
   }
 ]
 

@@ -1,7 +1,5 @@
 <template>
-
-
-  <a-layout  class="qtestcases-main-box">
+  <a-layout  class="qtestcasesup-main-box">
     <a-form
         style="padding-top: 1rem;padding-left: 0rem"
         ref="formRef"
@@ -12,7 +10,7 @@
           v-for="(domain, index) in dynamicValidateForm.domains"
           :key="domain.key"
           :name="['domains', index, 'value']"
-          :rules="{required: true,message: 'domain can not be null',trigger: 'change',
+          :rules="{required: true,message: '输入输出都不得为空',trigger: 'change',
       }"
       >
         <!--输入，输出    -->
@@ -30,7 +28,8 @@
           <a-col :span="8">
             <a-input
                 style="width: 100%;float: left;"
-                placeholder="测试输入" />
+                placeholder="测试输入"
+                />
           </a-col>
           <a-col :span="2">
             <h4
@@ -65,7 +64,9 @@
         </a-button>
       </a-form-item>
       <a-form-item>
-        <a-button type="primary"  @click="submitForm" style="width: 50%">上传</a-button>
+        <a-button
+            type="primary"  @click="submitForm"
+            style="width: 50%;background-color:green ">上传</a-button>
 <!--        <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>-->
       </a-form-item>
     </a-form>
@@ -75,9 +76,10 @@
 </template>
 <script lang="ts">
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons-vue';
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref,h } from 'vue';
 import type { FormInstance } from 'ant-design-vue';
-
+import { SmileOutlined } from '@ant-design/icons-vue';
+import { notification } from 'ant-design-vue';
 interface Domain {
   input: string;
   output:string,
@@ -90,34 +92,15 @@ export default defineComponent({
   },
   setup() {
     const formRef = ref<FormInstance>();
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 4 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 20 },
-      },
-    };
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 4 },
-      },
-    };
+
     const dynamicValidateForm = reactive<{ domains: Domain[] }>({
       domains: [],
+
     });
+
+    //提交表单
     const submitForm = () => {
-      formRef.value
-          .validate()
-          .then(() => {
-            console.log('values', dynamicValidateForm.domains);
-          })
-          .catch(error => {
-            console.log('error', error);
-          });
+      //发送请求，上传字符串
     };
     //重置表单
     const resetForm = () => {
@@ -134,16 +117,30 @@ export default defineComponent({
 
     //添加域
     const addDomain = () => {
-      dynamicValidateForm.domains.push({
-        input: '',
-        output:'',
-        key: Date.now(),
-      });
+
+      //不能超过10条测试用例
+      let len=dynamicValidateForm.domains.length
+      if(len<10){
+        dynamicValidateForm.domains.push({
+          input: '',
+          output:'',
+          key: Date.now(),
+        });
+      }else{
+        notification.open({
+          message: '提醒',
+          description:
+              '测试数据最多为10条!',
+          icon: () => h(SmileOutlined, { style: 'color: #108ee9' }),
+        });
+      }
+
+
     };
     return {
       formRef,
-      formItemLayout,
-      formItemLayoutWithOutLabel,
+
+      //数据
       dynamicValidateForm,
       submitForm,
       resetForm,
@@ -156,20 +153,14 @@ export default defineComponent({
 <style>
 
 
-.qtestcases-main-box{
+.qtestcasesup-main-box{
 
   width:100%;
   height:100%;
   position:fixed;
   background-size:100% 100%;
-  background-color: #d1c2d3;
   border-radius: 5px;
-  box-shadow: 0 0 5px 1px #999;
-
-
 }
-
-
 .dynamic-delete-button {
   cursor: pointer;
   position: relative;
