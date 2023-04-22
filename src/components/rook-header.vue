@@ -40,10 +40,11 @@
               <div>
                 <a-popconfirm title="确认退出登陆吗？" ok-text="是" cancel-text="否">
 
-                    <a href="#" style="margin-right: 1rem">
-                      <img src="../assets/exit.png" style="height: 1rem; width: 1rem; margin-bottom: 0.2rem; margin-right: 0.3rem"/>
-                      <span>退出</span>
-                    </a>
+                  <a href="#" style="margin-right: 1rem">
+                    <img src="../assets/exit.png"
+                         style="height: 1rem; width: 1rem; margin-bottom: 0.2rem; margin-right: 0.3rem"/>
+                    <span>退出</span>
+                  </a>
                 </a-popconfirm>
               </div>
             </template>
@@ -63,7 +64,7 @@
         <router-link to="/">首页</router-link>
       </a-menu-item>
 
-      <a-menu-item key="discussion">
+      <a-menu-item key="/discussion">
         <router-link to="/discussion">讨论</router-link>
       </a-menu-item>
     </a-menu>
@@ -76,6 +77,7 @@
 <script lang="ts">
 
 import {onMounted, ref} from "vue";
+import router from "@/router";
 
 
 export default {
@@ -84,7 +86,12 @@ export default {
 
     console.log("header init")
 
+    let currentPath = window.location.pathname;
     let navKeys = ref(['/']);
+    navKeys.value = [currentPath]
+
+    console.log("current path", currentPath)
+
     let cardShow = ref(false);
     let centerCard: any;
 
@@ -122,7 +129,8 @@ export default {
       }
     }
 
-    let onCardClicked = () =>{
+    let onCardClicked = () => {
+      document.removeEventListener('click', watchNextClick)
       cardShow.value = false;
       navKeys.value = ['/user']
     }
@@ -199,21 +207,23 @@ export default {
   font-size: 0.8rem;
 }
 
-.right-item{
+.right-item {
   position: absolute;
   right: 9.5rem;
   width: 3rem;
   height: 3rem;
 }
 
-.center-card-action-item img{
+
+.center-card-action-item img {
   vertical-align: middle;
   margin-right: 0.3rem;
   height: 1rem;
   width: 1rem;
 }
 
-.center-card-action-item span{
+
+.center-card-action-item span {
   vertical-align: middle;
 }
 
@@ -222,7 +232,8 @@ export default {
   .logo {
     margin-left: 5rem;
   }
-  .right-item{
+
+  .right-item {
     right: 7.5rem;
   }
 }
@@ -231,7 +242,8 @@ export default {
   .logo {
     margin-left: 4rem;
   }
-  .right-item{
+
+  .right-item {
     right: 5.5rem;
   }
 }
@@ -240,7 +252,8 @@ export default {
   .logo {
     margin-left: 3rem;
   }
-  .right-item{
+
+  .right-item {
     right: 3.5rem;
   }
 }
@@ -249,7 +262,8 @@ export default {
   .logo {
     margin-left: 2rem;
   }
-  .right-item{
+
+  .right-item {
     right: 1.5rem;
   }
 }
@@ -258,7 +272,8 @@ export default {
   .logo {
     margin-left: 1rem;
   }
-  .right-item{
+
+  .right-item {
     right: 0;
   }
 }

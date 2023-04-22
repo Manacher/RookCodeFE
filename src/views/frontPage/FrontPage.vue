@@ -58,6 +58,9 @@ export default defineComponent({
 </script>
 <style scoped>
 
+.front-page-main-area{
+  min-width: 88rem;
+}
 
 .layout-content {
   padding: 2rem 10rem 0 10rem;
