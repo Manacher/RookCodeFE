@@ -18,15 +18,15 @@
 
         <div class="contribution-item">
           <eye-outlined style="color: #007aff"/>
-          <span style="color: #5c5c5c">阅读总数</span>
-          <span style="color: #262626">110</span>
+          <span style="color: #5c5c5c; margin-left: 0.5rem">阅读总数</span>
+          <span style="color: #262626; margin-left: 0.5rem">110</span>
 
         </div>
 
         <div class="contribution-item">
           <like-outlined style="color: #00af9b"/>
-          <span style="color: #5c5c5c">获得点赞</span>
-          <span style="color: #262626">1</span>
+          <span style="color: #5c5c5c; margin-left: 0.5rem">获得点赞</span>
+          <span style="color: #262626; margin-left: 0.5rem">1</span>
         </div>
 
       </div>
@@ -60,23 +60,21 @@
         v-model:visible="modalVisible"
         :confirm-loading="modalLoading"
         @ok="handleModalOK"
+        cancelText="取消"
+        ok-text="保存"
     >
-      <a-form :model="userinfo" :label-col="{span: 6}" :wrapper-col="{span: 18}">
+      <a-form :model="editInfo" :label-col="{span: 6}" :wrapper-col="{span: 18}">
 
         <a-form-item label="头像">
-
           <a-upload :file-list="fileList" :before-upload="beforeUpload" class="avatar-uploader">
-
             <div class="user-avatar-area">
-              <img :src="imageSrc" alt="avatar" style="width: 10rem; height: 10rem; border-radius: 1rem; margin-left: 4rem;"/>
+              <img :src="editInfo.imageSrc" alt="avatar" style="width: 10rem; height: 10rem; border-radius: 1rem; margin-left: 4rem;"/>
               <div id="avatar-hover-div">
                 <a-space direction="vertical" :size="2" style="align-items: center; margin-left: 1.9rem; margin-top: 3.4rem">
                   <plus-circle-outlined style="font-size: 2rem"/>
                   <span style="font-size: 1rem">点击修改头像</span>
                 </a-space>
-
               </div>
-
             </div>
 
 
@@ -84,10 +82,10 @@
         </a-form-item>
 
         <a-form-item label="昵称">
-          <a-input v-model:value="userinfo.nickname" placeholder="请输入新的昵称"/>
+          <a-input v-model:value="editInfo.nickName" placeholder="请输入新的昵称"/>
         </a-form-item>
         <a-form-item label="个人简介">
-          <a-input v-model:value="userinfo.description" placeholder="请输入新的简介"/>
+          <a-input v-model:value="editInfo.description" placeholder="请输入新的简介"/>
         </a-form-item>
 
 
@@ -127,17 +125,19 @@ export default {
     }
 
     let onEditClicked = () => {
+      editInfo.value.imageSrc = userinfo.value.avatar
+      editInfo.value.nickName = userinfo.value.nickname
+      editInfo.value.description = userinfo.value.description
       modalVisible.value = true;
-      console.log("clicked")
     }
 
 
     const fileList = ref<any>([]);
     const uploading = ref<boolean>(false);
-    let imageSrc = ref("")
-
-    onMounted(() => {
-      imageSrc.value = userinfo.value.avatar
+    let editInfo = ref({
+      nickName: userinfo.value.nickname,
+      description: userinfo.value.description,
+      imageSrc: userinfo.value.avatar,
     })
 
     async function getBase64(file: any) {
@@ -147,7 +147,7 @@ export default {
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result as string);
       });
-      imageSrc.value = src;
+      editInfo.value.imageSrc = src;
     }
 
     const beforeUpload = (file: any) => {
@@ -178,7 +178,7 @@ export default {
       fileList,
       uploading,
       beforeUpload,
-      imageSrc,
+      editInfo,
     };
   },
 }
