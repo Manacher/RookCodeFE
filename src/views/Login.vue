@@ -57,9 +57,7 @@
           </a-col>
           <a-col :span="8">
             <!--    发送验证码，然后设置倒计时    -->
-            <a-form-item>
-              <img :src="imgUrl" alt="验证码" @click="changeCaptcha">
-            </a-form-item>
+            <img :src="imgUrl" alt="验证码" @click="changeCaptcha" style="height: 60%">
           </a-col>
 
         </a-row>
@@ -72,7 +70,8 @@
             <a-form-item>
               <a-button
                   block
-                  @click="gotoRegister">注册</a-button>
+                  @click="gotoRegister"
+                  style="border-radius: 5px">注册</a-button>
             </a-form-item>
           </a-col>
 
@@ -82,7 +81,8 @@
                   block
                   type="primary"
                   @click="try_login"
-                  html-type="submit">登录</a-button>
+                  html-type="submit"
+              style="background-color: green;border-radius: 5px">登录</a-button>
             </a-form-item>
           </a-col>
         </a-row>
@@ -155,36 +155,42 @@ export default defineComponent({
     //尝试登录
     const try_login = () => {
 
+      if(formState_login.email!=""&&formState_login.pass!=""
+          &&formState_login.VerificationCode!=""){
+        axios.post("http://175.178.221.165:8081/users/login",{
+          "account": formState_login.email,
+          "code": formState_login.VerificationCode,
+          "password": formState_login.pass
+        },{
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }).then((res) => {
+          console.log(res.data)
+          //判断登录是否成功
+          if(res.data.success==true){
 
-      axios.post("http://175.178.221.165:8081/users/login",{
-        "account": formState_login.email,
-        "code": formState_login.VerificationCode,
-        "password": formState_login.pass
-      },{
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => {
-        console.log(res.data)
-        //判断登录是否成功
-        if(res.data.success==true){
+            const userInfo={
+              token:res.data.data.token,
+              id:res.data.data.users.id
+            }
+            //保存token
+            store.commit("login",userInfo);
+            //跳转到主页
 
-          const userInfo={
-            token:res.data.data.token,
-            id:res.data.data.users.id
+          }else{
+            notification['error']({
+              message: '登录失败',
+              description:
+                  '请检查账号密码',
+            });
           }
-          //保存token
-          store.commit("login",userInfo);
-          //跳转到主页
+        })
+      }
 
-        }else{
-          notification['error']({
-            message: '登录失败',
-            description:
-                '请检查账号密码',
-          });
-        }
-      })
+
+
+
     };
 
 

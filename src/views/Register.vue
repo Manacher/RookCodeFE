@@ -49,6 +49,7 @@
               <a-button
                   type="primary"
                   block
+                  style="background-color: green;border-radius: 0px"
                   @click="sendCode">{{ counter === 0 ? '发送验证码' : counter+'秒之后再试' }}</a-button>
             </a-form-item>
           </a-col>
@@ -80,7 +81,8 @@
             <a-form-item>
               <a-button
                   block
-                  @click="() => formRef.resetFields()">重置</a-button>
+                  @click="() => formRef.resetFields()"
+                  style="border-radius: 5px">重置</a-button>
             </a-form-item>
           </a-col>
 
@@ -90,7 +92,8 @@
                   block
                   type="primary"
                   html-type="submit"
-                  @click="tryRegister">注册</a-button>
+                  @click="tryRegister"
+                  style="background-color: green;border-radius: 5px">注册</a-button>
             </a-form-item>
           </a-col>
         </a-row>
@@ -213,59 +216,87 @@ export default defineComponent({
 
     //发送验证码函数
     const sendCode=()=>{
+
       //尝试发送验证码
       if(counter.value==0){
-        try{
-          //计时器的相关操作
-          counter.value = 20
-          const timer = setInterval(() =>{
-            if(counter.value === 0){
-              //清除定时器
-              clearInterval(timer)
-            } else {
-              counter.value--
+        //首先得确保邮箱不为空
+        if(formState.email!=""){
+          let pass=new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,15}$/);
+          if(!pass.test(formState.email)){
+            notification.open({
+              message: '提示！',
+              description:
+                  '请输入正确的邮箱!',
+              onClick: () => {
+                console.log('Notification Clicked!');
+              },
+            });
+          }
+          else{
+            //开始倒计时
+            try{
+              //计时器的相关操作
+              counter.value = 20
+              const timer = setInterval(() =>{
+                if(counter.value === 0){
+                  //清除定时器
+                  clearInterval(timer)
+                } else {
+                  counter.value--
+                }
+              },1000)
+            }catch (e) {
+              notification.open({
+                message: '提示！',
+                description:
+                    '验证码发送失败!',
+                onClick: () => {
+                  console.log('Notification Clicked!');
+                },
+              });
             }
-          },1000)
 
-          //
+            //发送验证码请求
+            axios.post("http://175.178.221.165:8081/users/registerCode",{
+              'email':formState.email,
+            },{
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              // withCredentials:true
+            }).then((res:any)=>{
+              //提示消息发送成功
+              if(res.data.success===true){
+                notification.open({
+                  message: '验证码已发送',
+                  description:
+                      '验证码已发送到对应的邮箱，验证码五分钟内有效!',
+                  icon: () => h(SmileOutlined, { style: 'color: #108ee9' }),
+                });
+              }
+              else{
+                notification['error']({
+                  message: '验证码已发送',
+                  description:
+                      '验证码发送失败',
+                });
+              }
+            });
+          }
 
-        }catch (e) {
+        }
+        else{
           notification.open({
             message: '提示！',
             description:
-                '验证码发送失败!',
+                '请输入邮箱!',
             onClick: () => {
               console.log('Notification Clicked!');
             },
           });
         }
 
-        //发送验证码请求
-        axios.post("http://175.178.221.165:8081/users/registerCode",{
-          'email':formState.email,
-        },{
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // withCredentials:true
-        }).then((res:any)=>{
-          //提示消息发送成功
-          if(res.data.success===true){
-            notification.open({
-              message: '验证码已发送',
-              description:
-                  '验证码已发送到对应的邮箱，验证码五分钟内有效!',
-              icon: () => h(SmileOutlined, { style: 'color: #108ee9' }),
-            });
-          }
-          else{
-            notification['error']({
-              message: '验证码已发送',
-              description:
-                  '验证码发送失败',
-            });
-          }
-        });
+
       }
     };
 

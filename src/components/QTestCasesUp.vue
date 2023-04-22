@@ -6,13 +6,9 @@
         name="dynamic_form_item"
         :model="dynamicValidateForm"
     >
-      <a-form-item
-          v-for="(domain, index) in dynamicValidateForm.domains"
-          :key="domain.key"
-          :name="['domains', index, 'value']"
-          :rules="{required: true,message: '输入输出都不得为空',trigger: 'change',
-      }"
-      >
+      <div v-for="(domain) in dynamicValidateForm.domains"
+           :key="domain.key"
+            style="padding-bottom: 0.1rem">
         <!--输入，输出    -->
         <a-row>
           <a-col :span="2">
@@ -26,10 +22,14 @@
             </h4>
           </a-col>
           <a-col :span="8">
-            <a-input
-                style="width: 100%;float: left;"
-                placeholder="测试输入"
-                />
+            <a-form-item name="input">
+              <a-input
+                  v-model:value="domain.input"
+                  style="width: 100%;float: left;"
+                  placeholder="测试输入"
+              />
+            </a-form-item>
+
           </a-col>
           <a-col :span="2">
             <h4
@@ -43,9 +43,13 @@
             </h4>
           </a-col>
           <a-col :span="8">
-            <a-input
-                style="width: 100%;float: left"
-                placeholder="测试输出" />
+            <a-form-item has-feedback name="output">
+              <a-input
+                  v-model:value="domain.output"
+                  style="width: 100%;float: left"
+                  placeholder="测试输出" />
+            </a-form-item>
+
           </a-col>
           <a-col :span="4">
             <MinusCircleOutlined
@@ -56,7 +60,8 @@
             />
           </a-col>
         </a-row>
-      </a-form-item>
+      </div>
+
       <a-form-item>
         <a-button type="dashed" style="width: 50%" @click="addDomain">
           <PlusOutlined />
@@ -66,7 +71,7 @@
       <a-form-item>
         <a-button
             type="primary"  @click="submitForm"
-            style="width: 50%;background-color:green ">上传</a-button>
+            style="width: 50%;background-color:green" html-type="submit">上传</a-button>
 <!--        <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>-->
       </a-form-item>
     </a-form>
@@ -101,11 +106,10 @@ export default defineComponent({
     //提交表单
     const submitForm = () => {
       //发送请求，上传字符串
+
+
     };
-    //重置表单
-    const resetForm = () => {
-      //formRef.value.resetFields();
-    };
+
 
     //移除域
     const removeDomain = (item: Domain) => {
@@ -142,8 +146,10 @@ export default defineComponent({
 
       //数据
       dynamicValidateForm,
+
+      //提交表单的信息
       submitForm,
-      resetForm,
+
       removeDomain,
       addDomain,
     };

@@ -31,7 +31,7 @@
           padding-left: 4px;
           font-weight: bold;
       font-family:'宋体',serif;
-      font-size: 15px">不限</h4>
+      font-size: 15px">题解标签：{{tag_str}}</h4>
     <div style="padding-bottom: 50px;background-color: white">
         <a-button
             v-for="(item, index) in tag_btn_list"
@@ -44,9 +44,6 @@
         </a-button>
     </div>
     <a-divider style="border-color: #7cb305" dashed />
-
-
-
 
     <a-list
         item-layout="horizontal"
@@ -104,10 +101,6 @@
 
     </a-pagination>
 
-
-
-
-
   </div>
 
 </template>
@@ -133,7 +126,11 @@ export default defineComponent({
 
     const myStyle=ref({height:""})
     onMounted(() => {
+
       //初始的时候获取按钮标签
+
+
+      //获取题解
 
       //获取屏幕高度
       myStyle.value.height=window.outerHeight-100+"px";
@@ -148,10 +145,7 @@ export default defineComponent({
     //当前总的题解数目
     const total_cnt=ref(500)
     //当前的题解字符串
-    const tag_str=ref("")
-
-
-
+    const tag_str=ref("不限")
 
 
 
@@ -199,33 +193,30 @@ export default defineComponent({
     //搜索题解函数
     const onSearch = (searchValue: string) => {
       console.log(searchValue)
-
       //调用函数
+
 
     };
     /*按钮点击事件*/
     const choosetag=(item:number)=>{
-
       console.log("item0 click status ", tag_btn_list.value[0].isChoosed)
       tag_btn_list.value[item].isChoosed=!tag_btn_list.value[item].isChoosed;
       //获得当前的题解字符串
-
-
       var str=""
       //调用函数
       for (var i=0;i<tag_btn_list.value.length;i++){
-
-        if(tag_btn_list.value[i].isChoosed){
-          if(i!=(tag_btn_list.value.length-1)){
-            str+=tag_btn_list.value[i].tag+"_"
-          }else{
-            str+=tag_btn_list.value[i].tag
-          }
+        if(tag_btn_list.value[i].isChoosed==true){
+          str+=tag_btn_list.value[i].tag+"_"
         }
       }
-      tag_str.value=str
-      alert(tag_str.value)
+      if(str!=""){
+        tag_str.value=str.substring(0,str.length-1)
+      }
+      else{
+        tag_str.value="不限"
+      }
 
+      //之后需要利用函数重新为数组赋值
     }
     //跳转到写题解界面
     const writeSolution=()=>{
@@ -236,10 +227,8 @@ export default defineComponent({
 
     //页码改变的事件
     const tableChange=(page:number,pageSize:number)=>{
-
       current.value=page
       current_size.value=pageSize
-
       //重新请求数据
 
     };
@@ -249,6 +238,8 @@ export default defineComponent({
     const getDataAndLoad=(page:number,pageSize:number,searchValue:string,tag_str:string)=>{
 
       //发送请求
+
+      //渲染数据
     }
 
 

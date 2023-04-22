@@ -6,12 +6,9 @@
         name="dynamic_form_item"
         :model="dynamicValidateForm"
     >
-      <a-form-item
-          v-for="(domain, index) in dynamicValidateForm.domains"
+      <div
+          v-for="(domain) in dynamicValidateForm.domains"
           :key="domain.key"
-          :name="['domains', index, 'value']"
-          :rules="{required: true,message: 'domain can not be null',trigger: 'change',
-      }"
       >
         <!--输入，输出    -->
         <a-row>
@@ -26,11 +23,15 @@
             </h4>
           </a-col>
           <a-col :span="8">
-            <a-input
-                style="width: 100%;float: left;"
-                placeholder="测试输入"
-                v-model:value="domain.input"
-                :disabled="domain.disabled"/>
+            <a-form-item>
+              <a-input
+              style="width: 100%;float: left;"
+              placeholder="测试输入"
+              v-model:value="domain.input"
+              :disabled="domain.disabled"
+              />
+            </a-form-item>
+
           </a-col>
           <a-col :span="1"></a-col>
           <a-col :span="1">
@@ -44,11 +45,13 @@
             </h4>
           </a-col>
           <a-col :span="8">
-            <a-input
-                style="width: 100%;float: left"
-                placeholder="测试输出"
-                v-model:value="domain.input"
-                :disabled="domain.disabled"/>
+            <a-form-item>
+              <a-input
+                  style="width: 100%;float: left"
+                  placeholder="测试输出"
+                  v-model:value="domain.output"
+                  :disabled="domain.disabled"/>
+            </a-form-item>
           </a-col>
           <a-col :span="5">
             <a-space :size="10">
@@ -60,7 +63,7 @@
             </a-space>
           </a-col>
         </a-row>
-      </a-form-item>
+      </div>
       <a-form-item>
         <a-button type="dashed" style="width: 50%" @click="addDomain">
           <PlusOutlined />
@@ -80,7 +83,6 @@ import type { FormInstance } from 'ant-design-vue';
 import { notification } from 'ant-design-vue';
 import { Modal } from 'ant-design-vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
-import axios from "axios";
 
 interface Domain {
   input: string;
@@ -136,6 +138,7 @@ export default defineComponent({
             console.log('OK');
 
             //发送axiso请求
+            //注意键值的操作
 
 
             let index = dynamicValidateForm.domains.indexOf(item);
@@ -179,16 +182,35 @@ export default defineComponent({
     //编辑或者上传
     const editAndUpload=(item: Domain)=>{
 
-      //按钮被禁用了，这时候就打开
+      //按钮被禁用了，这时候就打开 这个时候进入编辑模式
       if(item.disabled){
+
         let index = dynamicValidateForm.domains.indexOf(item);
         dynamicValidateForm.domains[index].disabled=false;
       }else{
-        //上传数据
 
-        //再次禁用
-        let index = dynamicValidateForm.domains.indexOf(item);
-        dynamicValidateForm.domains[index].disabled=true;
+
+        //发送请求，完成修改
+        if(item.input==""||item.output==""){
+          notification.open({
+            message: '提示！',
+            description:
+                '输入输出不得为空!',
+            onClick: () => {
+              console.log('Notification Clicked!');
+            },
+          });
+        }else{
+
+          //发送请求，告知修改
+
+          //再次禁用
+          let index = dynamicValidateForm.domains.indexOf(item);
+          dynamicValidateForm.domains[index].disabled=true;
+        }
+
+
+
 
       }
 
