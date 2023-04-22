@@ -19,7 +19,7 @@
           v-model="content"
           :defaultConfig="editorConfig"
           :mode="mode"
-          style="height: 35rem"
+          style="height: 30rem"
           @onCreated="editorCreated"
       />
     </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import {onBeforeUnmount, ref, shallowRef, h} from "vue";
+import {onBeforeUnmount, ref, shallowRef, h, onMounted} from "vue";
 import type { SelectProps } from 'ant-design-vue';
 import { notification } from 'ant-design-vue'
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
@@ -65,22 +65,33 @@ export default {
     const {params} = useRoute()
     const title = ref("")
     const selectTags = ref([])
-    const tagList = ref<SelectProps['options']>([
-      {
-        value: 'C',
-        label: 'C',
-      },
-      {
-        value: 'Java',
-        label: 'Java',
-      },
-    ])
+    const tagList = ref<SelectProps['options']>([])
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef()
     // 编辑器，工具栏配置
     const editorConfig = {readOnly :false, scroll: true}
     const content = ref("")
 
+
+    // ajax 异步获取后端数据
+    onMounted(() => {
+      axios.get("http://175.178.221.165:8081/solutions/getAllTags",
+      ).then(res=>{
+        const success = res.data.success
+        const message = res.data.message
+        const data = res.data.data
+        const list = data.split("_")
+        tagList.value = []
+        for(let i=0;i<list.length;i++){
+          tagList.value.push({
+            value: list[i],
+            label: list[i],
+          });
+        }
+      }, err=>{
+        console.log(err.data)
+      })
+    })
 
     // 组件销毁时，也及时销毁编辑器
     onBeforeUnmount(() => {
@@ -117,13 +128,12 @@ export default {
         return str
       }
 
-      axios.post("http://175.178.221.165:8081/solutions/PubSolution",
+      axios.post("http://175.178.221.165:8081/solutions/pubSolution",
           {
             'content': editorRef.value.getHtml(),
             'questionId': Number(params.pro_id),
             'tags': List2String(selectTags.value),
             'title': title.value,
-            'userId': store.state.id,
           },
           {
             headers: {'Authorization': store.state.token}
@@ -163,7 +173,7 @@ export default {
   .create-solution{
     margin: auto;
     text-align: left;
-    background: white;
+    background: #FFFFFF;
   }
   .editor{
     border: solid 0.1rem lightgray;
