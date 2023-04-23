@@ -29,7 +29,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'create-solution',
         name: 'create-solution',
         component: () => import(/* webpackChunkName: "about" */ '../views/CreateSolution.vue'),
-      }
+      },
+      {
+        path: 'edit-solution/:sln_id',
+        name: 'edit-solution',
+        component: () => import(/* webpackChunkName: "about" */ '../views/EditSolution.vue')
+      },
     ]
   },
   {
@@ -47,12 +52,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'submission',
     component: () => import(/* webpackChunkName: "about" */ '../views/Submission.vue')
   },
-  {
-    path: '/edit-solution',
-    name: 'edit-solution',
-    component: () => import(/* webpackChunkName: "about" */ '../views/EditSolution.vue')
-  },
-]
+ ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

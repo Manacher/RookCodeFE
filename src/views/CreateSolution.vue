@@ -163,7 +163,7 @@ export default {
       confirm,
       cancel,
       onPublish,
-      
+
     }
   }
 

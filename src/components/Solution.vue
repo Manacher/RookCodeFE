@@ -78,8 +78,9 @@ import  { LikeOutlined, EyeOutlined } from '@ant-design/icons-vue';
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
-import {onBeforeUnmount, shallowRef, ref} from "vue";
+import {onBeforeUnmount, shallowRef, ref, onMounted} from "vue";
 import {useRoute} from 'vue-router';
+import axios from "axios";
 
 Boot.registerModule(markdownModule)
 
@@ -100,49 +101,18 @@ export default {
     const { query, params } = useRoute()
     debugger
     // 题解包含的信息
-    const avatar = "https://tse2-mm.cn.bing.net/th/id/OIP-C.Y5AKy_ThdGknRFLuqJmdtwHaEo?pid=ImgDet&rs=1"
-    const title = "A+B 题解"
-    const nickname = "YnmtDJ"
-    const thumbNum = 666
-    const viewNum = 777
-    const date = "2023/01/06"
-    const tagList = [
-          "bfs",
-          "dfs",
-        ]
+    const avatar = ref("")
+    const title = ref("")
+    const nickname = ref("") // TODO
+    const thumbNum = ref(0)
+    const viewNum = ref(0)
+    const date = ref("")  // TODO
+    const tagList = ref([])
     // 编辑器实例，必须用 shallowRef
     const contentRef = shallowRef()
     // 编辑器，工具栏配置
     const contentConfig = {readOnly :true, scroll: false}
-    const content = ref("<p>给你一个字符串 <code>s</code> ，请你统计并返回这个字符串中 <strong>回文子串</strong> 的数目。</p><p><strong>回文字符串</strong> 是正着读和倒过来读一样的字符串。</p>\n" +
-        "\n" +
-        "<p><strong>子字符串</strong> 是字符串中的由连续字符组成的一个序列。</p>\n" +
-        "\n" +
-        "<p>具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被视作不同的子串。</p>\n" +
-        "\n" +
-        "<p>&nbsp;</p>\n" +
-        "\n" +
-        "<p><strong>示例 1：</strong></p>\n" +
-        "\n" +
-        "<pre><strong>输入：</strong>s = \"abc\"\n" +
-        "<strong>输出：</strong>3\n" +
-        "<strong>解释：</strong>三个回文子串: \"a\", \"b\", \"c\"\n" +
-        "</pre>\n" +
-        "\n" +
-        "<p><strong>示例 2：</strong></p>\n" +
-        "\n" +
-        "<pre><strong>输入：</strong>s = \"aaa\"\n" +
-        "<strong>输出：</strong>6\n" +
-        "<strong>解释：</strong>6个回文子串: \"a\", \"a\", \"a\", \"aa\", \"aa\", \"aaa\"</pre>\n" +
-        "\n" +
-        "<p>&nbsp;</p>\n" +
-        "\n" +
-        "<p><strong>提示：</strong></p>\n" +
-        "\n" +
-        "<ul>\n" +
-        "\t<li><code>1 &lt;= s.length &lt;= 1000</code></li>\n" +
-        "\t<li><code>s</code> 由小写英文字母组成</li>\n" +
-        "</ul>")
+    const content = ref("")
 
     // 编辑器实例，必须用 shallowRef
     const commentRef = shallowRef()
@@ -180,6 +150,27 @@ export default {
       total: 100,
       showSizeChanger: false,
     };
+
+    // ajax 异步获取后端数据
+    onMounted(() => {
+      axios.post("http://175.178.221.165:8081//solutions/getSolutionsById",
+          {
+            'id': params.sln_id,
+          }
+      ).then(res=>{
+        const success = res.data.success
+        const message = res.data.message
+        const data = res.data.data
+        avatar.value = data.avatar
+        content.value = data.content
+        thumbNum.value = data.like_num
+        viewNum.value = data.view_num
+        title.value = data.title
+        tagList.value = data.tags.split("_")
+      },err=>{
+        console.log(err.data)
+      })
+    })
 
     // 组件销毁时，也及时销毁编辑器
     onBeforeUnmount(() => {
