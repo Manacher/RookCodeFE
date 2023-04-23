@@ -25,8 +25,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import QTestCasesUp from "@/components/QTestCasesUp.vue";
-import QTestCasesEd from "@/components/QTestCasesEd.vue";
+import QTestCasesUp from "@/components/QTestCases/QTestCasesUp.vue";
+import QTestCasesEd from "@/components/QTestCases/QTestCasesEd.vue";
 
 export default defineComponent({
   components: {

@@ -373,7 +373,7 @@ export default defineComponent({
 
 .register-main-box{
 
-  background-image: url("../assets/bg01.jpg");
+  background-image: url("../../assets/bg01.jpg");
   width:100%;
   height:100%;
   position:fixed;

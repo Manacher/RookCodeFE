@@ -85,9 +85,6 @@
       </template>
     </a-list>
 
-
-
-
     <a-pagination
         v-model:current="current"
         :total="total_cnt"

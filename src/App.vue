@@ -11,10 +11,11 @@
 <script lang="ts">
 import axios from "axios";
 import {defineComponent, onMounted,computed} from "vue";
-import Register from '@/views/Register.vue'
-import Login from "@/views/Login.vue";
+import Register from '@/views/LoginAndRegister/Register.vue'
+import Login from "@/views/LoginAndRegister/Login.vue";
 import QTestCases from "@/views/QTestCases.vue"
 import store  from "@/store";
+
 
 export default defineComponent({
   name:'App',
@@ -25,7 +26,6 @@ export default defineComponent({
   setup() {
     onMounted(() => {
       const token = store.state.token
-      const id=store.state.id
 
       console.log(token)
       //token不存在的话自动登录

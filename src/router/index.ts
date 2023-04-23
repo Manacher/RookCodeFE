@@ -5,14 +5,14 @@ const routes: Array<RouteRecordRaw> = [
   {
   path:'/login',
   name:'Login',
-  component:()=>import("@/views/Login.vue")
+  component:()=>import("@/views/LoginAndRegister/Login.vue")
   },
   {
     path:'/register',
     name:'Register',
     /*下面为登录限制,是否需要登录验证，当根目录被限制时，其子模块也将被限制*/
    /* meta:{requiresAuth:true},*/
-    component:()=>import("@/views/Register.vue")
+    component:()=>import("@/views/LoginAndRegister/Register.vue")
   },
   {
     path:'/solutions',
@@ -27,7 +27,8 @@ const routes: Array<RouteRecordRaw> = [
     /*下面为登录限制,是否需要登录验证，当根目录被限制时，其子模块也将被限制*/
     //meta:{requiresAuth:false},
     component:()=>import("@/views/QTestCases.vue")
-  }
+  },
+
 ]
 
 const router = createRouter({

@@ -170,9 +170,11 @@ export default defineComponent({
           //判断登录是否成功
           if(res.data.success==true){
 
+
+            //保存用户信息
             const userInfo={
               token:res.data.data.token,
-              id:res.data.data.users.id
+              //id:res.data.data.users.id
             }
             //保存token
             store.commit("login",userInfo);
@@ -251,7 +253,7 @@ export default defineComponent({
 
 .login-main-box{
 
-  background-image: url("../assets/bg01.jpg");
+  background-image: url("../../assets/bg01.jpg");
   width:100%;
   height:100%;
   position:fixed;

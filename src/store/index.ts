@@ -5,7 +5,7 @@ import { createStore } from 'vuex'
 /*存储token 和一些其他的全局信息*/
 export interface UserInfo {
   token: string
-  id:number
+  //id:number
 }
 
 
@@ -14,7 +14,7 @@ const store=createStore<UserInfo>({
   state: {
     //持久化存储
     token:localStorage.getItem("token")||"",
-    id:Number(localStorage.getItem("id"))||0
+    //id:Number(localStorage.getItem("id"))||0
   },
   //同步的
   mutations: {
@@ -22,11 +22,11 @@ const store=createStore<UserInfo>({
     //设置token
     login(state,userInfo:UserInfo){
       const token=userInfo.token
-      const id=userInfo.id
+      //const id=userInfo.id
       state.token=token
-      state.id=id
+      //state.id=id
       localStorage.setItem('token', token)
-      localStorage.setItem('id', id.toLocaleString())
+      //localStorage.setItem('id', id.toLocaleString())
 
     }
   },
