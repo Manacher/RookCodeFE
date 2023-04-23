@@ -10,7 +10,7 @@
     <div class="right-item">
       <div>
         <a-avatar :size="32"
-                  src="https://assets.leetcode.cn/aliyun-lc-upload/users/elated-villaniw8c/avatar_1645749344.png"
+                  :src=userInfo.avatar
                   @click="onCenterClicked"
                   id="center-avatar"/>
 
@@ -18,10 +18,11 @@
 
           <a-card hoverable class="center-card" v-show="cardShow" id="center-card">
 
-            <a-card-meta title="AgarthaSF" description="1426887306@qq.com" class="center-card-header">
+            <a-card-meta  :title=userInfo.nickname :description=userInfo.account class="center-card-header">
               <template #avatar>
-                <a-avatar :size="32"
-                          src="https://assets.leetcode.cn/aliyun-lc-upload/users/elated-villaniw8c/avatar_1645749344.png"/>
+                <a-avatar :size="40"
+                          :src=userInfo.avatar
+                />
               </template>
             </a-card-meta>
 
@@ -81,20 +82,47 @@
 <script lang="ts">
 
 import {onMounted, ref} from "vue";
-import router from "@/router";
+import store, {UserInfo} from "@/store";
+import axios from "axios";
+import {message} from "ant-design-vue";
 
 
 export default {
   name: "rook-header",
   setup() {
 
-    console.log("header init")
+    // todo 奇怪的bug，account必须初始化了才能成功
+    let userInfo = ref({
+      account: "account",
+      nickname: "",
+      avatar: "",
+    })
+
+    let getInfo = () => {
+      axios({
+        method: 'get',
+        url: '/header',
+        headers: {
+          'Authorization': store.state.token,
+        },
+      }).then((res)=>{
+        let data = res.data;
+        if(data.success){
+          data = data.data;
+          userInfo.value.nickname = data.nickname;
+          userInfo.value.avatar = data.avatar;
+          userInfo.value.account = data.account;
+
+          console.log("userInfo: ", userInfo.value)
+        }else{
+          message.error("网页Header请求出错")
+        }
+      })
+    }
 
     let currentPath = window.location.pathname;
     let navKeys = ref(['/']);
     navKeys.value = [currentPath]
-
-    console.log("current path", currentPath)
 
     let cardShow = ref(false);
     let centerCard: any;
@@ -105,6 +133,7 @@ export default {
       // 设置card样式
       let cardDetail = document.querySelector('.ant-card-meta-detail') as HTMLElement
       cardDetail.style.paddingLeft = '0.5rem'
+      getInfo();
     })
 
     // 个人头像点击事件，当卡片未显示时，点击头像让卡片出现，并添加鼠标监听事件
@@ -142,6 +171,7 @@ export default {
     return {
       navKeys,
       cardShow,
+      userInfo,
       onCenterClicked,
       onCardClicked,
     }
@@ -231,7 +261,7 @@ export default {
   vertical-align: middle;
 }
 
-.header-placeholder{
+.header-placeholder {
   height: 0.1rem;
   width: 100%;
   background-color: #f0f0f0;
