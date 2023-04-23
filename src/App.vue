@@ -18,13 +18,9 @@ export default defineComponent({
     RookFooter,
   },
   setup() {
+    return{
 
-    onMounted(() => {
-      console.log("axios test");
-      axios.get("/").then((res) => {
-        console.log("get resp:", res)
-      })
-    })
+    }
   }
 })
 

@@ -4,10 +4,12 @@
       :attributes="attributes"
       title-position="right"
       @dayclick="onDayClickHandler"
+      class="checkin-calendar"
+
   >
     <template #day-popover="{attributes }">
       <div>
-        <ul >
+        <ul>
           <li
               v-for="{ key, customData } in attributes"
               :key="key"
@@ -23,6 +25,7 @@
 
 <script lang="ts">
 import {computed, defineComponent, onMounted, ref} from 'vue';
+
 export default defineComponent({
   setup() {
 
@@ -66,5 +69,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.checkin-calendar {
+  border: none;
+  box-shadow: 0 2px 8px lightgrey;
+}
 
 </style>

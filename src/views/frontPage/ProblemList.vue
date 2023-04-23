@@ -1,123 +1,124 @@
 <template>
 
-  <div class="search-bar">
+  <div class="problem-list-area">
+    <div class="search-bar">
 
-    <div class="search-bar-item">
-      <span>难度</span>
+      <div class="search-bar-item">
+        <span>难度</span>
 
-      <a-select
-          v-model:value="diffSelected"
-          placeholder="选择难度"
-          size="middle"
-          :options="diffOptions"
-          class="search-bar-item-select"
-      ></a-select>
-    </div>
+        <a-select
+            v-model:value="diffSelected"
+            placeholder="选择难度"
+            size="middle"
+            :options="diffOptions"
+            class="search-bar-item-select"
+        ></a-select>
+      </div>
 
-    <div class="search-bar-item">
-      <span>状态</span>
+      <div class="search-bar-item">
+        <span>状态</span>
 
-      <a-select
-          v-model:value="stateSelected"
-          :options="stateOptions"
-          size="middle"
-          placeholder="Please select"
-          class="search-bar-item-select"
-      ></a-select>
+        <a-select
+            v-model:value="stateSelected"
+            :options="stateOptions"
+            size="middle"
+            placeholder="Please select"
+            class="search-bar-item-select"
+        ></a-select>
 
-    </div>
+      </div>
 
-    <div class="search-bar-item">
-      <span>标签</span>
-      <a-tree-select
-          v-model:value="tagSelected"
-          :maxTagCount="tagNumMaxi"
-          show-search
-          style="width: 20rem; text-align: left; height: 2rem; margin-right: 1.2rem"
-          :dropdown-style="{ maxHeight: '40rem', overflow: 'auto' }"
-          placeholder="筛选标签"
-          allow-clear
-          multiple
-          :maxTagPlaceholder=onTagNumOverMaxi
-          :treeDefaultExpandedKeys=defaultExpand
-          :tree-data="treeData"
-          :field-names="{
+      <div class="search-bar-item">
+        <span>标签</span>
+        <a-tree-select
+            v-model:value="tagSelected"
+            :maxTagCount="tagNumMaxi"
+            show-search
+            style="width: 20rem; text-align: left; height: 2rem; margin-right: 1.2rem"
+            :dropdown-style="{ maxHeight: '40rem', overflow: 'auto' }"
+            placeholder="筛选标签"
+            allow-clear
+            multiple
+            :maxTagPlaceholder=onTagNumOverMaxi
+            :treeDefaultExpandedKeys=defaultExpand
+            :tree-data="treeData"
+            :field-names="{
       children: 'children',
       label: 'name',
       value: 'value',
     }"
-      ></a-tree-select>
+        ></a-tree-select>
 
-    </div>
+      </div>
 
-    <div class="search-bar-item">
-      <a-input
-          v-model:value="inputContent"
-          placeholder="搜索题目或编号"
-          size="small"
-          style=" height: 1.9rem; margin: auto;width: 14rem">
+      <div class="search-bar-item">
+        <a-input
+            v-model:value="inputContent"
+            placeholder="搜索题目或编号"
+            size="small"
+            style=" height: 1.9rem; margin: auto;width: 14rem">
 
-        <template #prefix>
-          <search-outlined style="color: #959595"/>
-        </template>
-      </a-input>
+          <template #prefix>
+            <search-outlined style="color: #959595"/>
+          </template>
+        </a-input>
 
-      <div>
-        <a-button type="primary"
-                  size="small"
-                  style="margin-top: 0.1rem; margin-left: 1rem; height: 1.8rem;width: 4rem"
-                  @click="onSearchClicked">
-          搜索
-        </a-button>
+        <div>
+          <a-button type="primary"
+                    size="small"
+                    style="margin-top: 0.1rem; margin-left: 1rem; height: 1.8rem;width: 4rem"
+                    @click="onSearchClicked">
+            搜索
+          </a-button>
+        </div>
+
+
       </div>
 
 
     </div>
 
+    <div class="problem-list">
 
-  </div>
+      <a-table :columns="listColumns"
+               :data-source="listData"
+               style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
 
-  <div class="problem-list">
+        <template #bodyCell="{ column, record }">
 
-    <a-table :columns="listColumns"
-             :data-source="listData"
-             style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+          <template v-if="column.key === 'state'">
 
-      <template #bodyCell="{ column, record }">
+            <div v-if="record.state === 'solved'" class="list-state-icon">
+              <check-circle-outlined style="color: green;"/>
+            </div>
+            <div v-else-if="record.state === 'tried'" class="list-state-icon">
+              <issues-close-outlined style="color: #f2bc00;"/>
+            </div>
+            <div v-else></div>
 
-        <template v-if="column.key === 'state'">
+          </template>
 
-          <div v-if="record.state === 'solved'" class="list-state-icon">
-            <check-circle-outlined style="color: green;"/>
-          </div>
-          <div v-else-if="record.state === 'tried'" class="list-state-icon">
-            <issues-close-outlined style="color: #f2bc00;"/>
-          </div>
-          <div v-else></div>
+          <template v-else-if="column.key === 'title'">
 
-        </template>
+            <div class="problem-title">
+              <router-link :to="{path: 'problem/' + record.key }" style="color: inherit">{{ record.title }}</router-link>
+            </div>
 
-        <template v-else-if="column.key === 'title'">
+          </template>
 
-          <div class="problem-title">
-            <router-link :to="{path: 'problem/' + record.key }" style="color: inherit">{{ record.title }}</router-link>
-          </div>
+          <template v-else-if="column.key === 'difficulty'">
+            <a-tag color="#00af9b" v-if="record.difficulty === 'easy'">
+              简单
+            </a-tag>
+            <a-tag color="#ffb800" v-if="record.difficulty === 'medium'">
+              中等
+            </a-tag>
+            <a-tag color="#ff5064" v-if="record.difficulty === 'hard'">
+              困难
+            </a-tag>
+          </template>
 
-        </template>
-
-        <template v-else-if="column.key === 'difficulty'">
-          <a-tag color="#00af9b" v-if="record.difficulty === 'easy'">
-            简单
-          </a-tag>
-          <a-tag color="#ffb800" v-if="record.difficulty === 'medium'">
-            中等
-          </a-tag>
-          <a-tag color="#ff5064" v-if="record.difficulty === 'hard'">
-            困难
-          </a-tag>
-        </template>
-
-        <template v-else-if="column.key === 'action'">
+          <template v-else-if="column.key === 'action'">
         <span>
           <a>Invite 一 {{ record.name }}</a>
           <a-divider type="vertical"/>
@@ -128,10 +129,13 @@
             <down-outlined/>
           </a>
         </span>
+          </template>
         </template>
-      </template>
-    </a-table>
+      </a-table>
+    </div>
   </div>
+
+
 
 
 </template>
@@ -345,6 +349,10 @@ export default {
 
 <style scoped>
 
+/*.problem-list-area{*/
+/*  box-shadow: 0 2px 8px lightgrey;*/
+/*}*/
+
 .problem-title:hover {
   color: #007aff;
 }
@@ -354,7 +362,7 @@ export default {
   flex-direction: row;
   background-color: #e5e6e8;
   padding: 1rem;
-  margin-top: 1rem;
+  /*margin-top: 1rem;*/
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   color: #2c3e50;

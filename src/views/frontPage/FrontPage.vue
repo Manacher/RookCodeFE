@@ -7,7 +7,7 @@
 
         <a-col :span="18">
           <FrontBanner/>
-          <ProblemList style="margin-top: 3rem"/>
+          <ProblemList style="margin-top: 1rem"/>
         </a-col>
 
         <a-col :span="6">
@@ -60,6 +60,7 @@ export default defineComponent({
 
 .front-page-main-area{
   min-width: 88rem;
+  /*106.5*/
 }
 
 .layout-content {
@@ -75,29 +76,47 @@ export default defineComponent({
 
 @media screen and (min-width: 101rem) and (max-width: 105rem) {
   .layout-content {
-    padding: 2rem 8rem 0 8rem;
-  }
-}
-
-@media screen and (min-width: 97rem) and (max-width: 101rem) {
-  .layout-content {
     padding: 2rem 6rem 0 6rem;
   }
 }
 
-@media screen and (min-width: 93rem) and (max-width: 97rem) {
+@media screen and (min-width: 99rem) and (max-width: 101rem) {
+  .layout-content {
+    padding: 2rem 5rem 0 5rem;
+  }
+}
+
+@media screen and (min-width: 97rem) and (max-width: 99rem) {
   .layout-content {
     padding: 2rem 4rem 0 4rem;
   }
 }
 
-@media screen and (min-width: 89rem) and (max-width: 93rem) {
+@media screen and (min-width: 95rem) and (max-width: 97rem) {
+  .layout-content {
+    padding: 2rem 3rem 0 3rem;
+  }
+}
+
+@media screen and (min-width: 93rem) and (max-width: 95rem) {
   .layout-content {
     padding: 2rem 2rem 0 2rem;
   }
 }
 
-@media screen and (max-width: 89rem) {
+@media screen and (min-width: 91rem) and (max-width: 93rem) {
+  .layout-content {
+    padding: 2rem 1rem 0 1rem;
+  }
+}
+
+/*@media screen and (min-width: 89rem) and (max-width: 91rem) {*/
+/*  .layout-content {*/
+/*    padding: 2rem 2rem 0 2rem;*/
+/*  }*/
+/*}*/
+
+@media screen and (max-width: 91rem) {
   .layout-content {
     padding: 2rem 0 0 0;
   }
