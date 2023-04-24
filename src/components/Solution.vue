@@ -41,7 +41,7 @@
         />
       </div>
       <div class="comment-submit">
-        <a-button type="primary">评论</a-button>
+        <a-button type="primary" @click="onComment">评论</a-button>
       </div>
     </div>
     <div class="commentList" style="text-align: left">
@@ -74,13 +74,15 @@
 <script lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
-import  { LikeOutlined, EyeOutlined } from '@ant-design/icons-vue';
+import {LikeOutlined, EyeOutlined, CheckCircleOutlined} from '@ant-design/icons-vue';
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
-import {onBeforeUnmount, shallowRef, ref, onMounted} from "vue";
+import {onBeforeUnmount, shallowRef, ref, onMounted, h} from "vue";
 import {useRoute} from 'vue-router';
 import axios from "axios";
+import store from "@/store";
+import {notification} from "ant-design-vue";
 
 Boot.registerModule(markdownModule)
 
@@ -103,10 +105,10 @@ export default {
     // 题解包含的信息
     const avatar = ref("")
     const title = ref("")
-    const nickname = ref("") // TODO
+    const nickname = ref("")
     const thumbNum = ref(0)
     const viewNum = ref(0)
-    const date = ref("")  // TODO
+    const date = ref("")
     const tagList = ref([])
     // 编辑器实例，必须用 shallowRef
     const contentRef = shallowRef()
@@ -153,7 +155,7 @@ export default {
 
     // ajax 异步获取后端数据
     onMounted(() => {
-      axios.post("http://175.178.221.165:8081//solutions/getSolutionsById",
+      axios.post("http://175.178.221.165:8081/solutions/getSolutionsById",
           {
             'id': params.sln_id,
           }
@@ -162,9 +164,11 @@ export default {
         const message = res.data.message
         const data = res.data.data
         avatar.value = data.avatar
+        nickname.value = data.nickname
         content.value = data.content
         thumbNum.value = data.like_num
         viewNum.value = data.view_num
+        date.value = data.dateTime
         title.value = data.title
         tagList.value = data.tags.split("_")
       },err=>{
@@ -198,6 +202,30 @@ export default {
       console.log(commentRef.value.getHtml())
     }
 
+    // 评论
+    const onComment = () => {
+      axios.post("http://175.178.221.165:8081/solutions/PublishComment",
+          {
+            "content": comment.value,
+            "solution_id": params.sln_id,
+          },
+          {
+            headers: {'Authorization': store.state.token}
+          }
+      ).then(res=>{
+        debugger
+        notification.open({
+          message: '评论成功',
+          description: '',
+          icon: () => h(CheckCircleOutlined, { style: 'color: #008000' }),
+        });
+        comment.value = ""
+        // TODO: 刷新评论？
+      }, err=>{
+        console.log(err)
+      })
+    }
+
     return{
       query,
       params,
@@ -220,6 +248,7 @@ export default {
       contentCreated,
       commentCreated,
       onEdit,
+      onComment,
     }
   }
 
@@ -246,7 +275,7 @@ export default {
   }
   .comment-submit{
     text-align: right;
-    padding: 0.1rem;
+    padding: 0.2rem;
   }
   .commentList{
 
