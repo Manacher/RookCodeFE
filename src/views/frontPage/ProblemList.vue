@@ -50,8 +50,9 @@
       <div class="search-bar-item">
         <a-input
             v-model:value="inputContent"
-            placeholder="搜索题目或编号"
+            placeholder="输入题目名称"
             size="small"
+            allow-clear
             style=" height: 1.9rem; margin: auto;width: 14rem">
 
           <template #prefix>
@@ -146,90 +147,24 @@ import {message} from 'ant-design-vue';
 import {getProblemList, ProblemListBody} from "@/views/frontPage/frontPageHttp";
 import {FrontPageData, ProblemListColumn, processProblemListData} from "@/views/frontPage/frontPageUtil";
 
-const listColumns = [
-  {
-    title: '状态',
-    dataIndex: 'state',
-    key: 'state',
-    width: 120,
-  },
-  {
-    title: '题目',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: '题解',
-    dataIndex: 'solution',
-    key: 'solution',
-    width: 120,
-  },
-  {
-    title: '通过率',
-    key: 'pass',
-    dataIndex: 'pass',
-    width: 120,
-  },
-  {
-    title: '难度',
-    key: 'difficulty',
-    dataIndex: 'difficulty',
-    width: 120,
-  },
-];
-
-let diffOptions = [
-  {
-    value: 'easy',
-    label: '简单',
-  },
-  {
-    value: 'medium',
-    label: '中等',
-  },
-  {
-    value: 'hard',
-    label: '困难',
-  }, {
-    value: 'none',
-    label: '默认',
-  }
-]
-let stateOptions = [
-  {
-    value: 'unanswered',
-    label: '未开始',
-  },
-  {
-    value: 'solved',
-    label: '已解答',
-  },
-  {
-    value: 'tried',
-    label: '尝试过',
-  }, {
-    value: 'none',
-    label: '默认',
-  }
-]
+let listColumns = FrontPageData.frontPageListColumns
+let diffOptions = FrontPageData.frontPageDiffOptions
+let stateOptions = FrontPageData.frontPageStateOptions
 let listData: { value: ProblemListColumn[] } = ref([])
+let frontPageTreeData = FrontPageData.frontPageTreeData
 
 let pagination = ref({
   current: 1,
   pageSize: 15,
   total: 15,
   showSizeChanger: false,
-
 });
-
 let diffSelected = ref('none')
 let stateSelected = ref('none')
 let tagSelected = ref([])
 let inputContent = ref('')
 let tagNumMaxi = ref(3);
 let loading = ref(false);
-
-let frontPageTreeData = FrontPageData.frontPageTreeData
 
 export default {
   name: "problem-list",
@@ -279,12 +214,9 @@ export default {
     };
 
 
-
-
     return {
       listData,
       listColumns,
-
       diffSelected,
       stateSelected,
       tagSelected,
@@ -292,14 +224,11 @@ export default {
       frontPageTreeData,
       diffOptions,
       stateOptions,
-
-
       tagNumMaxi,
-      onTagNumOverMaxi,
-      onSearchClicked,
-
       pagination,
       loading,
+      onTagNumOverMaxi,
+      onSearchClicked,
       handleTableChange,
     };
   },
@@ -310,10 +239,6 @@ export default {
 
 <style scoped>
 
-/*.problem-list-area{*/
-/*  box-shadow: 0 2px 8px lightgrey;*/
-/*}*/
-
 .problem-title:hover {
   color: #007aff;
 }
@@ -323,7 +248,6 @@ export default {
   flex-direction: row;
   background-color: #e5e6e8;
   padding: 1rem;
-  /*margin-top: 1rem;*/
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   color: #2c3e50;
@@ -357,5 +281,4 @@ export default {
 .problem-list {
   caret-color: rgba(0, 0, 0, 0);
 }
-
 </style>

@@ -223,6 +223,72 @@ export class FrontPageData {
         }
     ]
 
+    public static frontPageListColumns = [
+        {
+            title: '状态',
+            dataIndex: 'state',
+            key: 'state',
+            width: 120,
+        },
+        {
+            title: '题目',
+            dataIndex: 'title',
+            key: 'title',
+        },
+        {
+            title: '题解',
+            dataIndex: 'solution',
+            key: 'solution',
+            width: 120,
+        },
+        {
+            title: '通过率',
+            key: 'pass',
+            dataIndex: 'pass',
+            width: 120,
+        },
+        {
+            title: '难度',
+            key: 'difficulty',
+            dataIndex: 'difficulty',
+            width: 120,
+        },
+    ];
 
+    public static frontPageDiffOptions = [
+        {
+            value: 'easy',
+            label: '简单',
+        },
+        {
+            value: 'medium',
+            label: '中等',
+        },
+        {
+            value: 'hard',
+            label: '困难',
+        }, {
+            value: 'none',
+            label: '默认',
+        }
+    ]
+
+    public static frontPageStateOptions = [
+        {
+            value: 'unanswered',
+            label: '未开始',
+        },
+        {
+            value: 'solved',
+            label: '已解答',
+        },
+        {
+            value: 'tried',
+            label: '尝试过',
+        }, {
+            value: 'none',
+            label: '默认',
+        }
+    ]
 
 }
