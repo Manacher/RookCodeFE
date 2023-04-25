@@ -16,6 +16,19 @@ export interface ProblemListColumn {
     difficulty: string,
 }
 
+export interface CalendarListReturnBody {
+    prob_id: number,
+    prob_title: string,
+    date: string,
+    state: boolean
+}
+
+export interface CalendarListColumn {
+    description: string,
+    dates: string,
+    color?: string,
+    highlight?: string,
+}
 
 export function processProblemListData(problemList: ProblemListReturnBody[]): ProblemListColumn[] {
     const processRes: ProblemListColumn[] = []
@@ -30,6 +43,37 @@ export function processProblemListData(problemList: ProblemListReturnBody[]): Pr
         })
     });
     return processRes
+}
+
+
+export function processCalendarListData(calendarList: CalendarListReturnBody[]) {
+
+    const processRes: CalendarListColumn[] = []
+    const day2ProbID = new Map<string, number>();
+
+    const date = new Date()
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+
+    calendarList.forEach((val) => {
+
+        if (val.date === formattedDate) {
+            processRes.push({
+                description: val.prob_title,
+                dates: val.date,
+                highlight: 'green',
+                color: 'none'
+            })
+        }else{
+            processRes.push({
+                description: val.prob_title,
+                dates: val.date,
+                color: val.state ? 'green' : 'orange',
+            })
+        }
+
+        day2ProbID.set(val.date, val.prob_id)
+    });
+    return [processRes, day2ProbID]
 }
 
 

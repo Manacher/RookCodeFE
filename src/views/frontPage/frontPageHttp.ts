@@ -23,3 +23,23 @@ export async function getProblemList(body: ProblemListBody){
     })
     return resp
 }
+
+export interface DailyQuestionParam{
+    start_date: string;
+    end_date: string;
+}
+
+export async function getDailyQuestionList(params: DailyQuestionParam){
+    let resp;
+    await axios({
+        method: 'get',
+        url: '/daily',
+        headers: {
+            'Authorization': store.state.token,
+        },
+        params: params,
+    }).then(res => {
+        resp = res.data
+    })
+    return resp
+}
