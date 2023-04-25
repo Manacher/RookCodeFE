@@ -4,14 +4,14 @@
     <div class="text-area">
       <div>
         过去一年共提交
-        <span style="font-size: 1.1rem; color: #262626; font-weight: bold">{{totalNum}}</span>
+        <span style="font-size: 1.1rem; color: #262626; font-weight: bold">{{ totalNum }}</span>
         次
       </div>
 
       <div style="margin-left: auto; color: #8a8a8e">
         累积提交天数:
-        <span style="color: #5c5c5c">{{totalDay}}</span>
-        <a-select v-model:value="yearSelected" style="width: 6.5rem; margin-left: 1.5rem;" >
+        <span style="color: #5c5c5c">{{ totalDay }}</span>
+        <a-select v-model:value="yearSelected" style="width: 6.5rem; margin-left: 1.5rem;">
           <a-select-option value="lastYear">过去一年</a-select-option>
         </a-select>
       </div>
@@ -28,6 +28,9 @@
 
 import * as echarts from 'echarts';
 import {onMounted, ref} from "vue";
+import {getUserYearSubmit} from "@/views/userPage/userPageHttp";
+import {message} from "ant-design-vue";
+import {processUserHeatmapData} from "@/views/userPage/userPageUtil";
 
 export default {
   props: ['account'],
@@ -35,44 +38,47 @@ export default {
 
   setup(props: any, context: any) {
 
-    let totalNum = ref(128);
-    let totalDay = ref(67);
-
+    let totalNum = ref(0);
+    let totalDay = ref(0);
     let yearSelected = ref('lastYear');
 
-    let changeSelectorStyle = () =>{
+    let changeSelectorStyle = () => {
       let selector = document.getElementsByClassName('ant-select-selector')[0] as HTMLElement;
       selector.style.border = 'none';
       selector.style.background = '#f2f3f4';
-      selector.style.borderRadius =  '0.3rem';
+      selector.style.borderRadius = '0.3rem';
       selector.style.color = '#595959';
     }
 
-    let getVirtualData = () => {
-      let today = Number(echarts.number.parseDate(new Date()));
-      let dayTime = 3600 * 24 * 1000;
-      let thatday = today - dayTime * 365;
-      let data = [];
-      for (let time = thatday; time < today; time += dayTime) {
-        data.push([
-          echarts.format.formatTime('yyyy-MM-dd', time),
-          Math.floor(Math.random() * 15)
-        ]);
-      }
-      return {
-        data,
-        today: echarts.format.formatTime('yyyy-MM-dd', today),
-        thatday: echarts.format.formatTime('yyyy-MM-dd', thatday)
-      };
+    let init = () => {
+      getUserYearSubmit(props.account).then((res: any) => {
+        if (res.success) {
+          let processRes = processUserHeatmapData(res.data);
+          let dataList = processRes[0]
+          let maxSubmit = processRes[1] as number
+          totalNum.value = processRes[2] as number
+          totalDay.value = processRes[3] as number
+
+          console.log("dataList", dataList)
+
+          let today = Number(echarts.number.parseDate(new Date()));
+          let lastYearDay = today - 3600 * 24 * 1000 * 364;
+          let todayString = echarts.format.formatTime('yyyy-MM-dd', today)
+          let lastYearDayString = echarts.format.formatTime('yyyy-MM-dd', lastYearDay)
+          renderChart(todayString, lastYearDayString, dataList, maxSubmit)
+        } else {
+          message.error(res.message)
+        }
+
+      })
     }
 
-    let renderChart = () => {
+    let renderChart = (startDate: string, endDate: string, data: any, maxSubmit: number) => {
       let myChart = echarts.init(document.getElementById('heatmap') as HTMLElement);
       let option = {
-        //todo 根据从后端获取到的最大值设置max
         visualMap: {
           min: 0,
-          max: 20,
+          max: maxSubmit,
           inRange: {
             color: ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196027', '#175b2f']
           },
@@ -97,7 +103,7 @@ export default {
           top: 0,
           left: 5,
           cellSize: [12, 12],
-          range: [getVirtualData()['thatday'], getVirtualData()['today']],
+          range: [startDate, endDate],
           itemStyle: {
             borderColor: '#fff',
             borderWidth: 3
@@ -122,19 +128,18 @@ export default {
         series: {
           type: 'heatmap',
           coordinateSystem: 'calendar',
-          data: getVirtualData()['data'],
+          data: data,
         },
       };
-
       myChart.setOption(option);
     }
 
     onMounted(() => {
-      renderChart();
+      init();
       changeSelectorStyle();
     })
 
-    return{
+    return {
       totalNum,
       totalDay,
       yearSelected,
@@ -155,7 +160,7 @@ export default {
   box-shadow: 0 2px 8px lightgrey;
 }
 
-.text-area{
+.text-area {
   text-align: left;
   color: #5c5c5c;
   font-size: 0.9rem;
@@ -164,7 +169,7 @@ export default {
   flex-direction: row;
 }
 
-.heatmap-container{
+.heatmap-container {
   overflow-x: auto;
   display: inline-block;
 }

@@ -11,7 +11,7 @@
         </span>
         </template>
 
-        <div style="display: inline-block;">
+        <div style="display: inline-block; width: 100%">
           <UserRecentPassList/>
         </div>
 
@@ -27,7 +27,7 @@
         </span>
         </template>
 
-        <div style="display: inline-block;">
+        <div style="display: inline-block; width: 100%">
           <UserPublishList/>
         </div>
 

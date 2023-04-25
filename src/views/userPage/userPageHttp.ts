@@ -45,3 +45,15 @@ export async function uploadUserInfo(body : UserInfoUploadBody){
     })
     return resp
 }
+
+export async function getUserYearSubmit(account : string){
+    let resp;
+    await axios({
+        method: 'get',
+        url: '/user/year_submit',
+        params: {'account': account},
+    }).then(res => {
+        resp = res.data
+    })
+    return resp
+}

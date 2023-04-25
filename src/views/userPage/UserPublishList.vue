@@ -1,5 +1,5 @@
 <template>
-  <a-list item-layout="horizontal" id="publish-list" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
+  <a-list item-layout="horizontal" id="publish-list" size="large" :pagination="pagination" :data-source="listData" style="width: 100%">
 
     <template #renderItem="{item, index}">
 

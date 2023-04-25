@@ -1,5 +1,5 @@
 <template>
-    <a-list item-layout="horizontal" id="pass-list" size="large" :pagination="pagination" :data-source="listData" style="width: 65rem">
+    <a-list item-layout="horizontal" id="pass-list" size="large" :pagination="pagination" :data-source="listData" style="width: 100%">
 
       <template #renderItem="{item, index}">
         <a-list-item key="item.title"
