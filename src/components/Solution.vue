@@ -13,7 +13,7 @@
         <span>{{ nickname }}</span>
         <span><like-outlined/>{{ thumbNum }}</span>
         <span><eye-outlined/>{{ viewNum }}</span>
-        <span>发布于：{{ date }}</span>
+        <span>发布于：{{ moment(date).fromNow() }}</span>
         <span v-for="tag in tagList" :key="tag">
       <a-tag>{{tag}}</a-tag>
     </span>
@@ -34,7 +34,6 @@
             :mode="mode"
         />
         <Editor
-            style="min-height: 5.4rem"
             v-model="comment"
             :defaultConfig="commentConfig"
             :mode="mode"
@@ -46,26 +45,43 @@
       </div>
     </div>
     <div class="commentList" style="text-align: left">
-      <a-list item-layout="horizontal" :data-source="commentList" :pagination="pagination">
+      <a-list
+          class="comment-list"
+          item-layout="horizontal"
+          :data-source="commentList"
+          :pagination="pagination">
         <template #header>
           <h1>精选评论</h1>
         </template>
         <template #renderItem="{ item }">
           <a-list-item>
-            <a-list-item-meta :description="item.datetime">
-              <template #title>
-                {{ item.nickname }}
+            <a-comment :author="item.nickname" :avatar="item.avatar">
+              <template #content>
+                <Editor
+                    style="width: 45rem"
+                    v-model="item.content"
+                    :defaultConfig="contentConfig"
+                    :mode="mode"
+                />
               </template>
-              <template #avatar>
-                <a-avatar :src="item.avatar" />
+              <template #datetime>
+                {{moment(item.datetime).fromNow()}}
               </template>
-            </a-list-item-meta>
+            </a-comment>
+<!--            <a-list-item-meta :description="moment(item.datetime).fromNow()">-->
+<!--              <template #title>-->
+<!--                {{ item.nickname }}-->
+<!--              </template>-->
+<!--              <template #avatar>-->
+<!--                <a-avatar :src="item.avatar" />-->
+<!--              </template>-->
+<!--            </a-list-item-meta>-->
           </a-list-item>
-          <Editor
-              v-model="item.content"
-              :defaultConfig="contentConfig"
-              :mode="mode"
-          />
+<!--          <Editor-->
+<!--              v-model="item.content"-->
+<!--              :defaultConfig="contentConfig"-->
+<!--              :mode="mode"-->
+<!--          />-->
         </template>
       </a-list>
     </div>
@@ -74,7 +90,6 @@
 
 <script lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-
 import {LikeOutlined, EyeOutlined, CheckCircleOutlined} from '@ant-design/icons-vue';
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
@@ -84,6 +99,9 @@ import {useRoute} from 'vue-router';
 import axios from "axios";
 import store from "@/store";
 import {notification} from "ant-design-vue";
+import moment from "moment/moment";
+
+moment.locale('zh-cn');
 
 Boot.registerModule(markdownModule)
 
@@ -268,6 +286,7 @@ export default {
       comment,
       commentList,
       pagination,
+      moment,
       contentCreated,
       commentCreated,
       onEdit,
@@ -280,6 +299,7 @@ export default {
 
 <style scoped>
   .solution{
+    min-height: 48rem;
     text-align: left;
     overflow-y: hidden;
     background: white;

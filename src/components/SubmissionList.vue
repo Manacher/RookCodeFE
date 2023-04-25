@@ -2,19 +2,21 @@
   <a-table bordered :data-source="dataSource" :columns="columns" >
     <template #bodyCell="{ column, text, record}">
       <template v-if="column.dataIndex === 'result'">
-        <a v-if="text === '通过'" style="color: green" :href="getUrl(record.key)">{{text}}</a>
-        <a v-else style="color: red" :href="getUrl(record.key)">{{text}}</a>
+        <a v-if="text === '通过'" style="color: green" :href="getUrl(record.id)" target="_blank">{{text}}</a>
+        <a v-else style="color: red" :href="getUrl(record.id)" target="_blank">{{text}}</a>
       </template>
     </template>
   </a-table>
 </template>
 
 <script lang="ts">
-
 import {ref, Ref} from "vue";
+import moment from "moment/moment";
+
+moment.locale('zh-cn');
 
 interface DataItem{
-  key: string;
+  id: string;
   result: string,
   time: string,
   memory: string,
@@ -31,15 +33,15 @@ export default {
 
     // TODO: 模拟请求数据
     setTimeout(() => {
-      dataSource.value.push({key: "1", result: "通过",time: "28ms", memory: "3MB", lang: "c++", date: "2022-01-04"})
-      dataSource.value.push({key: "2", result: "失败",time: "28ms", memory: "3MB", lang: "c++", date: "2022-01-04"})
+      dataSource.value.push({id: "426282678", result: "通过",time: "28ms", memory: "3MB", lang: "c++", date: "2022-01-04"})
+      dataSource.value.push({id: "426282678", result: "失败",time: "28ms", memory: "3MB", lang: "c++", date: "2022-01-04"})
       debugger
     }, 3000);
 
     // 获取提交详情url
-    const getUrl = (key: string) => {
+    const getUrl = (id: string) => {
       // TODO
-      return "https://leetcode.cn/submissions/detail/" + key
+      return "https://leetcode.cn/submissions/detail/" + id
     }
 
     return {

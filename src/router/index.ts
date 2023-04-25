@@ -38,6 +38,11 @@ const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
+    path: '/submissions/detail/:sub_id',
+    name: 'submissions',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Submission.vue')
+  },
+  {
     path: '/problemView',
     name: 'problemView',
     component: () => import(/* webpackChunkName: "about" */ '../components/ProblemView.vue')
@@ -46,11 +51,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/submit',
     name: 'submit',
     component: () => import(/* webpackChunkName: "about" */ '../components/Submit.vue')
-  },
-  {
-    path: '/submission',
-    name: 'submission',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Submission.vue')
   },
  ]
 

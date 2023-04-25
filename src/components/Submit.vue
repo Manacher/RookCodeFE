@@ -23,10 +23,10 @@
             v-model:value="language"
             style="width: 6rem"
             @change="handleLangChange">
-          <a-select-option value="cpp">cpp</a-select-option>
-          <a-select-option value="c">c</a-select-option>
-          <a-select-option value="python">python</a-select-option>
-          <a-select-option value="java">java</a-select-option>
+          <a-select-option value="C++">C++</a-select-option>
+          <a-select-option value="C">C</a-select-option>
+          <a-select-option value="Python">Python</a-select-option>
+          <a-select-option value="Java">Java</a-select-option>
         </a-select>
         <a-button type="primary" :loading="loading" @click="handleButtonClick">提交</a-button>
       </a-space>
@@ -41,6 +41,9 @@ import { python } from "@codemirror/lang-python";
 import { java } from "@codemirror/lang-java";
 import { oneDark } from "@codemirror/theme-one-dark";
 import {ref} from "vue";
+import axios from "axios";
+import {useRoute} from "vue-router";
+import store from "@/store";
 
 interface DelayLoading{
   delay: number;
@@ -52,8 +55,10 @@ export default {
   emits: ['submit'],  // 自定义component事件
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(props: any, context: any){
+    // 获取路由参数
+    const { params } = useRoute()
     const code = ref("");  // 用户编写的代码
-    let language = ref("cpp");  // 选择的代码语言
+    let language = ref("C++");  // 选择的代码语言
     const options = {
       style: { height: "100%" },
       mode: "text/x-c++src",
@@ -70,18 +75,18 @@ export default {
     const handleLangChange = (lang: string) => {
       console.log(lang)
       language.value = lang
-      if(language.value === "cpp" || language.value === "c"){
+      if(language.value === "C++" || language.value === "C"){
         // eslint-disable-next-line no-undef
         options.extensions = [cpp(), oneDark]
-        if(language.value === "cpp") options.mode = "text/x-c++src";
-        else if(language.value === "c") options.mode = "text/x-csrc";
+        if(language.value === "C++") options.mode = "text/x-c++src";
+        else if(language.value === "C") options.mode = "text/x-csrc";
       }
-      else if(language.value === "python"){
+      else if(language.value === "Python"){
         // eslint-disable-next-line no-undef
         options.extensions = [python(), oneDark]
         options.mode = "text/x-python";
       }
-      else if(language.value === "java"){
+      else if(language.value === "Java"){
         // eslint-disable-next-line no-undef
         options.extensions = [java(), oneDark]
         options.mode = "text/x-java";
@@ -93,14 +98,34 @@ export default {
 
     // 监听提交按钮
     const handleButtonClick = () =>{
-      //TODO
       loading.value = { delay: 0 }
 
-      setTimeout(() => {
-        loading.value = false;
-      }, 5000);
+      const ConvertLang = (lang: string) => {
+        if(lang === "C") return "C"
+        else if(lang === "C++") return "C_PLUS_PLUS";
+        else if(lang === "Python") return "PYTHON"
+        else if(lang === "Java") return "JAVA"
+        return "C"
+      }
 
-      context.emit("submit", 1)
+      // TODO: 提交代码, 
+      axios.post("http://175.178.221.165:8081/submission/submit_code",
+          {
+            "language": ConvertLang(language.value),
+            "questionId":  params.pro_id,
+            "submissionCode": code.value,
+          },
+          {
+            headers: {'Authorization': store.state.token}
+          }
+      ).then(res=>{
+        console.log(res.data)
+        loading.value = false;
+        context.emit("submit", 1)
+      }, err=>{
+        console.log(err.data)
+      })
+
     }
 
     return {
