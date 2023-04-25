@@ -47,13 +47,11 @@ interface passListData{
   title: string;
   date: string;
   id: number;
+  question_id?: number;
 }
 
 let passList = ref<passListData[]>([])
 let loading = ref(false)
-
-
-
 
 export default {
   props: ['account'],
@@ -73,7 +71,7 @@ export default {
 
 
     let onTitleClicked = (id: number) => {
-      window.open(`/solution/${id}`)
+      window.open(`/submission/${id}`)
     }
 
     let handleQuery = (page: number) => {
@@ -88,11 +86,10 @@ export default {
 
           passList.value = []
 
-          // TODO 此处现在没有题目ID，后续需要根据题目ID重新修改标题的内容
           moment.locale('zh-cn');
           data.infoRespList.forEach((val : passListData) => {
             passList.value.push({
-              title: val.id + '. ' + val.title,
+              title: val.question_id + '. ' + val.title,
               date: moment(val.date).fromNow(),
               id: val.id,
             })

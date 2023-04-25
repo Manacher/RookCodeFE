@@ -51,20 +51,21 @@ import moment from "moment/moment";
 import {message} from "ant-design-vue";
 
 interface publishListData {
-  title: string,
-  view: number,
-  like: number,
+  title: string;
+  view: number;
+  like: number;
   date: string;
   id: number;
 }
 
 interface publishRespData {
-  question_title: string,
-  solution_title: string,
-  view: number,
-  like: number,
+  question_title: string;
+  solution_title: string;
+  view: number;
+  like: number;
   date: string;
   id: number;
+  question_id: number;
 }
 
 let loading = ref(false)
@@ -102,10 +103,9 @@ export default {
 
           let list = data.findSolutionRespList
 
-          // TODO 此处现在没有题目ID，后续需要根据题目ID重新修改标题的内容
           list.forEach((val: publishRespData) => {
             publishList.value.push({
-              title: val.id + '. ' + val.question_title + ' - ' + val.solution_title,
+              title: val.question_id + '. ' + val.question_title + ' - ' + val.solution_title,
               like: val.like,
               view: val.view,
               date: moment(val.date).fromNow(),
