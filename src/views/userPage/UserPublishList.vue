@@ -1,30 +1,42 @@
 <template>
-  <a-list item-layout="horizontal" id="publish-list" size="large" :pagination="pagination" :data-source="listData" style="width: 100%">
+  <a-list item-layout="horizontal"
+          id="publish-list"
+          size="large"
+          :pagination="pagination"
+          :data-source="publishList"
+          :loading="loading"
+          style="width: 100%">
 
     <template #renderItem="{item, index}">
 
       <a-list-item key="item.title"
                    @click="onTitleClicked(item.id)"
-                   :style= "{'background-color':(index%2 === 1 ? '#fff' : '#f7f7f8'),
+                   :style="{'background-color':(index%2 === 1 ? '#fff' : '#f7f7f8'),
                    'border-radius': (index%2 === 1 ? '0' : '0.35rem')}">
 
         <template #actions>
-            <span class="publish-list-action-item">
-              <like-outlined style="margin-right: 0.3rem"/>{{ item.like }}</span>
-          <span class="publish-list-action-item">
-              <eye-outlined style="margin-right: 0.3rem"/>{{ item.view }}</span>
-          <span class="publish-list-action-item">
-              {{ item.date }}</span>
-          <a @click="onEditClicked(item.id)">编辑</a>
+
+          <a-space direction="horizontal">
+            <div class="publish-list-action-item" style="width: 2rem">
+              <like-outlined style="margin-right: 0.3rem;"/>
+              {{ item.like }}
+            </div>
+            <div class="publish-list-action-item" style="width: 2rem">
+              <eye-outlined style="margin-right: 0.3rem;"/>
+              {{ item.view }}
+            </div>
+            <div class="publish-list-action-item" style="width: 4rem">
+              {{ item.date }}
+            </div>
+            <a @click="onEditClicked(item.id)">编辑</a>
+          </a-space>
+
+
         </template>
         <div>
-          <a style="color: #262626" >{{ item.title }}</a>
+          <a style="color: #262626">{{ item.title }}</a>
         </div>
-
       </a-list-item>
-
-
-
 
     </template>
   </a-list>
@@ -33,22 +45,82 @@
 
 <script lang="ts">
 
-let listData: { title: string; date: string; id: number; like: number; view: number; }[] = [];
+import {ref} from "vue";
+import {getUserPublishList} from "@/views/userPage/userPageHttp";
+import moment from "moment/moment";
+import {message} from "ant-design-vue";
 
-for (let i = 0; i < 100; i++) {
-  listData.push({
-    title: `93. 复原 IP 地址 - C++ 时间击败100% ${i}`,
-    date: '2021-05-01',
-    id: i,
-    like: 13,
-    view: 123,
-  });
+interface publishListData {
+  title: string,
+  view: number,
+  like: number,
+  date: string;
+  id: number;
 }
+
+interface publishRespData {
+  question_title: string,
+  solution_title: string,
+  view: number,
+  like: number,
+  date: string;
+  id: number;
+}
+
+let loading = ref(false)
 
 export default {
   props: ['account'],
   name: "UserPublishList",
   setup(props: any, context: any) {
+
+    let pagination = ref({
+      current: 1,
+      pageSize: 15,
+      total: 15,
+      showSizeChanger: false,
+      onChange: (page: number) => {
+        handleQuery(page)
+      }
+    });
+
+    let publishList = ref<publishListData[]>([])
+
+    let handleQuery = (page: number) => {
+      loading.value = true;
+      getUserPublishList(props.account, page).then((res: any) => {
+        if (res.success) {
+          let data = res.data;
+
+          console.log("publish data", data.findSolutionRespList)
+
+          pagination.value.total = data.total_page * pagination.value.pageSize;
+          pagination.value.current = page;
+
+          publishList.value = []
+          moment.locale('zh-cn');
+
+          let list = data.findSolutionRespList
+
+          // TODO 此处现在没有题目ID，后续需要根据题目ID重新修改标题的内容
+          list.forEach((val: publishRespData) => {
+            publishList.value.push({
+              title: val.id + '. ' + val.question_title + ' - ' + val.solution_title,
+              like: val.like,
+              view: val.view,
+              date: moment(val.date).fromNow(),
+              id: val.id,
+            })
+          })
+          loading.value = false;
+        } else {
+          message.error(res.message)
+          loading.value = false;
+        }
+      })
+    }
+
+    handleQuery(pagination.value.current)
 
     let onTitleClicked = (id: number) => {
       window.open(`/solution/${id}`)
@@ -58,17 +130,11 @@ export default {
       window.open(`/solution/edit/${id}`)
     }
 
-    console.log(window.innerWidth)
-    const pagination = {
-      onChange: (page: number) => {
-        console.log(page);
-      },
-      pageSize: 15,
-    };
 
     return {
-      listData,
       pagination,
+      publishList,
+      loading,
       onTitleClicked,
       onEditClicked,
     };
@@ -80,11 +146,12 @@ export default {
 
 .publish-list-action-item {
   margin-right: 0.5rem;
-  margin-left: 0.5rem
+  /*margin-left: 0.5rem;*/
+  text-align: right;
 }
 
 
-#publish-list .ant-list-item{
+#publish-list .ant-list-item {
   cursor: pointer;
 }
 

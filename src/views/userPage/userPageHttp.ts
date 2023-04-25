@@ -69,3 +69,15 @@ export async function getUserRecentPassList(account : string, page : number){
     })
     return resp
 }
+
+export async function getUserPublishList(account : string, page : number){
+    let resp;
+    await axios({
+        method: 'get',
+        url: '/user/solutionList',
+        params: {'account': account, 'page': page },
+    }).then(res => {
+        resp = res.data
+    })
+    return resp
+}

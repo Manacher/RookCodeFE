@@ -15,9 +15,6 @@ console.log('current axios address', process.env.VUE_APP_SERVER);
 // 配置axios默认请求地址
 axios.defaults.baseURL = 'http://175.178.221.165:8081';
 
-const AUTH_TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNDI2ODg3MzA2QHFxLmNvbSIsImNyZWF0ZWQiOjE2ODIyNDcwMTA0MDYsImV4cCI6MTcxODI0NzAxMH0.LmY3hcywCho3RVjPrfQkSx4ofSI-broMbfDU5eCXgVPctACsfEOA1n4NnYr64cquu9dx6Y9iVWPSUPlFSal6vA";
-axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-
 // axios拦截器配置
 axios.interceptors.request.use(function (config) {
     console.log("request param: ", config)

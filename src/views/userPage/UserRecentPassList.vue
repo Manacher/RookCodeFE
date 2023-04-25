@@ -1,5 +1,11 @@
 <template>
-  <a-list item-layout="horizontal" id="pass-list" size="large" :pagination="pagination" :data-source="passList"
+  <a-list item-layout="horizontal"
+          id="pass-list"
+          size="large"
+          :pagination="pagination"
+          :data-source="passList"
+          :loading="loading"
+          @change="handleListChange"
           style="width: 100%">
 
     <template #renderItem="{item, index}">
@@ -43,42 +49,47 @@ interface passListData{
   id: number;
 }
 
-// let listData: { title: string; date: string; id: number; }[] = [];
-// for (let i = 0; i < 100; i++) {
-//   listData.push({
-//     title: `剑指Offer 12.矩阵中的路径 ${i}`,
-//     date: '2021-05-01',
-//     id: i,
-//   });
-// }
+let passList = ref<passListData[]>([])
+let loading = ref(false)
+
+
+
 
 export default {
   props: ['account'],
   name: "UserRecentPassList",
   setup(props: any, context: any) {
 
+
     let pagination = ref({
       current: 1,
       pageSize: 15,
       total: 15,
       showSizeChanger: false,
+      onChange: (page: number) => {
+        handleQuery(page)
+      }
     });
 
-    let passList = ref<passListData[]>([])
 
     let onTitleClicked = (id: number) => {
       window.open(`/solution/${id}`)
     }
 
-    let init = () => {
-      getUserRecentPassList(props.account, 1).then((res: any) => {
+    let handleQuery = (page: number) => {
+      loading.value = true;
+      getUserRecentPassList(props.account, page).then((res: any) => {
         console.log("recent pass list", res)
         if(res.success){
           let data = res.data;
-          pagination.value = data.total_page;
 
+          pagination.value.total = data.total_page * pagination.value.pageSize;
+          pagination.value.current = page;
+
+          passList.value = []
+
+          // TODO 此处现在没有题目ID，后续需要根据题目ID重新修改标题的内容
           moment.locale('zh-cn');
-
           data.infoRespList.forEach((val : passListData) => {
             passList.value.push({
               title: val.id + '. ' + val.title,
@@ -86,21 +97,27 @@ export default {
               id: val.id,
             })
           })
-
+          loading.value = false;
         }else{
           message.error(res.message)
+          loading.value = false;
         }
-
       })
     }
 
-    init();
+    handleQuery(pagination.value.current)
 
+    let handleListChange = (pagination: any) => {
+      console.log("handleListChange", pagination)
+      handleQuery(pagination.current);
+    };
 
     return {
       passList,
       pagination,
+      loading,
       onTitleClicked,
+      handleListChange,
     };
   },
 }
