@@ -12,7 +12,7 @@
         </template>
 
         <div style="display: inline-block; width: 100%">
-          <UserRecentPassList/>
+          <UserRecentPassList :account="account"/>
         </div>
 
 
@@ -28,7 +28,7 @@
         </template>
 
         <div style="display: inline-block; width: 100%">
-          <UserPublishList/>
+          <UserPublishList :account="account"/>
         </div>
 
       </a-tab-pane>
@@ -44,6 +44,7 @@ import UserRecentPassList from "@/views/userPage/UserRecentPassList.vue";
 import UserPublishList from "@/views/userPage/UserPublishList.vue";
 
 export default {
+  props: ['account'],
   name: "user-list",
   components: {UserPublishList, UserRecentPassList},
   setup() {

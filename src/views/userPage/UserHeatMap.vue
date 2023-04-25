@@ -59,7 +59,7 @@ export default {
           totalNum.value = processRes[2] as number
           totalDay.value = processRes[3] as number
 
-          console.log("dataList", dataList)
+          // console.log("dataList", dataList)
 
           let today = Number(echarts.number.parseDate(new Date()));
           let lastYearDay = today - 3600 * 24 * 1000 * 364;

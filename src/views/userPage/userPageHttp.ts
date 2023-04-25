@@ -57,3 +57,15 @@ export async function getUserYearSubmit(account : string){
     })
     return resp
 }
+
+export async function getUserRecentPassList(account : string, page : number){
+    let resp;
+    await axios({
+        method: 'get',
+        url: '/user/pass/list',
+        params: {'account': account, 'page': page },
+    }).then(res => {
+        resp = res.data
+    })
+    return resp
+}

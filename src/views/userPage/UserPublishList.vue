@@ -46,8 +46,9 @@ for (let i = 0; i < 100; i++) {
 }
 
 export default {
+  props: ['account'],
   name: "UserPublishList",
-  setup() {
+  setup(props: any, context: any) {
 
     let onTitleClicked = (id: number) => {
       window.open(`/solution/${id}`)

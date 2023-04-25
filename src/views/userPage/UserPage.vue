@@ -33,7 +33,7 @@
           <a-row class="content-bottom">
             <a-col flex="0"/>
             <a-col flex="auto">
-              <UserList/>
+              <UserList :account="userAccount"/>
             </a-col>
           </a-row>
         </a-col>
