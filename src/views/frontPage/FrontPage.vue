@@ -12,7 +12,7 @@
 
         <a-col :span="6">
           <div class="right-side">
-            <ProgressDisplay style="width: 20rem" :value="statisticsData"/>
+            <ProgressDisplay style="width: 20rem"/>
             <CheckInCalendar style="width: 20rem; margin-top: 2rem"/>
           </div>
 
@@ -41,17 +41,8 @@ export default defineComponent({
   },
 
   setup() {
-    let statisticsData = ref({
-      easyTotal: 200,
-      mediumTotal: 150,
-      hardTotal: 100,
-      easySolved: 45,
-      mediumSolved: 25,
-      hardSolved: 31
-    })
-
     return {
-      statisticsData
+
     };
   },
 });

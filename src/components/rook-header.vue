@@ -30,13 +30,11 @@
 
               <div class="center-card-action-item">
 
-                <router-link to="/user" v-on:click="onCardClicked">
+                <router-link :to="`/user/${userInfo.account}`" v-on:click="onCardClicked">
                   <img src="../assets/center.png" class="center-card-item-img"/>
                   <span>主页</span>
                 </router-link>
-
               </div>
-
 
               <div>
                 <a-popconfirm title="确认退出登陆吗？" ok-text="是" cancel-text="否">
@@ -120,6 +118,13 @@ export default {
       })
     }
 
+    // let info:UserInfo = {
+    //   account: "1426887306@qq.com",
+    //   token:"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNDI2ODg3MzA2QHFxLmNvbSIsImNyZWF0ZWQiOjE2ODIyNDcwMTA0MDYsImV4cCI6MTcxODI0NzAxMH0.LmY3hcywCho3RVjPrfQkSx4ofSI-broMbfDU5eCXgVPctACsfEOA1n4NnYr64cquu9dx6Y9iVWPSUPlFSal6vA"
+    // }
+    // store.commit("login",info);
+    // console.log("account and token", store.state.token, store.state.account)
+
     let currentPath = window.location.pathname;
     let navKeys = ref(['/']);
     navKeys.value = [currentPath]
@@ -165,7 +170,7 @@ export default {
     let onCardClicked = () => {
       document.removeEventListener('click', watchNextClick)
       cardShow.value = false;
-      navKeys.value = ['/user']
+      navKeys.value = ['/user/' + userInfo.value.account]
     }
 
     return {

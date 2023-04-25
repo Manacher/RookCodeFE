@@ -7,17 +7,18 @@
 
     <div class="progress-display">
 
+
       <div class="progress-chart">
         <a-tooltip title="简单">
-          <a-progress :percent="value.easySolved / value.easyTotal * 100" size="small" strokeColor="#00af9b" :showInfo="false"/>
+          <a-progress :percent="statisticsData.easySolved / statisticsData.easyTotal * 100" size="small" strokeColor="#00af9b" :showInfo="false"/>
         </a-tooltip>
 
         <a-tooltip title="中等">
-          <a-progress :percent="value.mediumSolved / value.mediumTotal * 100" size="small" strokeColor="#ffb800" :showInfo="false"/>
+          <a-progress :percent="statisticsData.mediumSolved / statisticsData.mediumTotal * 100" size="small" strokeColor="#ffb800" :showInfo="false"/>
         </a-tooltip>
 
         <a-tooltip title="困难">
-          <a-progress :percent="value.hardSolved / value.hardTotal * 100" size="small" strokeColor="#ff5064" :showInfo="false"/>
+          <a-progress :percent="statisticsData.hardSolved / statisticsData.hardTotal * 100" size="small" strokeColor="#ff5064" :showInfo="false"/>
         </a-tooltip>
 
       </div>
@@ -29,9 +30,9 @@
           <a-col :span="8">
             <span class="dif-text" style="color: #00af9b">简单</span>
             <div>
-              <span class="static-solve-span">{{ value.easySolved }}</span>
+              <span class="static-solve-span">{{ statisticsData.easySolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ value.easyTotal }}</span>
+              <span class="static-total-span">{{ statisticsData.easyTotal }}</span>
             </div>
           </a-col>
 
@@ -41,18 +42,18 @@
             </div>
 
             <div>
-              <span class="static-solve-span">{{ value.mediumSolved }}</span>
+              <span class="static-solve-span">{{ statisticsData.mediumSolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ value.mediumTotal }}</span>
+              <span class="static-total-span">{{ statisticsData.mediumTotal }}</span>
             </div>
           </a-col>
 
           <a-col :span="8">
             <span class="dif-text" style="color: #ff2d55">困难</span>
             <div>
-              <span class="static-solve-span">{{ value.hardSolved }}</span>
+              <span class="static-solve-span">{{ statisticsData.hardSolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ value.hardTotal }}</span>
+              <span class="static-total-span">{{ statisticsData.hardTotal }}</span>
             </div>
           </a-col>
 
@@ -70,10 +71,43 @@
 
 <script lang="ts">
 
+import {getFrontPageProgressData} from "@/views/frontPage/frontPageHttp";
+import {ref} from "vue";
+import {message} from "ant-design-vue";
 
 export default {
-  props:['value'],
   name: "progress-display",
+  setup(){
+
+    let statisticsData = ref({
+      easyTotal: 0,
+      mediumTotal: 0,
+      hardTotal: 0,
+      easySolved: 0,
+      mediumSolved: 0,
+      hardSolved: 0
+    })
+
+    getFrontPageProgressData().then( (res : any) => {
+
+      if(res.success){
+        let data = res.data
+        statisticsData.value.easyTotal = data.easy_total
+        statisticsData.value.mediumTotal = data.medium_total
+        statisticsData.value.hardTotal = data.hard_total
+        statisticsData.value.easySolved = data.easy_solved
+        statisticsData.value.mediumSolved = data.medium_solved
+        statisticsData.value.hardSolved = data.hard_solved
+      }else{
+        message.error(res.message)
+      }
+
+    })
+
+    return{
+      statisticsData
+    }
+  }
 }
 </script>
 

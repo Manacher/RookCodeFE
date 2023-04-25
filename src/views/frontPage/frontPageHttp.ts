@@ -43,3 +43,15 @@ export async function getDailyQuestionList(params: DailyQuestionParam){
     })
     return resp
 }
+
+export async function getFrontPageProgressData(){
+    let resp;
+    await axios({
+        method: 'get',
+        url: '/user/progress',
+        params: {'account': store.state.account},
+    }).then(res => {
+        resp = res.data
+    })
+    return resp
+}
