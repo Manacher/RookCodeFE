@@ -19,7 +19,7 @@
             <a-row :gutter="12">
 
               <a-col flex="26rem">
-                <UserStatistics :value="statisticsData" style="height: 11rem"/>
+                <UserStatistics :account="userAccount" style="height: 11rem"/>
               </a-col>
 
               <a-col flex="auto">
@@ -75,20 +75,17 @@ export default defineComponent({
       return router.currentRoute.value.params.id === ''
     }
 
-    let statisticsData = ref({
-      easyTotal: 765,
-      mediumTotal: 651,
-      hardTotal: 1599,
-      easySolved: 43,
-      mediumSolved: 25,
-      hardSolved: 91
-    })
+    let userAccount = ref("")
+    userAccount.value = router.currentRoute.value.params.id as string
+    console.log("user page", userAccount.value)
+
+
 
     console.log(window.innerWidth)
 
     return {
       isSelfPage,
-      statisticsData,
+      userAccount,
     };
   },
 });

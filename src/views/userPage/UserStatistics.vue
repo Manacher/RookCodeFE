@@ -11,7 +11,7 @@
       <div class="progress-line-chart">
 
         <a-tooltip title="简单">
-          <a-progress :percent="value.easySolved / value.easyTotal * 100"
+          <a-progress :percent="statisticsData.easySolved / statisticsData.easyTotal * 100"
                       size="large"
                       strokeColor="#00af9b"
                       :showInfo="false"
@@ -19,7 +19,7 @@
         </a-tooltip>
 
         <a-tooltip title="中等">
-          <a-progress :percent="value.mediumSolved / value.mediumTotal * 100"
+          <a-progress :percent="statisticsData.mediumSolved / statisticsData.mediumTotal * 100"
                       size="large"
                       strokeColor="#ffb800"
                       :showInfo="false"
@@ -27,7 +27,7 @@
         </a-tooltip>
 
         <a-tooltip title="困难">
-          <a-progress :percent="value.hardSolved / value.hardTotal * 100"
+          <a-progress :percent="statisticsData.hardSolved / statisticsData.hardTotal * 100"
                       size="large"
                       strokeColor="#ff5064"
                       :showInfo="false"/>
@@ -42,9 +42,9 @@
           <a-col :span="8">
             <span class="dif-text" style="color: #00af9b;">简单</span>
             <div>
-              <span class="static-solve-span">{{ value.easySolved }}</span>
+              <span class="static-solve-span">{{ statisticsData.easySolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ value.easyTotal }}</span>
+              <span class="static-total-span">{{ statisticsData.easyTotal }}</span>
             </div>
           </a-col>
 
@@ -54,18 +54,18 @@
             </div>
 
             <div>
-              <span class="static-solve-span">{{ value.mediumSolved }}</span>
+              <span class="static-solve-span">{{ statisticsData.mediumSolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ value.mediumTotal }}</span>
+              <span class="static-total-span">{{ statisticsData.mediumTotal }}</span>
             </div>
           </a-col>
 
           <a-col :span="8">
             <span class="dif-text" style="color: #ff2d55;">困难</span>
             <div>
-              <span class="static-solve-span">{{ value.hardSolved }}</span>
+              <span class="static-solve-span">{{ statisticsData.hardSolved }}</span>
               <a-divider style="margin:0"/>
-              <span class="static-total-span">{{ value.hardTotal }}</span>
+              <span class="static-total-span">{{ statisticsData.hardTotal }}</span>
             </div>
           </a-col>
 
@@ -83,26 +83,57 @@
 <script lang="ts">
 
 import * as echarts from 'echarts';
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
+import {getUserPageProgressData} from "@/views/userPage/userPageHttp";
+import {message} from "ant-design-vue";
 
 export default {
-  props: ['value'],
+  props: ['account'],
   name: "user-statistics",
-  components: {},
+
 
   setup(props: any, context: any) {
-    onMounted(() => {
-      console.log("value", props.value.easySolved)
 
+    let statisticsData = ref({
+      easyTotal: 0,
+      mediumTotal: 0,
+      hardTotal: 0,
+      easySolved: 0,
+      mediumSolved: 0,
+      hardSolved: 0
+    })
+
+
+    onMounted(() => {
+      getUserPageProgressData(props.account).then((res: any) => {
+        if (res.success) {
+          // console.log("user sta", res)
+          let data = res.data
+          statisticsData.value.easyTotal = data.easy_total
+          statisticsData.value.mediumTotal = data.medium_total
+          statisticsData.value.hardTotal = data.hard_total
+          statisticsData.value.easySolved = data.easy_solved
+          statisticsData.value.mediumSolved = data.medium_solved
+          statisticsData.value.hardSolved = data.hard_solved
+          // console.log("user sta data", statisticsData)
+          chartInit()
+        } else {
+          message.error(res.message)
+        }
+      })
+    })
+
+
+    let chartInit = () => {
       let myChart = echarts.init(document.getElementById('echarts-container') as HTMLElement);
       myChart.setOption({
         title: {
-          text: props.value.easySolved+props.value.mediumSolved+props.value.hardSolved + '\n解决问题',
+          text: statisticsData.value.easySolved + statisticsData.value.mediumSolved + statisticsData.value.hardSolved + '\n解决问题',
           color: 'grey',
           left: 'center',
           top: 'center',
-          textStyle:{
-            fontSize:15
+          textStyle: {
+            fontSize: 15
           }
         },
         series: [
@@ -119,19 +150,25 @@ export default {
             },
             silent: true,
             data: [
-              {value: props.value.easySolved, itemStyle: {color: '#00af9b'}},
-              {value: props.value.mediumSolved, itemStyle: {color: '#ffb800'}},
-              {value: props.value.hardSolved, itemStyle: {color: '#ff2d55'}},
-              {value: props.value.easyTotal - props.value.easySolved
-                    + props.value.mediumTotal - props.value.mediumSolved
-                    + props.value.hardTotal - props.value.hardSolved, itemStyle: {color: '#dfd6d7'}},
+              {value: statisticsData.value.easySolved, itemStyle: {color: '#00af9b'}},
+              {value: statisticsData.value.mediumSolved, itemStyle: {color: '#ffb800'}},
+              {value: statisticsData.value.hardSolved, itemStyle: {color: '#ff2d55'}},
+              {
+                value: statisticsData.value.easyTotal - statisticsData.value.easySolved
+                    + statisticsData.value.mediumTotal - statisticsData.value.mediumSolved
+                    + statisticsData.value.hardTotal - statisticsData.value.hardSolved, itemStyle: {color: '#dfd6d7'}
+              },
             ]
           }
         ]
       })
-    })
+    }
 
-    return {}
+
+    return {
+      statisticsData
+
+    }
   }
 }
 </script>
