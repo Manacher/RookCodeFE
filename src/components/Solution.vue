@@ -34,6 +34,7 @@
             :mode="mode"
         />
         <Editor
+            style="min-height: 5.4rem"
             v-model="comment"
             :defaultConfig="commentConfig"
             :mode="mode"
@@ -51,7 +52,7 @@
         </template>
         <template #renderItem="{ item }">
           <a-list-item>
-            <a-list-item-meta :description="item.date">
+            <a-list-item-meta :description="item.datetime">
               <template #title>
                 {{ item.nickname }}
               </template>
@@ -61,7 +62,7 @@
             </a-list-item-meta>
           </a-list-item>
           <Editor
-              v-model="item.comment"
+              v-model="item.content"
               :defaultConfig="contentConfig"
               :mode="mode"
           />
@@ -88,9 +89,11 @@ Boot.registerModule(markdownModule)
 
 interface CommentItem {
   avatar: string,
+  comment_id: number,
+  content: string,
+  datetime: string,
   nickname: string,
-  date: string,
-  comment: string,
+  user_id: number,
 }
 
 export default {
@@ -116,42 +119,38 @@ export default {
     const contentConfig = {readOnly :true, scroll: false}
     const content = ref("")
 
+    // 评论当前页号(从1开始)
+    const cur_page = ref(1)
     // 编辑器实例，必须用 shallowRef
     const commentRef = shallowRef()
     // 编辑器，工具栏配置
     const commentConfig = {readOnly :false, scroll: false}
     const comment = ref('')
     // 评论列表数据
-    const commentList: CommentItem[] = [
-      {
-        avatar: "https://tse2-mm.cn.bing.net/th/id/OIP-C.Y5AKy_ThdGknRFLuqJmdtwHaEo?pid=ImgDet&rs=1",
-        nickname: "三七",
-        date: "2023/01/05",
-        comment: "<p style=\"text-align: left;\">我的代码很简单</p><pre><code class=\"language-cpp\">class Solution {\n" +
-            "public:\n" +
-            "    unordered_map&lt;int,int&gt; mp1;\n" +
-            "    vector&lt;int&gt; twoSum(vector&lt;int&gt;& nums, int target) {\n" +
-            "        for( int i=0;i&lt;nums.size();i++ ){\n" +
-            "            if( mp1.count(target-nums[i]) ) return vector&lt;int&gt;{i,mp1[target-nums[i]]};\n" +
-            "            else mp1[nums[i]]=i;\n" +
-            "        }\n" +
-            "        return vector&lt;int&gt;();\n" +
-            "    }\n" +
-            "};</code></pre><p><br></p>",
-      },
-    ];
+    const commentList = ref([]);
+    // 每页评论个数
+    const pageSize = 10
     // commentList的分页设置
-    const pagination = {
+    const pagination = ref({
       onChange: (page: number) => {
-        //TODO
-        console.log(page);
-        commentList.length = 0;
-
+        cur_page.value = page
+        commentList.value.length = 0;
+        axios.get("http://175.178.221.165:8081/solutions/Getcomments", {
+          params: {
+            'page': cur_page.value,
+            'solution_id': params.sln_id,
+          }
+        }).then(res => {
+          commentList.value = res.data.data.commentList
+          pagination.value.total = res.data.data.total_page*pageSize
+        }, err => {
+          console.log(err.data)
+        })
       },
-      pageSize: 10,
+      pageSize: pageSize,
       total: 100,
       showSizeChanger: false,
-    };
+    });
 
     // ajax 异步获取后端数据
     onMounted(() => {
@@ -172,6 +171,18 @@ export default {
         title.value = data.title
         tagList.value = data.tags.split("_")
       },err=>{
+        console.log(err.data)
+      })
+
+      axios.get("http://175.178.221.165:8081/solutions/Getcomments", {
+        params: {
+          'page': cur_page.value,
+          'solution_id': params.sln_id,
+        }
+      }).then(res => {
+        commentList.value = res.data.data.commentList
+        pagination.value.total = res.data.data.total_page*pageSize
+      }, err => {
         console.log(err.data)
       })
     })
@@ -221,6 +232,18 @@ export default {
         });
         comment.value = ""
         // TODO: 刷新评论？
+        cur_page.value = 1
+        axios.get("http://175.178.221.165:8081/solutions/Getcomments", {
+          params: {
+            'page': cur_page.value,
+            'solution_id': params.sln_id,
+          }
+        }).then(res => {
+          commentList.value = res.data.data.commentList
+          pagination.value.total = res.data.data.total_page*pageSize
+        }, err => {
+          console.log(err.data)
+        })
       }, err=>{
         console.log(err)
       })
