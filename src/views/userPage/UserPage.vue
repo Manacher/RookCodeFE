@@ -112,7 +112,7 @@ export default defineComponent({
 
 @media screen and (min-width: 97rem) and (max-width: 101rem) {
   .main-area {
-    padding: 2rem 6rem 0 6rem;
+    padding: 2rem 5rem 0 5rem;
   }
 }
 

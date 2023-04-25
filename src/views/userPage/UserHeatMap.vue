@@ -19,7 +19,7 @@
     </div>
 
     <div class="heatmap-container">
-      <div id="heatmap" style="width: 40rem; height: 7rem"></div>
+      <div id="heatmap" style="width: 41rem; height: 7rem"></div>
     </div>
   </div>
 </template>
@@ -92,7 +92,7 @@ export default {
         backgroundColor: '#fff',
         calendar: {
           top: 0,
-          left: 0,
+          left: 5,
           cellSize: [12, 12],
           range: [getVirtualData()['thatday'], getVirtualData()['today']],
           itemStyle: {
