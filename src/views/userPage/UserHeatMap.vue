@@ -30,14 +30,16 @@ import * as echarts from 'echarts';
 import {onMounted, ref} from "vue";
 
 export default {
+  props: ['account'],
   name: "user-heat-map",
-  components: {},
 
-  setup() {
+  setup(props: any, context: any) {
 
     let totalNum = ref(128);
     let totalDay = ref(67);
+
     let yearSelected = ref('lastYear');
+
     let changeSelectorStyle = () =>{
       let selector = document.getElementsByClassName('ant-select-selector')[0] as HTMLElement;
       selector.style.border = 'none';
@@ -63,6 +65,7 @@ export default {
         thatday: echarts.format.formatTime('yyyy-MM-dd', thatday)
       };
     }
+
     let renderChart = () => {
       let myChart = echarts.init(document.getElementById('heatmap') as HTMLElement);
       let option = {

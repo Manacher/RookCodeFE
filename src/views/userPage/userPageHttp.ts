@@ -12,3 +12,36 @@ export async function getUserPageProgressData(account : string){
     })
     return resp
 }
+
+
+export async function getUserPageDetail(account : string){
+    let resp;
+    await axios({
+        method: 'post',
+        url: '/user/detail',
+        params: {'account': account},
+        headers: {'Authorization': store.state.token},
+    }).then(res => {
+        resp = res.data
+    })
+    return resp
+}
+
+export interface UserInfoUploadBody{
+    avatar: string;
+    nickname: string;
+    description: string;
+}
+
+export async function uploadUserInfo(body : UserInfoUploadBody){
+    let resp;
+    await axios({
+        method: 'post',
+        url: '/user/update',
+        data: body,
+        headers: {'Authorization': store.state.token},
+    }).then(res => {
+        resp = res.data
+    })
+    return resp
+}

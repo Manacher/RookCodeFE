@@ -3,7 +3,7 @@
   <a-layout class="main-area">
 
     <div class="user-info">
-      <UserInfoCard/>
+      <UserInfoCard :cardInfo="cardInfo"/>
     </div>
 
     <a-layout-content class="content-area">
@@ -11,7 +11,7 @@
       <a-row :gutter="12">
 
         <a-col flex="16rem">
-          <UserInfoDetail style="width:100%"/>
+          <UserInfoDetail :detailInfo="detailInfo" style="width:100%"/>
         </a-col>
 
         <a-col flex="auto">
@@ -23,7 +23,7 @@
               </a-col>
 
               <a-col flex="auto">
-                <UserHeatMap style="height: 11rem"/>
+                <UserHeatMap :account="userAccount" style="height: 11rem"/>
               </a-col>
 
             </a-row>
@@ -58,6 +58,8 @@ import UserStatistics from './UserStatistics.vue'
 import UserHeatMap from './UserHeatMap.vue'
 import UserList from './UserList.vue'
 import UserInfoDetail from "@/views/userPage/UserInfoDetail.vue";
+import {getUserPageDetail} from "@/views/userPage/userPageHttp";
+import {message} from "ant-design-vue";
 
 export default defineComponent({
   components: {
@@ -70,22 +72,63 @@ export default defineComponent({
 
   setup() {
 
-
-    let isSelfPage = () => {
-      return router.currentRoute.value.params.id === ''
-    }
-
     let userAccount = ref("")
     userAccount.value = router.currentRoute.value.params.id as string
-    console.log("user page", userAccount.value)
+
+    let isSelf = ref(false)
+
+    let cardInfo = ref({
+      avatar: "",
+      nickname: "",
+      account: "",
+      isLoading: true,
+    })
+
+    let detailInfo = ref({
+      avatar: "",
+      nickname: "",
+      account: "",
+      description: "",
+      view: 0,
+      like: 0,
+      langs: [],
+      isSelf: false,
+      isLoading: true,
+    })
 
 
+    getUserPageDetail(userAccount.value).then((res: any) => {
 
-    console.log(window.innerWidth)
+      if (res.success) {
+        console.log("user page detail", res)
+        let data = res.data
+        isSelf.value = data.is_self
+
+        cardInfo.value.nickname = data.nickname
+        cardInfo.value.account = data.account
+        cardInfo.value.avatar = data.avatar
+        cardInfo.value.isLoading = false;
+
+        detailInfo.value.nickname = data.nickname
+        detailInfo.value.account = data.account
+        detailInfo.value.avatar = data.avatar
+        detailInfo.value.description = data.description
+        detailInfo.value.view = data.view
+        detailInfo.value.like = data.like
+        detailInfo.value.langs = data.langs
+        detailInfo.value.isSelf = data._self;
+        detailInfo.value.isLoading = false;
+
+      } else {
+        message.error(res.message)
+      }
+    })
 
     return {
-      isSelfPage,
+      isSelf,
       userAccount,
+      cardInfo,
+      detailInfo,
     };
   },
 });
@@ -130,7 +173,6 @@ export default defineComponent({
     padding: 2rem 0 0 0;
   }
 }
-
 
 
 .user-info {
