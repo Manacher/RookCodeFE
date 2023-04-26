@@ -26,7 +26,7 @@ export default defineComponent({
     })
 
     const userInfo={
-      token: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNjI0MzA5MzIxQHFxLmNvbSIsImNyZWF0ZWQiOjE2ODI0MjQxMDIxOTEsImV4cCI6MTcxODQyNDEwMn0.gGVqehvojB3d9llJYiNoPa39gpJLBElKpsil6fqlT0KOwF9KPo7985qlUxMvS_4sHZHnhtGbuG4h2Gffun6lPA",
+      token: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNjI0MzA5MzIxQHFxLmNvbSIsImNyZWF0ZWQiOjE2ODI0OTM5MDc3ODIsImV4cCI6MTcxODQ5MzkwN30.bVgBngvtb-bVWyYiD-wRdRK4c-nNW1mSojB6fL418RKhPPAuyJZqhUdOAcGIBMk8vW-lEmTfaejCoG_qkYKJaQ",
       id: 28
     }
     //±£´ætoken

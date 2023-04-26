@@ -68,20 +68,7 @@
                 {{moment(item.datetime).fromNow()}}
               </template>
             </a-comment>
-<!--            <a-list-item-meta :description="moment(item.datetime).fromNow()">-->
-<!--              <template #title>-->
-<!--                {{ item.nickname }}-->
-<!--              </template>-->
-<!--              <template #avatar>-->
-<!--                <a-avatar :src="item.avatar" />-->
-<!--              </template>-->
-<!--            </a-list-item-meta>-->
           </a-list-item>
-<!--          <Editor-->
-<!--              v-model="item.content"-->
-<!--              :defaultConfig="contentConfig"-->
-<!--              :mode="mode"-->
-<!--          />-->
         </template>
       </a-list>
     </div>
@@ -187,7 +174,8 @@ export default {
         viewNum.value = data.view_num
         date.value = data.dateTime
         title.value = data.title
-        tagList.value = data.tags.split("_")
+        if(data.tags !== "") tagList.value = data.tags.split("_")
+        else tagList.value = []
       },err=>{
         console.log(err.data)
       })
@@ -227,7 +215,6 @@ export default {
 
     // 编辑自己的题解
     const onEdit = () => {
-      //TODO
       console.log(commentRef.value.getHtml())
     }
 

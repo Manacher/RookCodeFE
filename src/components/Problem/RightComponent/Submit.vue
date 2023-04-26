@@ -16,12 +16,40 @@
           @focus="log('focus', $event)"
           @blur="log('blur', $event)"/>
     </div>
+    <div class="submitInfo" v-if="showInfo">
+      <div class="basicInfo">
+        <a-row type="flex" justify="space-around" align="middle">
+          <a-col :span="12" style="text-align: left">
+            <span style="font-weight: bold">{{acNum}}/{{testNum}}</span>个通过测试用例
+          </a-col>
+          <a-col :span="12" style="text-align: right">
+            状态：
+            <span v-if="state === 'ACCEPT'" style="color: green; font-size: large">{{state}}</span>
+            <span v-else style="color: red; font-size: large">{{state}}</span>
+          </a-col>
+        </a-row>
+        <a-row type="flex" justify="space-around" align="middle">
+          <a-col :span="12" style="text-align: left">
+            执行用时：<span style="font-weight: bold">{{time}}ms</span>
+          </a-col>
+          <a-col :span="12" style="text-align: right">
+            内存消耗：
+            <span style="font-weight: bold">{{memory}}KB</span>
+          </a-col>
+        </a-row>
+      </div>
+      <div class="detailInfo" v-if="debugInfo !== ''">
+        <span style="color: red">
+          {{ debugInfo }}
+        </span>
+      </div>
+    </div>
     <div class="submit">
       <a-space>
         <a-select
             ref="select"
             v-model:value="language"
-            style="width: 6rem"
+            style="width: 5.5rem"
             @change="handleLangChange">
           <a-select-option value="C++">C++</a-select-option>
           <a-select-option value="C">C</a-select-option>
@@ -69,6 +97,13 @@ export default {
       extensions: [cpp(), oneDark], // 传递给CodeMirror EditorState。创建({扩展})
     }
     const loading = ref<boolean | DelayLoading>(false);  // 用于控制提交按钮状态
+    const showInfo = ref(false)  // 控制提交代码后返回信息的显示
+    const acNum = ref(0)  // 通过测试数量
+    const testNum = ref(0)  // 总共的测试数量
+    const state = ref("")  // 运行结果
+    const time = ref("")  // 运行用时
+    const memory = ref("")  // 消耗的内存
+    const debugInfo = ref("")  // 返回的调试信息
 
 
     // 监听代码语言的选择
@@ -119,9 +154,15 @@ export default {
             headers: {'Authorization': store.state.token}
           }
       ).then(res=>{
-        console.log(res.data)
+        const data = res.data.data
         loading.value = false;
-        context.emit("submit", 1)
+        showInfo.value = true
+        acNum.value = data.accessNum
+        testNum.value = data.totalNum
+        state.value = data.judgeCondition
+        debugInfo.value = data.extraInfo
+        time.value = data.timeCost
+        memory.value = data.memoryCost
       }, err=>{
         console.log(err.data)
       })
@@ -133,6 +174,13 @@ export default {
       options,
       language,
       loading,
+      showInfo,
+      acNum,
+      testNum,
+      state,
+      time,
+      memory,
+      debugInfo,
       log: console.log,
       handleLangChange,
       handleButtonClick,
@@ -145,14 +193,29 @@ export default {
 <style scoped>
   .submitView{
     height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   .code{
-    height: 95%;
     text-align: left;
     overflow-y: hidden;
+    flex-grow: 1;
+  }
+  .submitInfo{
+    padding-top: 1rem;
+  }
+  .basicInfo{
+    border: 0.1rem solid lightgray;
+    padding: 1rem;
+  }
+  .detailInfo{
+    background: rgba(240, 128, 128, 0.25);
+    border: 0.1rem solid red;
+    padding: 1rem;
+    text-align: left;
   }
   .submit{
-    float: right;
+    text-align: right;
     padding: 1rem;
   }
 </style>

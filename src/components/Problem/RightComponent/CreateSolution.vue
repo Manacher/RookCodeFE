@@ -110,7 +110,8 @@ export default {
 
     // 确定取消发布
     const confirm = (e: MouseEvent) => {
-      router.push('/problems/'+params.pro_id)
+      //router.push('/problems/'+params.pro_id)
+      router.back()
     }
 
     // 继续发布
@@ -144,7 +145,7 @@ export default {
           description: '',
           icon: () => h(CheckCircleOutlined, { style: 'color: #008000' }),
         });
-        router.push('/problems/'+params.pro_id)
+        router.push('/problems/'+params.pro_id+'/solution/'+res.data.data)  // TODO: id?
       }, err => {  // 发布失败
         console.log(err.data)
       })
@@ -163,7 +164,6 @@ export default {
       confirm,
       cancel,
       onPublish,
-
     }
   }
 

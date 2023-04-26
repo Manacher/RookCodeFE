@@ -60,7 +60,8 @@ import { Codemirror } from "vue-codemirror";
 import { cpp } from "@codemirror/lang-cpp";
 import { python } from "@codemirror/lang-python";
 import { java } from "@codemirror/lang-java";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
+import router from "@/router"
 import {ref} from 'vue'
 import moment from "moment/moment";
 
@@ -73,7 +74,6 @@ export default {
   setup(){
     // 获取路由参数
     const { params } = useRoute()
-    const router = useRouter()
     // 需要的变量
     const title = ref("A+B问题")  // 题目标题
     const acNum = ref(15)  // 通过测试数量

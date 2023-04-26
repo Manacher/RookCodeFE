@@ -23,17 +23,17 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'solution/:sln_id',
         name: 'solution',
-        component: () => import(/* webpackChunkName: "about" */ '../components/Solution.vue'),
+        component: () => import(/* webpackChunkName: "about" */ '../components/Problem/RightComponent/Solution.vue'),
       },
       {
         path: 'create-solution',
         name: 'create-solution',
-        component: () => import(/* webpackChunkName: "about" */ '../views/CreateSolution.vue'),
+        component: () => import(/* webpackChunkName: "about" */ '../components/Problem/RightComponent/CreateSolution.vue'),
       },
       {
         path: 'edit-solution/:sln_id',
         name: 'edit-solution',
-        component: () => import(/* webpackChunkName: "about" */ '../views/EditSolution.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../components/Problem/RightComponent/EditSolution.vue')
       },
     ]
   },
@@ -41,16 +41,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/submissions/detail/:sub_id',
     name: 'submissions',
     component: () => import(/* webpackChunkName: "about" */ '../views/Submission.vue')
-  },
-  {
-    path: '/problemView',
-    name: 'problemView',
-    component: () => import(/* webpackChunkName: "about" */ '../components/ProblemView.vue')
-  },
-  {
-    path: '/submit',
-    name: 'submit',
-    component: () => import(/* webpackChunkName: "about" */ '../components/Submit.vue')
   },
  ]
 

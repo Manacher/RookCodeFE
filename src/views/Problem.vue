@@ -3,23 +3,23 @@
     <div class="leftStyle">
       <a-tabs v-model:activeKey="tabKey">
         <a-tab-pane key="problem" tab="题目描述"><ProblemView :id="Number(params.pro_id)"/></a-tab-pane>
-        <a-tab-pane key="solution" tab="题解"><SolutionList/></a-tab-pane>
+        <a-tab-pane key="solution" tab="题解"><SolutionList v-if="tabKey==='solution'"/></a-tab-pane>
         <a-tab-pane key="submission" tab="提交记录"><SubmissionList v-if="tabKey==='submission'"/></a-tab-pane>
       </a-tabs>
     </div>
     <div class="rightStyle" style="position:relative">
       <Submit @submit="handleSubmit"/>
-      <router-view style="position:absolute; top: 2rem; left: 2rem; right: 2rem;"></router-view>
+      <router-view style="position:absolute; top: 2rem; left: 2rem; right: 2rem;" :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import {ref, shallowRef} from "vue";
-import ProblemView from "@/components/ProblemView.vue";
-import Submit from "@/components/Submit.vue";
-import SolutionList from "@/components/SolutionList.vue";
-import SubmissionList from "@/components/SubmissionList.vue";
+import ProblemView from "@/components/Problem/LeftComponent/ProblemView.vue";
+import Submit from "@/components/Problem/RightComponent/Submit.vue";
+import SolutionList from "@/components/Problem/LeftComponent/questionSolutions.vue"
+import SubmissionList from "@/components/Problem/LeftComponent/SubmissionList.vue";
 import { useRoute } from 'vue-router';
 
 export default {
@@ -35,9 +35,9 @@ export default {
 
     // 监听题目提交
     const handleSubmit = (val: number) => {
-      //TODO
+      //TODO: Do Nothing
       console.log(val)
-      tabKey.value = 'submission'
+      // tabKey.value = 'submission'
     }
 
     return {

@@ -26,9 +26,8 @@ interface DataItem{
 
 export default {
   name: "SubmissionList",
-
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  setup() {
+  setup(props: any, context: any) {
     const dataSource: Ref<DataItem[]> = ref([])  // 列表数据
 
     // TODO: 模拟请求数据
