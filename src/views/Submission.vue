@@ -10,14 +10,14 @@
       </a-col>
       <a-col :span="12" style="text-align: right">
         状态：
-        <span v-if="state === '通过'" style="color: green; font-size: large">{{state}}</span>
+        <span v-if="state === 'ACCEPT'" style="color: green; font-size: large">{{state}}</span>
         <span v-else style="color: red; font-size: large">{{state}}</span>
       </a-col>
     </a-row>
     <a-row type="flex" justify="space-around" align="middle">
       <a-col :span="12" style="text-align: left">
-        执行用时：<span style="font-weight: bold">{{time}}</span><br>
-        内存消耗：<span style="font-weight: bold">{{memory}}</span>
+        执行用时：<span style="font-weight: bold">{{time}} ms</span><br>
+        内存消耗：<span style="font-weight: bold">{{memory}} KB</span>
       </a-col>
       <a-col :span="12" style="text-align: right">
         提交时间：
@@ -62,8 +62,10 @@ import { python } from "@codemirror/lang-python";
 import { java } from "@codemirror/lang-java";
 import {useRoute} from "vue-router";
 import router from "@/router"
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import moment from "moment/moment";
+import axios from "axios";
+import {oneDark} from "@codemirror/theme-one-dark";
 
 moment.locale('zh-cn');
 
@@ -82,13 +84,8 @@ export default {
     const time = ref("N/A")  // 运行用时
     const memory = ref("N/A")  // 消耗的内存
     const date = ref("2023/01/02")  // 提交日期
-    const debugInfo = ref("=================================================================\n" +
-        "==42==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000000354 at pc 0x00000034c47f bp 0x7ffd6db038f0 sp 0x7ffd6db038e8\n" +
-        "READ of size 4 at 0x602000000354 thread T0\n" +
-        "    #2 0x7fbb067a30b2  (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)\n" +
-        "0x602000000354 is located 0 bytes to the right of 4-byte region [0x602000000350,0x602000000354)\n" +
-        "allocated by thread T0 here:")  // 调试输出
-    const lang = ref("c++")  // 选择的语言
+    const debugInfo = ref("")  // 调试输出
+    const lang = ref("C++")  // 选择的语言
     const code = ref("int main(){\n" +
         "\tint a = 1;\n" +
         "\treturn 0;\n" +
@@ -98,11 +95,47 @@ export default {
       mode: "text/x-c++src",
       extensions: [cpp()], // 传递给CodeMirror EditorState。创建({扩展})
     }
+    const pro_id = ref(-1)  // 对应的问题的id
 
 
-    const handleClick = () => {
-      // TODO: 返回题目
-      router.push('/problems/')
+    // ajax异步请求数据
+    onMounted(() => {
+      axios.get("http://175.178.221.165:8081/records/GetRecordsDetail/"+params.sub_id,
+      ).then(res=>{
+        const data = res.data.data
+        time.value = data.execTime
+        debugInfo.value = data.extraInfo
+        lang.value = data.langName
+        memory.value = data.memory
+        pro_id.value = data.questionId
+        state.value = data.result
+        code.value = data.submitCode
+        date.value = data.submitDate
+        acNum.value = data.testCaseAccessNum
+        testNum.value = data.testCaseTotalNum
+        if(lang.value === "C++" || lang.value === "C"){
+          options.extensions = [cpp()]
+          if(lang.value === "C++") options.mode = "text/x-c++src";
+          else if(lang.value === "C") options.mode = "text/x-csrc";
+        }
+        else if(lang.value === "Python"){
+          options.extensions = [python()]
+          options.mode = "text/x-python";
+        }
+        else if(lang.value === "Java"){
+          options.extensions = [java()]
+          options.mode = "text/x-java";
+        }
+        else{
+          console.log("unknown language")
+        }
+      }, err=>{
+        console.log(err.data)
+      })
+    })
+
+    const handleClick = () => {  // 返回题目
+      router.push('/problems/'+pro_id.value)
     }
 
     return{
@@ -141,6 +174,7 @@ export default {
   .detailInfo{
     width: 70%;
     margin: auto;
+    text-align: left;
     background: rgba(240, 128, 128, 0.25);
     border: 0.1rem solid red;
     padding: 1rem;

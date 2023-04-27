@@ -30,11 +30,11 @@
         </a-row>
         <a-row type="flex" justify="space-around" align="middle">
           <a-col :span="12" style="text-align: left">
-            执行用时：<span style="font-weight: bold">{{time}}ms</span>
+            执行用时：<span style="font-weight: bold">{{time}} ms</span>
           </a-col>
           <a-col :span="12" style="text-align: right">
             内存消耗：
-            <span style="font-weight: bold">{{memory}}KB</span>
+            <span style="font-weight: bold">{{memory}} KB</span>
           </a-col>
         </a-row>
       </div>
@@ -111,18 +111,15 @@ export default {
       console.log(lang)
       language.value = lang
       if(language.value === "C++" || language.value === "C"){
-        // eslint-disable-next-line no-undef
         options.extensions = [cpp(), oneDark]
         if(language.value === "C++") options.mode = "text/x-c++src";
         else if(language.value === "C") options.mode = "text/x-csrc";
       }
       else if(language.value === "Python"){
-        // eslint-disable-next-line no-undef
         options.extensions = [python(), oneDark]
         options.mode = "text/x-python";
       }
       else if(language.value === "Java"){
-        // eslint-disable-next-line no-undef
         options.extensions = [java(), oneDark]
         options.mode = "text/x-java";
       }
