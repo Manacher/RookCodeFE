@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 
 
 /*存储token 和一些其他的全局信息*/
+/*如果需要修改 login.vue中需要修改161到166行的代码*/
 export interface UserInfo {
   token: string
   //id:number

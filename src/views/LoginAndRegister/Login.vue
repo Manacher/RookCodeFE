@@ -3,7 +3,7 @@
 <!--登录主页  -->
   <a-layout class="login-main-box">
     <a-layout id="login-box" class="login-box">
-      <h1 style="font-family: 'Times New Roman',serif;font-size: 27px">RookCode</h1>
+      <h1 style="font-family: 'Times New Roman',serif;font-size: 27px;">RookCode</h1>
       <a-form
           class="login-form"
           ref="formRef"
@@ -19,7 +19,10 @@
             style="text-align: left ;
           padding-left: 4px;
           font-weight: bold;
-      font-family:'宋体',serif;font-size: 17px">邮箱</h4>
+      font-size: 16px">邮箱</h4>
+
+<!--        <h4 style="color: #262626; font-weight: bold; font-size: 1.1rem;
+            padding-top: 1rem;padding-bottom: 0.5rem;float: ">邮箱</h4>-->
         <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}">
           <a-input v-model:value="formState_login.email" />
         </a-form-item>
@@ -31,8 +34,7 @@
             style="text-align: left ;
             font-weight: bold;
           padding-left: 4px;
-      font-family:'宋体',serif;
-     font-size: 17px">密码</h4>
+     font-size: 16px">密码</h4>
         <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}"
                      :rules="[{ required: true, message: '请输入密码!' }]">
           <a-input-password v-model:value="formState_login.pass" />
@@ -43,8 +45,7 @@
         <h4  style="text-align: left ;
           padding-left: 4px;
           font-weight: bold;
-      font-family:'宋体',serif;
-      font-size: 17px">验证码</h4>
+      font-size: 16px">验证码</h4>
         <a-row>
           <a-col :span="15">
             <a-form-item
@@ -61,8 +62,6 @@
           </a-col>
 
         </a-row>
-
-
 
         <!-- 提交按钮     -->
         <a-row>
@@ -82,22 +81,13 @@
                   type="primary"
                   @click="try_login"
                   html-type="submit"
-              style="background-color: green;border-radius: 5px">登录</a-button>
+              style="border-radius: 5px">登录</a-button>
             </a-form-item>
           </a-col>
         </a-row>
-
-
       </a-form>
     </a-layout>
   </a-layout>
-
-
-
-
-
-
-
 </template>
 
 
@@ -127,7 +117,6 @@ export default defineComponent({
       changeCaptcha()
     })
 
-
     // 更换验证码
     const changeCaptcha = () => {
       //发送一个请求
@@ -140,7 +129,6 @@ export default defineComponent({
         imgUrl.value = qrUrl;
       })
     };
-
 
     //基本数据类型
     const formRef = ref<FormInstance>();
@@ -169,8 +157,6 @@ export default defineComponent({
           console.log(res.data)
           //判断登录是否成功
           if(res.data.success==true){
-
-
             //保存用户信息
             const userInfo={
               token:res.data.data.token,
@@ -179,6 +165,7 @@ export default defineComponent({
             //保存token
             store.commit("login",userInfo);
             //跳转到主页
+
 
           }else{
             notification['error']({
@@ -189,13 +176,7 @@ export default defineComponent({
           }
         })
       }
-
-
-
-
     };
-
-
 
 
     /*邮箱校验函数*/
@@ -217,10 +198,9 @@ export default defineComponent({
       email:[{ required: true, validator: validaEmail, trigger: 'change' }],
     };
 
-
     //跳转到登录页面
     const gotoRegister=()=>{
-      console.log("跳转到登录页面")
+      console.log("跳转到注册页面")
       router.push({ path: '/register' });
     }
 
@@ -235,8 +215,6 @@ export default defineComponent({
       //获取新的验证码图片
       imgUrl,//图片的地质
       changeCaptcha,
-
-
       //跳转
       gotoRegister,
     }

@@ -22,16 +22,14 @@
         <h4
             style="text-align: left ;
           padding-left: 4px;
-      font-family:'宋体',serif;
-      font-weight: bold;font-size: 17px">邮箱</h4>
+      font-weight: bold;font-size: 16px">邮箱</h4>
         <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}">
           <a-input v-model:value="formState.email" />
         </a-form-item>
 
         <h4  style="text-align: left ;
           padding-left: 4px;
-      font-family:'宋体',serif;
-      font-weight: bold;font-size: 17px">验证码</h4>
+      font-weight: bold;font-size: 16px">验证码</h4>
         <a-row>
           <a-col :span="15">
             <a-form-item
@@ -49,7 +47,7 @@
               <a-button
                   type="primary"
                   block
-                  style="background-color: green;border-radius: 0px"
+                  style="border-radius: 0px"
                   @click="sendCode">{{ counter === 0 ? '发送验证码' : counter+'秒之后再试' }}</a-button>
             </a-form-item>
           </a-col>
@@ -59,16 +57,14 @@
         <!--  有反馈吗  -->
         <h4  style="text-align: left ;
           padding-left: 4px;
-      font-family:'宋体',serif;
-      font-weight: bold;font-size: 17px">密码</h4>
+      font-weight: bold;font-size: 16px">密码</h4>
         <a-form-item has-feedback   name="pass" :wrapper-col="{ offset: 0 ,span:21}">
           <a-input-password v-model:value="formState.pass" />
         </a-form-item>
 
         <h4  style="text-align: left ;
           padding-left: 4px;
-      font-family:'宋体',serif;
-      font-weight: bold;font-size: 17px">确认密码</h4>
+      font-weight: bold;font-size: 16px">确认密码</h4>
         <a-form-item has-feedback name="checkPass" :wrapper-col="{ offset: 0 ,span:21}">
           <a-input-password v-model:value="formState.checkPass" />
         </a-form-item>
@@ -93,7 +89,7 @@
                   type="primary"
                   html-type="submit"
                   @click="tryRegister"
-                  style="background-color: green;border-radius: 5px">注册</a-button>
+                  style="border-radius: 5px">注册</a-button>
             </a-form-item>
           </a-col>
         </a-row>

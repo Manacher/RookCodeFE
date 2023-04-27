@@ -2,8 +2,6 @@
 
   <router-link to="/login">登录</router-link>|
   <router-link to="/register">注册</router-link>|
-  <router-link to="/solutions">题解</router-link>|
-  <router-link to="/qtestcases">测试用例</router-link>
   <router-view/>
 </template>
 
@@ -13,20 +11,18 @@ import axios from "axios";
 import {defineComponent, onMounted,computed} from "vue";
 import Register from '@/views/LoginAndRegister/Register.vue'
 import Login from "@/views/LoginAndRegister/Login.vue";
-import QTestCases from "@/views/QTestCases.vue"
 import store  from "@/store";
 
 
 export default defineComponent({
   name:'App',
   // eslint-disable-next-line vue/no-unused-components
-  components: {Register,Login,QTestCases},
+  components: {Register,Login},
 
 
   setup() {
     onMounted(() => {
       const token = store.state.token
-
       console.log(token)
       //token不存在的话自动登录
       /*if(token=="") {
@@ -39,13 +35,7 @@ export default defineComponent({
     })
 
 
-    /*这里存疑*/
-    const currentToken = computed(() => {
-      return store.state.token
-    })
-
     return{
-      currentToken,
     }
 
   }
