@@ -118,10 +118,16 @@ export default {
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 8px lightgrey;
+  font-family: 微软雅黑;
 }
 
 .text-area {
   position: absolute;
+  font-size: 1rem;
+  color: #1a1a1a;
+  font-weight: bold;
+  top: 0.6rem;
+
 }
 
 .progress-display {

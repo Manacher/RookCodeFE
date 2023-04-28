@@ -58,14 +58,14 @@ export function processCalendarListData(calendarList: CalendarListReturnBody[]) 
 
         if (val.date === formattedDate) {
             processRes.push({
-                description: val.prob_title,
+                description: val.prob_id + '. ' + val.prob_title,
                 dates: val.date,
                 highlight: 'green',
                 color: 'none'
             })
         }else{
             processRes.push({
-                description: val.prob_title,
+                description: val.prob_id + '. ' + val.prob_title,
                 dates: val.date,
                 color: val.state ? 'green' : 'orange',
             })

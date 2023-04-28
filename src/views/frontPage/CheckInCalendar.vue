@@ -8,6 +8,7 @@
       :min-date="new Date('2023-03-25')"
       @dayclick="onDayClickHandler"
       @update:fromPage="onWeekClickHandler"
+      locale="zh"
   >
 <!--    locale="zh"-->
 
@@ -63,8 +64,6 @@ export default defineComponent({
         end_date: endDateString
       }
       getCalendarData(params)
-
-      console.log("calendar change", startDateString, endDateString)
     }
 
     let getCalendarData = (params: DailyQuestionParam) => {
