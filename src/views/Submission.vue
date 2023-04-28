@@ -108,6 +108,7 @@ export default {
         lang.value = data.langName
         memory.value = data.memory
         pro_id.value = data.questionId
+        title.value = data.questionTitle
         state.value = data.result
         code.value = data.submitCode
         date.value = data.submitDate

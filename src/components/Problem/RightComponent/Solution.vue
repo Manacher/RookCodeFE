@@ -3,7 +3,7 @@
     <div class="title">
       <router-link :to="'/problems/'+params.pro_id"><a-button size="small">关闭</a-button></router-link><br>
       <a-space>
-        <a-avatar :size="32" :src="avatar"/>
+        <router-link :to="'/user/'+account"><a-avatar :size="32" :src="avatar"/></router-link>
         <span style="font-size: x-large">{{ title }}</span>
         <a-button @click="onEdit">编辑</a-button>
       </a-space>
@@ -55,7 +55,10 @@
         </template>
         <template #renderItem="{ item }">
           <a-list-item>
-            <a-comment :author="item.nickname" :avatar="item.avatar">
+            <a-comment :author="item.nickname">
+              <template #avatar>
+                <router-link :to="'/user/'+item.account"><a-avatar :size="32" :src="item.avatar"/></router-link>
+              </template>
               <template #content>
                 <Editor
                     style="width: 45rem"
@@ -99,6 +102,7 @@ interface CommentItem {
   datetime: string,
   nickname: string,
   user_id: number,
+  account: string,
 }
 
 export default {
@@ -111,6 +115,7 @@ export default {
     const { query, params } = useRoute()
     debugger
     // 题解包含的信息
+    const account = ref("")
     const avatar = ref("")
     const title = ref("")
     const nickname = ref("")
@@ -167,6 +172,8 @@ export default {
         const success = res.data.success
         const message = res.data.message
         const data = res.data.data
+        console.log(data.account)
+        account.value = data.account
         avatar.value = data.avatar
         nickname.value = data.nickname
         content.value = data.content
@@ -258,6 +265,7 @@ export default {
       query,
       params,
       avatar,
+      account,
       title,
       nickname,
       thumbNum,

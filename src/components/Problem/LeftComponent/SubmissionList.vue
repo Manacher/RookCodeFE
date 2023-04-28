@@ -47,7 +47,7 @@ export default {
 
     // ajax异步请求数据
     onMounted(() => {
-      axios.get("http://175.178.221.165:8081/records/GetList/"+store.state.id+"/"+params.pro_id,
+      axios.get("http://175.178.221.165:8081/records/GetList/"+params.pro_id,
           {
             headers: {'Authorization': store.state.token}
           }
@@ -57,7 +57,6 @@ export default {
       }, err=>{
         console.log(err.data)
       })
-
     })
 
 
