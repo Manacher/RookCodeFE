@@ -42,7 +42,7 @@ export default defineComponent({
 
     let onDayClickHandler = (day: any) => {
       if (day2ID.get(day.id)) {
-        router.push({path: '/problem/' + day2ID.get(day.id)})
+        router.push({path: '/problems/' + day2ID.get(day.id)})
       }
     }
 

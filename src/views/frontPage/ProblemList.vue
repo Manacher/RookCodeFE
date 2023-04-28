@@ -101,7 +101,7 @@
           <template v-else-if="column.key === 'title'">
 
             <div class="problem-title">
-              <router-link :to="{path: 'problem/' + record.key }" style="color: inherit">{{
+              <router-link :to="{path: 'problems/' + record.key }" style="color: inherit">{{
                   record.title
                 }}
               </router-link>

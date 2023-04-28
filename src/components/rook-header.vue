@@ -118,6 +118,7 @@ export default {
       })
     }
 
+    // TODO 手动设置登陆token
     // let info:UserInfo = {
     //   account: "1426887306@qq.com",
     //   token:"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNDI2ODg3MzA2QHFxLmNvbSIsImNyZWF0ZWQiOjE2ODIyNDcwMTA0MDYsImV4cCI6MTcxODI0NzAxMH0.LmY3hcywCho3RVjPrfQkSx4ofSI-broMbfDU5eCXgVPctACsfEOA1n4NnYr64cquu9dx6Y9iVWPSUPlFSal6vA"
