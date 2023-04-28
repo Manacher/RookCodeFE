@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import {ref} from "vue";
-import UserRecentPassList from "@/views/userPage/UserRecentPassList.vue";
+import UserRecentPassList from "@/components/UserPage/UserRecentPassList.vue";
 import UserPublishList from "@/views/userPage/UserPublishList.vue";
 
 export default {

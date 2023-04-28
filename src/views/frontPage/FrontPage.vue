@@ -27,10 +27,10 @@
 </template>
 <script lang="ts">
 import {defineComponent, ref} from 'vue';
-import FrontBanner from "@/views/frontPage/FrontBanner.vue";
-import ProblemList from "@/views/frontPage/ProblemList.vue";
-import ProgressDisplay from "@/views/frontPage/ProgressDisplay.vue";
-import CheckInCalendar from "@/views/frontPage/CheckInCalendar.vue";
+import FrontBanner from "@/components/FrontPage/FrontBanner.vue";
+import ProblemList from "@/components/FrontPage/ProblemList.vue";
+import ProgressDisplay from "@/components/FrontPage/ProgressDisplay.vue";
+import CheckInCalendar from "@/components/FrontPage/CheckInCalendar.vue";
 
 export default defineComponent({
   components: {
