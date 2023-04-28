@@ -1,5 +1,5 @@
 <template>
-  <a-layout-header class="header">
+  <div class="header">
 
     <div class="logo">
         <span>
@@ -58,8 +58,9 @@
         v-model:selectedKeys="navKeys"
         mode="horizontal"
         class="menu"
+        style="padding-top: 0.5rem;"
     >
-      <a-menu-item key="/">
+      <a-menu-item key="/" style="padding-bottom: 0.5rem">
         <router-link to="/">首页</router-link>
       </a-menu-item>
 
@@ -68,7 +69,7 @@
       </a-menu-item>
     </a-menu>
 
-  </a-layout-header>
+  </div>
 
   <div class="header-placeholder">
 
@@ -192,6 +193,8 @@ export default {
   caret-color: rgba(0, 0, 0, 0);
   user-select: none;
   font-size: 1rem;
+  /*padding-top: 1rem;*/
+  /*margin-bottom: 1rem;*/
   z-index: 1;
 }
 
@@ -202,9 +205,11 @@ export default {
 }
 
 .logo {
+  color: #262626;
   float: left;
-  margin-left: 7rem;
+  margin-left: 10rem;
   margin-right: 1rem;
+  margin-top: 0.7rem;
   font-style: italic;
   font-size: 1.5rem;
   font-weight: bold;
@@ -249,6 +254,7 @@ export default {
 
 .right-item {
   position: absolute;
+  top: 1rem;
   right: 9.5rem;
   width: 3rem;
   height: 3rem;
@@ -273,12 +279,19 @@ export default {
   background-color: #f0f0f0;
 }
 
+@media screen and (min-width: 105rem) and (max-width: 106rem) {
+  .logo {
+    margin-left: 9rem;
+  }
+  .right-item {
+    right: 9.5rem;
+  }
+}
 
 @media screen and (min-width: 101rem) and (max-width: 105rem) {
   .logo {
-    margin-left: 5rem;
+    margin-left: 7rem;
   }
-
   .right-item {
     right: 7.5rem;
   }
@@ -286,9 +299,8 @@ export default {
 
 @media screen and (min-width: 97rem) and (max-width: 101rem) {
   .logo {
-    margin-left: 4rem;
+    margin-left: 5rem;
   }
-
   .right-item {
     right: 5.5rem;
   }
@@ -298,7 +310,6 @@ export default {
   .logo {
     margin-left: 3rem;
   }
-
   .right-item {
     right: 3.5rem;
   }
@@ -306,9 +317,8 @@ export default {
 
 @media screen and (min-width: 89rem) and (max-width: 93rem) {
   .logo {
-    margin-left: 2rem;
+    margin-left: 1rem;
   }
-
   .right-item {
     right: 1.5rem;
   }
@@ -316,9 +326,8 @@ export default {
 
 @media screen and (max-width: 89rem) {
   .logo {
-    margin-left: 1rem;
+    margin-left: 0rem;
   }
-
   .right-item {
     right: 0;
   }
