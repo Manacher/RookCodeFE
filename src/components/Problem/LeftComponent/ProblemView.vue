@@ -1,26 +1,42 @@
 <template>
-  <div class = "problemView">
-    <h3>P{{(Array(4).join('0')+String(id)).slice(-4)}} {{title}}</h3>
-    <a-space>
-      <span style="color: gray">难度</span>
-      <span :style="{color: diffColor}">{{difficulty}}</span>
-      <a-tag v-for="tag in tagList" :key="tag">{{tag}}</a-tag>
-    </a-space>
-    <a-divider style="background-color: lightgray" />
+
+
+  <div class="problemView">
+    <div v-if="loading">
+      <a-skeleton size="small" active/>
+      <a-divider style="background-color: lightgray"/>
+      <a-skeleton active/>
+    </div>
+
+    <div v-if="!loading">
+      <h3>P{{ (Array(4).join('0') + String(id)).slice(-4) }} {{ title }}</h3>
+      <a-space>
+        <span style="color: gray">难度</span>
+        <span :style="{color: diffColor}">{{ difficulty }}</span>
+        <a-tag v-for="tag in tagList" :key="tag">{{ tag }}</a-tag>
+      </a-space>
+      <a-divider style="background-color: lightgray"/>
+    </div>
+
+
     <Editor
         v-model="content"
         :defaultConfig="editorConfig"
         :mode="mode"
         @onCreated="handleCreated"
+        class="myEditor"
+        style="padding-bottom: 6.5rem"
     />
+
+
   </div>
 </template>
 
 <script lang="ts">
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import axios from 'axios'
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
-import { Editor} from '@wangeditor/editor-for-vue'
+import {onBeforeUnmount, ref, shallowRef, onMounted} from 'vue'
+import {Editor} from '@wangeditor/editor-for-vue'
 import {Boot} from '@wangeditor/editor'
 import markdownModule from '@wangeditor/plugin-md'
 
@@ -28,15 +44,15 @@ Boot.registerModule(markdownModule)
 
 export default {
   name: "Problem",
-  components: { Editor},
-  props:["id"], // Number
+  components: {Editor},
+  props: ["id"], // Number
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(props: any, context: any) {
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef()
     // 编辑器，工具栏配置
     const toolbarConfig = {}
-    const editorConfig = {readOnly :true, scroll: true, autoFocus: false}
+    const editorConfig = {readOnly: true, scroll: true, autoFocus: false}
     // 题目内容
     const title = ref("这是标题")  // 题目标题
     const difficulty = ref("这是难度")  // 题目难度
@@ -44,14 +60,16 @@ export default {
     const content = ref("")  // 题目内容html格式
     const tagList = ref([])  // 题目标签
 
+    const loading = ref(false)  // 加载中
 
     // ajax 异步获取后端数据
     onMounted(() => {
+      loading.value = true;
       axios.post("http://175.178.221.165:8081/questions/getQuestion",
           {
             'id': props.id,
           }
-       ).then(res=>{
+      ).then(res => {
         const success = res.data.success
         const message = res.data.message
         const data = res.data.data
@@ -65,13 +83,13 @@ export default {
         } else if (data.level == 3) {  // 困难
           difficulty.value = "困难"
           diffColor.value = "#FF0000"
-        }
-        else{
+        } else {
           console.log("error difficulty")
         }
         content.value = data.content
         tagList.value = data.tags
-      },err=>{
+        loading.value = false;
+      }, err => {
         console.log(err.data)
       })
     })
@@ -89,6 +107,7 @@ export default {
 
     }
 
+
     return {
       editorRef,
       title,
@@ -99,7 +118,10 @@ export default {
       mode: 'default', // 或 'simple'
       toolbarConfig,
       editorConfig,
-      handleCreated
+      handleCreated,
+
+
+      loading,
     };
   }
 
@@ -107,10 +129,28 @@ export default {
 </script>
 
 <style scoped>
-  .problemView{
-    overflow-y: hidden;
-    text-align: left
-  }
+.problemView {
+  overflow-y: hidden;
+  text-align: left;
+}
+
+.myEditor >>> .w-e-scroll {
+  padding-right: 1rem;
+}
+
+
+.myEditor >>> .w-e-scroll::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.myEditor >>> .w-e-scroll::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.myEditor >>> .w-e-scroll::-webkit-scrollbar-thumb {
+  background: #ececec;
+  border-radius: 0.6rem;
+}
 
 
 </style>
