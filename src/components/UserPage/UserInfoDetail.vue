@@ -98,8 +98,7 @@
 
 import {onMounted, ref, watch} from 'vue'
 import {message, Modal} from "ant-design-vue";
-import {uploadUserInfo, UserInfoUploadBody} from "@/views/userPage/userPageHttp";
-
+import {uploadUserInfo, UserInfoUploadBody} from "@/components/UserPage/userPageHttp";
 
 export default {
   props: ['detailInfo'],

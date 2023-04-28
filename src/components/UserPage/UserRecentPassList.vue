@@ -38,7 +38,7 @@
 
 <script lang="ts">
 
-import {getUserRecentPassList} from "@/views/userPage/userPageHttp";
+import {getUserRecentPassList} from "@/components/UserPage/userPageHttp";
 import {ref} from "vue";
 import {message} from "ant-design-vue";
 import moment from 'moment';
@@ -69,9 +69,8 @@ export default {
       }
     });
 
-
     let onTitleClicked = (id: number) => {
-      window.open(`/submission/${id}`)
+      window.open(`/submissions/detail/${id}`)
     }
 
     let handleQuery = (page: number) => {

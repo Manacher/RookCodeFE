@@ -1,19 +1,22 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 
+// TODO 奇怪的懒加载bug，此处使用懒加载会导致页面无法正常渲染，暂时使用同步加载
+import Problem from "@/views/Problem.vue";
+
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'FrontPage',
-        component: () => import('../views/frontPage/FrontPage.vue')
+        component: () => import('../views/FrontPage.vue')
     }, {
         path: '/user/:id?',
         name: 'UserPage',
-        component: () => import('../views/userPage/UserPage.vue')
+        component: () => import('../views/UserPage.vue')
     },
     {
         path: '/problems/:pro_id',
         name: 'problems',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Problem.vue'),
+        component: Problem,
         children: [
             {
                 path: 'solution/:sln_id',

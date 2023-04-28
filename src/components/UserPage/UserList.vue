@@ -41,7 +41,7 @@
 <script lang="ts">
 import {ref} from "vue";
 import UserRecentPassList from "@/components/UserPage/UserRecentPassList.vue";
-import UserPublishList from "@/views/userPage/UserPublishList.vue";
+import UserPublishList from "@/components/UserPage/UserPublishList.vue";
 
 export default {
   props: ['account'],

@@ -144,8 +144,8 @@
 <script lang="ts">
 import {ref} from "vue";
 import {message} from 'ant-design-vue';
-import {getProblemList, ProblemListBody} from "@/views/frontPage/frontPageHttp";
-import {FrontPageData, ProblemListColumn, processProblemListData} from "@/views/frontPage/frontPageUtil";
+import {getProblemList, ProblemListBody} from "@/components/FrontPage/frontPageHttp";
+import {FrontPageData, ProblemListColumn, processProblemListData} from "@/components/FrontPage/frontPageUtil";
 
 let listColumns = FrontPageData.frontPageListColumns
 let diffOptions = FrontPageData.frontPageDiffOptions

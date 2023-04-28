@@ -84,12 +84,13 @@
 
 import * as echarts from 'echarts';
 import {onMounted, ref} from "vue";
-import {getUserPageProgressData} from "@/views/userPage/userPageHttp";
+import {getUserPageProgressData} from "@/components/UserPage/userPageHttp";
 import {message} from "ant-design-vue";
 
 export default {
   props: ['account'],
   name: "user-statistics",
+
 
 
   setup(props: any, context: any) {

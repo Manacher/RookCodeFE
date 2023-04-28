@@ -31,9 +31,9 @@
 
 <script lang="ts">
 import {computed, defineComponent, onMounted, ref} from 'vue';
-import {DailyQuestionParam, getDailyQuestionList} from "@/views/frontPage/frontPageHttp";
+import {DailyQuestionParam, getDailyQuestionList} from "@/components/FrontPage/frontPageHttp";
 import {message} from "ant-design-vue";
-import {CalendarListColumn, processCalendarListData} from "@/views/frontPage/frontPageUtil";
+import {CalendarListColumn, processCalendarListData} from "@/components/FrontPage/frontPageUtil";
 import router from "@/router";
 import {start} from "@popperjs/core";
 

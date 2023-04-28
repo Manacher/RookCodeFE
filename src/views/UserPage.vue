@@ -53,12 +53,12 @@
 import {defineComponent, ref} from "vue";
 import router from "@/router";
 
-import UserInfoCard from '../../components/UserPage/UserInfoCard.vue'
-import UserStatistics from '../../components/UserPage/UserStatistics.vue'
-import UserHeatMap from '../../components/UserPage/UserHeatMap.vue'
-import UserList from './UserList.vue'
+import UserInfoCard from '../components/UserPage/UserInfoCard.vue'
+import UserStatistics from '../components/UserPage/UserStatistics.vue'
+import UserHeatMap from '../components/UserPage/UserHeatMap.vue'
+import UserList from '../components/UserPage/UserList.vue'
 import UserInfoDetail from "@/components/UserPage/UserInfoDetail.vue";
-import {getUserPageDetail} from "@/views/userPage/userPageHttp";
+import {getUserPageDetail} from "@/components/UserPage/userPageHttp";
 import {message} from "ant-design-vue";
 
 export default defineComponent({

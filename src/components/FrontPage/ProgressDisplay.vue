@@ -71,7 +71,7 @@
 
 <script lang="ts">
 
-import {getFrontPageProgressData} from "@/views/frontPage/frontPageHttp";
+import {getFrontPageProgressData} from "@/components/FrontPage/frontPageHttp";
 import {ref} from "vue";
 import {message} from "ant-design-vue";
 

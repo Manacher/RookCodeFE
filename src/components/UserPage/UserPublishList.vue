@@ -10,25 +10,25 @@
     <template #renderItem="{item, index}">
 
       <a-list-item key="item.title"
-                   @click="onTitleClicked(item.id)"
+                   @click="onTitleClicked(item.question_id, item.id)"
                    :style="{'background-color':(index%2 === 1 ? '#fff' : '#f7f7f8'),
                    'border-radius': (index%2 === 1 ? '0' : '0.35rem')}">
 
         <template #actions>
 
           <a-space direction="horizontal">
-            <div class="publish-list-action-item" style="width: 2rem">
+            <div class="publish-list-action-item" style="width: 4rem">
               <like-outlined style="margin-right: 0.3rem;"/>
               {{ item.like }}
             </div>
-            <div class="publish-list-action-item" style="width: 2rem">
+            <div class="publish-list-action-item" style="width: 4rem">
               <eye-outlined style="margin-right: 0.3rem;"/>
               {{ item.view }}
             </div>
             <div class="publish-list-action-item" style="width: 4rem">
               {{ item.date }}
             </div>
-            <a @click="onEditClicked(item.id)">编辑</a>
+            <a @click="onEditClicked(item.question_id, item.id)">编辑</a>
           </a-space>
 
 
@@ -46,7 +46,7 @@
 <script lang="ts">
 
 import {ref} from "vue";
-import {getUserPublishList} from "@/views/userPage/userPageHttp";
+import {getUserPublishList} from "@/components/UserPage/userPageHttp";
 import moment from "moment/moment";
 import {message} from "ant-design-vue";
 
@@ -56,6 +56,7 @@ interface publishListData {
   like: number;
   date: string;
   id: number;
+  question_id: number;
 }
 
 interface publishRespData {
@@ -110,6 +111,7 @@ export default {
               view: val.view,
               date: moment(val.date).fromNow(),
               id: val.id,
+              question_id: val.question_id,
             })
           })
           loading.value = false;
@@ -122,12 +124,12 @@ export default {
 
     handleQuery(pagination.value.current)
 
-    let onTitleClicked = (id: number) => {
-      window.open(`/solution/${id}`)
+    let onTitleClicked = (question_id:number, solution_id: number) => {
+      window.open(`/problems/${question_id}/solution/${solution_id}`)
     }
 
-    let onEditClicked = (id: number) => {
-      window.open(`/solution/edit/${id}`)
+    let onEditClicked = (question_id:number, solution_id: number) => {
+      window.open(`/problems/${question_id}/edit-solution/${solution_id}`)
     }
 
 

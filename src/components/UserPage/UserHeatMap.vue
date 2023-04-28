@@ -28,9 +28,10 @@
 
 import * as echarts from 'echarts';
 import {onMounted, ref} from "vue";
-import {getUserYearSubmit} from "@/views/userPage/userPageHttp";
+import {getUserYearSubmit} from "@/components/UserPage/userPageHttp";
 import {message} from "ant-design-vue";
-import {processUserHeatmapData} from "@/views/userPage/userPageUtil";
+import {processUserHeatmapData} from "@/components/UserPage/userPageUtil";
+
 
 export default {
   props: ['account'],
