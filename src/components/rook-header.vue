@@ -18,7 +18,7 @@
 
           <a-card hoverable class="center-card" v-show="cardShow" id="center-card">
 
-            <a-card-meta  :title=userInfo.nickname :description=userInfo.account class="center-card-header">
+            <a-card-meta :title=userInfo.nickname :description=userInfo.account class="center-card-header">
               <template #avatar>
                 <a-avatar :size="40"
                           :src=userInfo.avatar
@@ -80,17 +80,17 @@
 
 <script lang="ts">
 
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import store, {UserInfo} from "@/store";
 import axios from "axios";
 import {message} from "ant-design-vue";
+import {useRoute} from "vue-router";
 
 
 export default {
   name: "rook-header",
   setup() {
 
-    // todo 奇怪的bug，account必须初始化了才能成功
     let userInfo = ref({
       account: "account",
       nickname: "",
@@ -104,16 +104,16 @@ export default {
         headers: {
           'Authorization': store.state.token,
         },
-      }).then((res)=>{
+      }).then((res) => {
         let data = res.data;
-        if(data.success){
+        if (data.success) {
           data = data.data;
           userInfo.value.nickname = data.nickname;
           userInfo.value.avatar = data.avatar;
           userInfo.value.account = data.account;
 
           console.log("userInfo: ", userInfo.value)
-        }else{
+        } else {
           message.error("网页Header请求出错")
         }
       })
@@ -175,6 +175,26 @@ export default {
       navKeys.value = ['/user/' + userInfo.value.account]
     }
 
+    let route = useRoute();
+    const routePath = computed(() => {
+      return route.path.split("/")[1]
+    });
+
+    watch(routePath, (newVal, oldVal) => {
+      if (newVal !== '') {
+        navKeys.value = [newVal]
+      } else {
+        navKeys.value = ['/']
+      }
+
+      let logo = document.querySelector('.logo') as HTMLElement
+      if (newVal === 'problems') {
+        logo.classList.add('logo-problem')
+      } else {
+        logo.classList.remove('logo-problem')
+      }
+
+    })
     return {
       navKeys,
       cardShow,
@@ -213,6 +233,10 @@ export default {
   font-style: italic;
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.logo-problem {
+  margin-left: 1rem;
 }
 
 @keyframes slide-up {
@@ -283,6 +307,7 @@ export default {
   .logo {
     margin-left: 9rem;
   }
+
   .right-item {
     right: 9.5rem;
   }
@@ -292,6 +317,7 @@ export default {
   .logo {
     margin-left: 7rem;
   }
+
   .right-item {
     right: 7.5rem;
   }
@@ -301,6 +327,7 @@ export default {
   .logo {
     margin-left: 5rem;
   }
+
   .right-item {
     right: 5.5rem;
   }
@@ -310,26 +337,19 @@ export default {
   .logo {
     margin-left: 3rem;
   }
+
   .right-item {
     right: 3.5rem;
   }
 }
 
-@media screen and (min-width: 89rem) and (max-width: 93rem) {
+@media screen and (max-width: 93rem) {
   .logo {
     margin-left: 1rem;
   }
+
   .right-item {
     right: 1.5rem;
-  }
-}
-
-@media screen and (max-width: 89rem) {
-  .logo {
-    margin-left: 0rem;
-  }
-  .right-item {
-    right: 0;
   }
 }
 

@@ -83,29 +83,16 @@ export default defineComponent({
   }
 }
 
-/*@media screen and (min-width: 97rem) and (max-width: 99rem) {*/
-/*  .layout-content {*/
-/*    padding: 2rem 4rem 0 4rem;*/
-/*  }*/
-/*}*/
-
 @media screen and (min-width: 93rem) and (max-width: 97rem) {
   .layout-content {
     padding: 2rem 3rem 0 3rem;
   }
 }
 
-@media screen and (min-width: 89rem) and (max-width: 93rem) {
+@media screen and  (max-width: 93rem) {
   .layout-content {
     padding: 2rem 1rem 0 1rem;
   }
 }
-
-@media screen and (max-width: 89rem) {
-  .layout-content {
-    padding: 2rem 0 0 0;
-  }
-}
-
 
 </style>

@@ -3,16 +3,32 @@
     <div class="leftStyle">
 
       <a-tabs v-model:activeKey="tabKey" type="card">
-        <a-tab-pane key="problem" tab="题目描述">
+        <a-tab-pane key="problem">
+
+          <template #tab>
+            <file-search-outlined style="margin-right: 0.5rem"/>
+            题目描述
+          </template>
+
           <ProblemView :id="Number(params.pro_id)"
                        style="height: 82vh; overflow-y: hidden;"/>
         </a-tab-pane>
 
-        <a-tab-pane key="solution" tab="题解" :affix="true">
+        <a-tab-pane key="solution">
+          <template #tab>
+            <unordered-list-outlined style="margin-right: 0.5rem"/>
+            题解
+          </template>
           <SolutionList v-if="tabKey==='solution'" style="height: 82vh; overflow-y: auto"/>
         </a-tab-pane>
 
-        <a-tab-pane key="submission" tab="提交记录">
+        <a-tab-pane key="submission">
+
+          <template #tab>
+            <history-outlined style="margin-right: 0.5rem"/>
+            提交记录
+          </template>
+
           <SubmissionList v-if="tabKey==='submission'" style="overflow-y: auto"/>
         </a-tab-pane>
 
