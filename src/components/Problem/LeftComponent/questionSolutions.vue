@@ -75,7 +75,7 @@
             <template #actions>
               <span
                 key="comment-basic-like"
-                style="font-size: 0.9rem; color: #595959"
+                style="font-size: 0.8rem; color: #595959"
               >
                 <a-tooltip title="点赞量">
                   <template v-if="action === 'liked'">
@@ -92,7 +92,7 @@
 
               <span
                 key="comment-basic-view"
-                style="font-size: 0.9rem; color: #595959"
+                style="font-size: 0.8rem; color: #595959"
               >
                 <a-tooltip title="浏览量">
                   <eye-outlined />
@@ -102,7 +102,7 @@
                 </span>
               </span>
 
-              <span style="font-size: 0.9rem; color: #595959">
+              <span style="font-size: 0.8rem; color: #595959">
                 <a-tooltip title="评论数">
                   <comment-outlined />
                 </a-tooltip>
@@ -111,6 +111,7 @@
                 </span>
               </span>
             </template>
+
             <template #author>
               <span style="font-size: 1rem; color: #262626">
                 {{ item.title }}

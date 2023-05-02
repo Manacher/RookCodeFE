@@ -58,7 +58,7 @@
           </span>
         </a-space>
       </div>
-      <a-divider></a-divider>
+      <a-divider style="margin-bottom: 0"></a-divider>
       <Editor
         v-model="content"
         :defaultConfig="contentConfig"
