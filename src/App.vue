@@ -1,15 +1,15 @@
 <template>
-  <rook-header/>
+  <rook-header v-if="ok"></rook-header>
   <router-view/>
-  <rook-footer/>
+  <rook-footer v-if="ok"></rook-footer>
 </template>
 
 
 <script lang="ts">
-import axios from "axios";
-import {defineComponent, onMounted} from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import RookHeader from "@/components/rook-header.vue";
 import RookFooter from "@/components/rook-footer.vue";
+import store from "@/store";
 
 export default defineComponent({
   name: 'app',
@@ -18,8 +18,18 @@ export default defineComponent({
     RookFooter,
   },
   setup() {
-    return{
+    let ok=ref(true)
+    onMounted(()=>{
+      if(store.state.token===''){
+        ok.value=false
+      }
 
+    })
+    watch(store.state, (newVal, oldVal)=> {
+      ok.value=true
+    })
+    return{
+      ok
     }
   }
 })

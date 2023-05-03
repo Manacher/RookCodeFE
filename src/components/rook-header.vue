@@ -37,7 +37,8 @@
               </div>
 
               <div>
-                <a-popconfirm title="确认退出登陆吗？" ok-text="是" cancel-text="否">
+                <a-popconfirm title="确认退出登陆吗,登录状态将被清除？" ok-text="是" cancel-text="否"
+                @confirm="logout">
 
                   <a href="#" style="margin-right: 1rem">
                     <img src="../assets/exit.png"
@@ -85,6 +86,8 @@ import store, {UserInfo} from "@/store";
 import axios from "axios";
 import {message} from "ant-design-vue";
 import {useRoute} from "vue-router";
+import router from "@/router";
+
 
 
 export default {
@@ -118,6 +121,8 @@ export default {
         }
       })
     }
+
+
 
     // TODO 手动设置登陆token
     // let info:UserInfo = {
@@ -195,7 +200,21 @@ export default {
       }
 
     })
+    //点击个人头像，退出登录
+    const logout=(e:any)=>{
+      const userInfo={
+        token:'',
+       account:'',
+      }
+      //保存token
+      store.commit("loginSafe",userInfo);
+      //清楚本地数据，跳转到登录界面
+      localStorage.clear()
+      router.go(0)
+    }
+
     return {
+      logout,
       navKeys,
       cardShow,
       userInfo,

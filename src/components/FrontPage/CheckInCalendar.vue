@@ -1,5 +1,4 @@
 <template>
-
   <VCalendar
       :attributes="attributes"
       title-position="right"
@@ -11,8 +10,6 @@
       locale="zh"
   >
 <!--    locale="zh"-->
-
-
     <template #day-popover="{attributes }">
       <div>
         <ul>

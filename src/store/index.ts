@@ -15,8 +15,7 @@ const store = createStore<UserInfo>({
     },
     //同步的
     mutations: {
-        //设置token
-        login(state, userInfo: UserInfo) {
+        loginSafe(state,userInfo:UserInfo){
             const token = userInfo.token
             state.token = token
             localStorage.setItem('token', token)
@@ -24,6 +23,14 @@ const store = createStore<UserInfo>({
             const account = userInfo.account
             state.account = account
             localStorage.setItem('account', account)
+        },
+
+        loginNotSafe(state,userInfo:UserInfo){
+            const token = userInfo.token
+            state.token = token
+
+            const account = userInfo.account
+            state.account = account
         }
     },
     //异步操作

@@ -2,7 +2,6 @@
   <a-layout class="front-page-main-area">
 
     <a-layout-content class="layout-content">
-
       <a-row>
 
         <a-col :span="18">
@@ -26,17 +25,18 @@
   </a-layout>
 </template>
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
+import {defineComponent} from 'vue';
 import FrontBanner from "@/components/FrontPage/FrontBanner.vue";
 import ProblemList from "@/components/FrontPage/ProblemList.vue";
 import ProgressDisplay from "@/components/FrontPage/ProgressDisplay.vue";
 import CheckInCalendar from "@/components/FrontPage/CheckInCalendar.vue";
 
+
 export default defineComponent({
   components: {
     FrontBanner,
     ProblemList,
-    ProgressDisplay,
+   ProgressDisplay,
     CheckInCalendar,
   },
 

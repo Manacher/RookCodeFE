@@ -90,6 +90,8 @@ export default {
 
     getFrontPageProgressData().then( (res : any) => {
 
+      console.log("-1-1-1-1-1-1-1-")
+      console.log(res.data)
       if(res.success){
         let data = res.data
         statisticsData.value.easyTotal = data.easy_total
