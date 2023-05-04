@@ -100,6 +100,7 @@
           :pagination="pagination"
           class="comment-list"
           item-layout="horizontal"
+          style="overflow-y: auto; height: 63vh; padding-bottom: 1rem"
         >
           <template #renderItem="{ item }">
             <a-list-item>
@@ -426,6 +427,21 @@ export default {
   text-align: right;
   padding: 0.2rem;
 }
-.commentList {
+
+
+
+.comment-list::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
 }
+
+.comment-list::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+  background: #ececec;
+  border-radius: 0.6rem;
+}
+
 </style>

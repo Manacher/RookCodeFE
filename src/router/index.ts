@@ -4,7 +4,7 @@ import {notification} from "ant-design-vue";
 import {SmileOutlined} from "@ant-design/icons-vue";
 import {  h } from 'vue';
 // TODO 奇怪的懒加载bug，此处使用懒加载会导致页面无法正常渲染，暂时使用同步加载
-import Problem from "@/views/Problem.vue";
+// import Problem from "@/views/Problem.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -12,14 +12,14 @@ const routes: Array<RouteRecordRaw> = [
         name:'Login',
         /*下面为登录限制,是否需要登录验证，需要拦截的路由将其改为true,当根目录被限制时，其子模块也将被限制*/
         meta:{requiresAuth:false},
-        component:()=>import("@/views/LoginRegister/Login.vue")
+        component:()=>import("@/views/Login.vue")
     },
     {
         path:'/register',
         name:'Register',
         /*下面为登录限制,是否需要登录验证，当根目录被限制时，其子模块也将被限制*/
         meta:{requiresAuth:false},
-        component:()=>import("@/views/LoginRegister/Register.vue")
+        component:()=>import("@/views/Register.vue")
     },
     {
         path: '/',
@@ -36,7 +36,8 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/problems/:pro_id',
         name: 'problems',
-        component: Problem,
+        // component: Problem,
+        component: () => import('../views/Problem.vue'),
         meta:{requiresAuth:true},
         children: [
             {
