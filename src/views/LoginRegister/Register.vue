@@ -1,41 +1,47 @@
 <template>
-
-<!--  主页视图-->
-  <a-layout class="register-main-box">
-    <a-layout id="register-box" class="register-box">
-      <h1 style="font-family: 'Times New Roman',serif;font-size: 27px">RookCode注册</h1>
-      <a-form
-          class="register-form"
-          ref="formRef"
-          name="form_register"
-          :model="formState"
-          :rules="rules"
-          v-bind="layout"
-          :wrapper-col="{ span: 18 }"
-          @finish="handleFinish"
-          @validate="handleValidate"
-          @finishFailed="handleFinishFailed"
+  <!--  主页视图-->
+  <div class="register-main-box">
+    <div id="register-box" class="register-box">
+      <a-button
+        @click="returnToLogin"
+        size="small"
+        style="position: absolute; left: 0.5rem; top: 0.5rem"
+        >返回</a-button
       >
-
-
-        <!--  输入邮箱    -->
-        <h4
-            style="text-align: left ;
-          padding-left: 4px;
-      font-weight: bold;font-size: 16px">邮箱</h4>
-        <a-form-item has-feedback  name="email" :wrapper-col="{ offset: 0 ,span:21}">
+      <h1
+        style="
+          font-style: italic;
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: #262626;
+          padding-top: 1rem;
+        "
+      >
+        RookCode注册
+      </h1>
+      <a-form
+        class="register-form"
+        ref="formRef"
+        name="form_register"
+        :model="formState"
+        :rules="rules"
+        v-bind="layout"
+        :wrapper-col="wrapperCol"
+        :label-col="labelCol"
+        @finish="handleFinish"
+        @validate="handleValidate"
+        @finishFailed="handleFinishFailed"
+      >
+        <a-form-item has-feedback label="邮箱" name="email">
           <a-input v-model:value="formState.email" />
         </a-form-item>
 
-        <h4  style="text-align: left ;
-          padding-left: 4px;
-      font-weight: bold;font-size: 16px">验证码</h4>
         <a-row>
           <a-col :span="15">
             <a-form-item
-                name="VerificationCode"
-                :wrapper-col="{ offset: 0 ,span:24}"
-                :rules="[{ required: true, message: '请输入验证码!' }]"
+              label="验证码"
+              name="VerificationCode"
+              :rules="[{ required: true, message: '请输入验证码!' }]"
             >
               <a-input v-model:value="formState.VerificationCode" />
             </a-form-item>
@@ -45,129 +51,106 @@
             <a-form-item>
               <!--    绑定事件      -->
               <a-button
-                  type="primary"
-                  block
-                  style="border-radius: 0px"
-                  @click="sendCode">{{ counter === 0 ? '发送验证码' : counter+'秒之后再试' }}</a-button>
+                type="primary"
+                block
+                style="border-radius: 0px"
+                @click="sendCode"
+                >{{
+                  counter === 0 ? "发送验证码" : counter + "秒之后再试"
+                }}</a-button
+              >
             </a-form-item>
           </a-col>
-
         </a-row>
 
-        <!--  有反馈吗  -->
-        <h4  style="text-align: left ;
-          padding-left: 4px;
-      font-weight: bold;font-size: 16px">密码</h4>
-        <a-form-item has-feedback   name="pass" :wrapper-col="{ offset: 0 ,span:21}">
+        <a-form-item has-feedback label="密码" name="pass">
           <a-input-password v-model:value="formState.pass" />
         </a-form-item>
 
-        <h4  style="text-align: left ;
-          padding-left: 4px;
-      font-weight: bold;font-size: 16px">确认密码</h4>
-        <a-form-item has-feedback name="checkPass" :wrapper-col="{ offset: 0 ,span:21}">
+        <a-form-item has-feedback label="确认密码" name="checkPass">
           <a-input-password v-model:value="formState.checkPass" />
         </a-form-item>
 
-
-
-        <!-- 提交按钮     -->
-        <a-row>
-          <a-col :span="12">
-            <a-form-item>
-              <a-button
-                  block
-                  @click="() => formRef.resetFields()"
-                  style="border-radius: 5px">重置</a-button>
-            </a-form-item>
-          </a-col>
-
-          <a-col :span="12">
-            <a-form-item>
-              <a-button
-                  block
-                  type="primary"
-                  html-type="submit"
-                  @click="tryRegister"
-                  style="border-radius: 5px">注册</a-button>
-            </a-form-item>
-          </a-col>
-        </a-row>
-
-
+        <a-form-item style="margin-left: 5.5rem; margin-top: 2.5rem">
+          <div style="display: flex; flex-direction: row">
+            <a-button
+              block
+              @click="() => formRef.resetFields()"
+              style="border-radius: 5px; margin-right: 1rem"
+              >重置</a-button
+            >
+            <a-button
+              block
+              type="primary"
+              html-type="submit"
+              @click="tryRegister"
+              style="border-radius: 5px; margin-left: 1rem"
+              >注册</a-button
+            >
+          </div>
+        </a-form-item>
       </a-form>
-    </a-layout>
-  </a-layout>
-
-
-
-
+    </div>
+  </div>
 </template>
 
-
-
-
-
 <script lang="ts">
-
 import axios from "axios";
-import type { Rule } from 'ant-design-vue/es/form';
-import { defineComponent, reactive, ref ,h} from 'vue';
-import type { FormInstance } from 'ant-design-vue';
-import { notification } from 'ant-design-vue';
-import { SmileOutlined } from '@ant-design/icons-vue';
+import type { Rule } from "ant-design-vue/es/form";
+import { defineComponent, reactive, ref, h } from "vue";
+import type { FormInstance } from "ant-design-vue";
+import { notification } from "ant-design-vue";
+import { SmileOutlined } from "@ant-design/icons-vue";
 import router from "@/router";
 
 //计时器
-const counter = ref(0)
+const counter = ref(0);
 
 /*注册界面的表单*/
 interface FormState {
-  email:string,
+  email: string;
   pass: string;
   checkPass: string;
-  VerificationCode:string;
-
+  VerificationCode: string;
 }
-
 
 export default defineComponent({
   setup() {
-
-
     const formRef = ref<FormInstance>();
     const formState = reactive<FormState>({
-      email:'',
-      pass: '',
-      checkPass: '',
-      VerificationCode:'',
+      email: "",
+      pass: "",
+      checkPass: "",
+      VerificationCode: "",
     });
 
-
     /*邮箱校验函数*/
-    let validaEmail= async (_rule: Rule, value: string) => {
+    let validaEmail = async (_rule: Rule, value: string) => {
       if (!value) {
-        return Promise.reject('请输入邮箱！');
+        return Promise.reject("请输入邮箱！");
       } else {
-        let email = new RegExp(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/);
+        let email = new RegExp(
+          /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+        );
         if (!email.test(value)) {
-          return Promise.reject('请合法邮箱！');
+          return Promise.reject("请合法邮箱！");
         } else {
           return Promise.resolve();
         }
       }
     };
 
-      /*密码校验*/
+    /*密码校验*/
     let validatePass = async (_rule: Rule, value: string) => {
-      if (value === '') {
-        return Promise.reject('请输入密码！');
+      if (value === "") {
+        return Promise.reject("请输入密码！");
       } else {
-        if (formState.checkPass !== '') {
-
-          let pass=new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,15}$/);
-          if(!pass.test(value)){
-            return Promise.reject('密码长度需为6到15位，且应该为数字加字母的组合！');
+        if (formState.checkPass !== "") {
+          let pass = new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,15}$/);
+          if (!pass.test(value)) {
+            return Promise.reject(
+              "密码长度需为6到15位，且应该为数字加字母的组合！"
+            );
           }
           /*formRef.value.validateFields('checkPass');*/
         }
@@ -177,8 +160,8 @@ export default defineComponent({
 
     /*密码确认校验*/
     let validatePass2 = async (_rule: Rule, value: string) => {
-      if (value === '') {
-        return Promise.reject('请再次输入密码');
+      if (value === "") {
+        return Promise.reject("请再次输入密码");
       } else if (value !== formState.pass) {
         return Promise.reject("两次密码不一致！");
       } else {
@@ -188,7 +171,7 @@ export default defineComponent({
 
     /*为对应的框设置自定义验证参数*/
     const rules: Record<string, Rule[]> = {
-      email:[{ required: true, validator: validaEmail, trigger: 'change' }],
+      email: [{ required: true, validator: validaEmail, trigger: "change" }],
       /*pass: [{ required: true, validator: validatePass, trigger: 'change' }],
       checkPass: [{ required: true,validator: validatePass2, trigger: 'change' }],*/
     };
@@ -209,137 +192,138 @@ export default defineComponent({
       console.log(args);
     };
 
-
     //发送验证码函数
-    const sendCode=()=>{
-
+    const sendCode = () => {
       //尝试发送验证码
-      if(counter.value==0){
+      if (counter.value == 0) {
         //首先得确保邮箱不为空
-        if(formState.email!=""){
-          let email = new RegExp(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/);
-          if(!email.test(formState.email)){
+        if (formState.email != "") {
+          let email = new RegExp(
+            /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+          );
+          if (!email.test(formState.email)) {
             notification.open({
-              message: '提示！',
-              description:
-                  '请输入正确的邮箱!',
+              message: "提示！",
+              description: "请输入正确的邮箱!",
               onClick: () => {
-                console.log('Notification Clicked!');
+                console.log("Notification Clicked!");
               },
             });
-          }
-          else{
+          } else {
             //开始倒计时
-            try{
+            try {
               //计时器的相关操作
-              counter.value = 20
-              const timer = setInterval(() =>{
-                if(counter.value === 0){
+              counter.value = 20;
+              const timer = setInterval(() => {
+                if (counter.value === 0) {
                   //清除定时器
-                  clearInterval(timer)
+                  clearInterval(timer);
                 } else {
-                  counter.value--
+                  counter.value--;
                 }
-              },1000)
-            }catch (e) {
+              }, 1000);
+            } catch (e) {
               notification.open({
-                message: '提示！',
-                description:
-                    '验证码发送失败!',
+                message: "提示！",
+                description: "验证码发送失败!",
                 onClick: () => {
-                  console.log('Notification Clicked!');
+                  console.log("Notification Clicked!");
                 },
               });
             }
 
             //发送验证码请求
-            axios.post("http://175.178.221.165:8081/users/registerCode",{
-              'email':formState.email,
-            },{
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              // withCredentials:true
-            }).then((res:any)=>{
-              //提示消息发送成功
-              if(res.data.success===true){
-                notification.open({
-                  message: '验证码已发送',
-                  description:
-                      '验证码已发送到对应的邮箱，验证码五分钟内有效!',
-                  icon: () => h(SmileOutlined, { style: 'color: #108ee9' }),
-                });
-              }
-              else{
-                notification['error']({
-                  message: '验证码已发送',
-                  description:
-                      '验证码发送失败',
-                });
-              }
-            });
+            axios
+              .post(
+                "http://175.178.221.165:8081/users/registerCode",
+                {
+                  email: formState.email,
+                },
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  // withCredentials:true
+                }
+              )
+              .then((res: any) => {
+                //提示消息发送成功
+                if (res.data.success === true) {
+                  notification.open({
+                    message: "验证码已发送",
+                    description:
+                      "验证码已发送到对应的邮箱，验证码五分钟内有效!",
+                    icon: () => h(SmileOutlined, { style: "color: #108ee9" }),
+                  });
+                } else {
+                  notification["error"]({
+                    message: "验证码已发送",
+                    description: "验证码发送失败",
+                  });
+                }
+              });
           }
-
-        }
-        else{
+        } else {
           notification.open({
-            message: '提示！',
-            description:
-                '请输入邮箱!',
+            message: "提示！",
+            description: "请输入邮箱!",
             onClick: () => {
-              console.log('Notification Clicked!');
+              console.log("Notification Clicked!");
             },
           });
         }
-
-
       }
     };
 
     //注册函数
-    const tryRegister=()=>{
+    const tryRegister = () => {
       //首先得保证内容不为空
-      if(formState.email!=''&&formState.VerificationCode!=''
-          &&formState.pass!=''&&formState.checkPass!=''){
-        axios.post("http://175.178.221.165:8081/users/register",{
-          account:formState.email,
-          password:formState.pass,
-          code:formState.VerificationCode,
-
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).then((res:any)=>{
-          //提示消息发送成功
-          console.log(res.data.message)
-          if(res.data.success===true){
-            //跳转到登录界面，使得用户进行登录
-            notification.open({
-              message: '注册状态',
-              description:
-                  '注册成功，请登录!',
-              icon: () => h(SmileOutlined, { style: 'color: #108ee9' }),
-            });
-            router.push({ path: '/login' });
-          }
-          //否则给出错误的提示信息
-          else{
-            notification['error']({
-              message: '提示',
-              description:
-              res.data.message,
-            });
-          }
-        });
+      if (
+        formState.email != "" &&
+        formState.VerificationCode != "" &&
+        formState.pass != "" &&
+        formState.checkPass != ""
+      ) {
+        axios
+          .post(
+            "http://175.178.221.165:8081/users/register",
+            {
+              account: formState.email,
+              password: formState.pass,
+              code: formState.VerificationCode,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((res: any) => {
+            //提示消息发送成功
+            console.log(res.data.message);
+            if (res.data.success === true) {
+              //跳转到登录界面，使得用户进行登录
+              notification.open({
+                message: "注册状态",
+                description: "注册成功，请登录!",
+                icon: () => h(SmileOutlined, { style: "color: #108ee9" }),
+              });
+              router.push({ path: "/login" });
+            }
+            //否则给出错误的提示信息
+            else {
+              notification["error"]({
+                message: "提示",
+                description: res.data.message,
+              });
+            }
+          });
       }
+    };
 
-
-
-
-    }
-
-
+    let returnToLogin = () => {
+      router.back();
+    };
 
     return {
       counter,
@@ -347,7 +331,6 @@ export default defineComponent({
       formRef,
       rules,
       layout,
-
 
       //发送验证吗函数
       sendCode,
@@ -357,54 +340,36 @@ export default defineComponent({
       handleFinish,
       resetForm,
       handleValidate,
+      returnToLogin,
+      wrapperCol: { span: 16 },
+      labelCol: { style: { fontWeight: "bold", width: "5rem" } },
     };
   },
 });
 </script>
 
-
-
 <style scoped>
-
-
-.register-main-box{
-
-  width:100%;
-  height:100%;
-  position:fixed;
-  background-size:100% 100%;
-
-  /*display: flex;
-  width: 100%;
-  height: 100%;
-  min-height: 800px;
-
-  background-size: 100% 100%;*/
-
+.register-main-box {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f0f2f5;
+  display: flex;
+  flex-direction: column;
 }
 
 .register-box {
-  width: 50%;
-  height: 470px;
-  /* background-color: #fff; */
-  background-color: #d1c2d3;
+  position: relative;
+  margin-top: 10rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30rem;
+  background-color: #fff;
   border-radius: 5px;
-  box-shadow: 0 0 5px 1px #999;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 5px 2px rgba(213, 207, 207, 0.73);
 }
 .register-form {
-  /*background: #fff;
-  border: 5px solid #fff;
-  border-radius: 5px;
-  width: 50%;
-  position: relative;
-  margin: 10 auto;*/
-  padding: 0px 0px 0px 10%;/*上 右 下 左*/
+  padding: 0px 0px 0px 10%; /*上 右 下 左*/
   top: 5%;
-  /*transform: translateY(150%);*/
 }
 
 .aligncenter {
