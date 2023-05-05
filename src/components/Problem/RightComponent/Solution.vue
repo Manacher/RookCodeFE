@@ -254,9 +254,17 @@ export default {
     // ajax 异步获取后端数据
     onMounted(() => {
       axios
-        .post("/solutions/getSolutionsById", {
-          id: params.sln_id,
-        })
+        .post(
+          "/solutions/getSolutionsById",
+          {
+            id: params.sln_id,
+          },
+          {
+            headers: {
+              Authorization: store.state.token,
+            },
+          }
+        )
         .then(
           (res) => {
             const success = res.data.success;
@@ -428,8 +436,6 @@ export default {
   padding: 0.2rem;
 }
 
-
-
 .comment-list::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;
@@ -443,5 +449,4 @@ export default {
   background: #ececec;
   border-radius: 0.6rem;
 }
-
 </style>

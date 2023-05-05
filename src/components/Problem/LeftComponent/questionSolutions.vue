@@ -162,6 +162,7 @@ import {
 } from "@ant-design/icons-vue";
 import { useRoute } from "vue-router";
 import router from "@/router";
+import store from "@/store";
 
 type solutionType = {
   ID: number;
@@ -287,6 +288,7 @@ export default defineComponent({
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: store.state.token,
             },
           }
         )

@@ -1,6 +1,8 @@
 <template>
   <div class="user-detail-area">
     <a-space direction="vertical" :size="4" style="width: 100%">
+      <UserSubscribe />
+
       <button
         class="edit-button"
         @click="onEditClicked"
@@ -137,8 +139,9 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { message, Modal } from "ant-design-vue";
+import UserSubscribe from "@/components/UserPage/UserFollower.vue";
 import {
   uploadUserInfo,
   UserInfoUploadBody,
@@ -147,6 +150,9 @@ import {
 export default {
   props: ["detailInfo"],
   name: "UserInfoDetail",
+  components: {
+    UserSubscribe,
+  },
   setup(props: any, context: any) {
     let userDetailData = ref({
       description: "",
