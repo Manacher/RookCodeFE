@@ -124,7 +124,7 @@
           :pagination="pagination"
           class="comment-list"
           item-layout="horizontal"
-          style="overflow-y: auto; height: 63vh; padding-bottom: 1rem"
+          style="overflow-y: visible"
           :loading="commentLoading"
         >
           <template #renderItem="{ item }">
@@ -283,8 +283,16 @@ export default {
       showSizeChanger: false,
     });
 
+    let setPaginationStyle = () => {
+      let paginationDom = document.querySelector(
+        "#ant-pagination"
+      ) as HTMLElement;
+      paginationDom.style.paddingBottom = "1rem";
+    };
+
     // ajax 异步获取后端数据
     onMounted(() => {
+      // setPaginationStyle();
       loading.value = true;
       axios
         .post(
@@ -492,10 +500,10 @@ export default {
 
 <style scoped>
 .solution {
-  min-height: 48rem;
   text-align: left;
-  overflow-y: hidden;
   background: white;
+  overflow-y: scroll;
+  margin-bottom: 2rem;
 }
 
 .title {
@@ -545,16 +553,16 @@ export default {
   color: #2db55d;
 }
 
-.comment-list::-webkit-scrollbar {
+.solution::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;
 }
 
-.comment-list::-webkit-scrollbar-track {
+.solution::-webkit-scrollbar-track {
   background: #ffffff;
 }
 
-.comment-list::-webkit-scrollbar-thumb {
+.solution::-webkit-scrollbar-thumb {
   background: #ececec;
   border-radius: 0.6rem;
 }
