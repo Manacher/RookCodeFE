@@ -1,12 +1,9 @@
-<template>
-  <div class="solution">
-    <div class="solution-top-area" style="background: #f7f7f7; height: 2.4rem">
-      <router-link :to="'/problems/' + params.pro_id">
-        <a-button size="small" style="margin-top: 0.5rem">关闭 </a-button>
-      </router-link>
-    </div>
 
-    <div class="solution-main-area" style="padding: 1rem">
+// TODO: 修改名称、接口
+
+<template>
+  <div class="discussion">
+    <div class="discussion-main-area" style="padding: 1rem">
       <div class="title">
         <a-space>
           <router-link :to="'/user/' + account">
@@ -27,35 +24,24 @@
 
           <span style="color: #e5e5e5">•</span>
 
-          <span style="margin-left: 0.2rem"
-          ><like-outlined style="margin-right: 0.2rem" />{{ thumbNum }}</span
-          >
-
-          <span style="color: #e5e5e5">•</span>
-
-          <span style="margin-left: 0.2rem"
-          ><eye-outlined style="margin-right: 0.2rem" />{{ viewNum }}</span
-          >
-
-          <span style="color: #e5e5e5">•</span>
-
-          <span style="margin-left: 0.2rem"
-          >发布于 {{ moment(date).fromNow() }}</span
-          >
-
-          <span style="color: #e5e5e5">•</span>
-
-          <span v-for="tag in tagList" :key="tag">
-            <a-tag
-                style="
-                border-radius: 0.5rem;
-                border: none;
-                background: #f2f3f4;
-                color: #262626;
-              "
-            >{{ tag }}</a-tag
-            >
+          <span style="margin-left: 0.2rem" @click="onLike">
+            <like-outlined style="margin-right: 0.2rem" v-if="!liked"/>
+            <like-filled style="margin-right: 0.2rem" v-if="liked"/>
+            {{ thumbNum }}
           </span>
+
+          <span style="color: #e5e5e5">•</span>
+
+          <span style="margin-left: 0.2rem"
+          ><eye-outlined style="margin-right: 0.2rem" />{{ viewNum }}</span>
+
+          <span style="color: #e5e5e5">•</span>
+
+          <span style="margin-left: 0.2rem"
+          >发布于 {{ moment(date).fromNow() }}</span>
+
+          <span style="color: #e5e5e5">•</span>
+
         </a-space>
       </div>
       <a-divider style="margin-bottom: 0"></a-divider>
@@ -100,7 +86,7 @@
             :pagination="pagination"
             class="comment-list"
             item-layout="horizontal"
-            style="overflow-y: auto; height: 63vh; padding-bottom: 1rem"
+            style="overflow-y: auto; /*height: 63vh;*/ padding-bottom: 1rem"
         >
           <template #renderItem="{ item }">
             <a-list-item>
@@ -136,6 +122,7 @@ import {
   CheckCircleOutlined,
   EyeOutlined,
   LikeOutlined,
+  LikeFilled,
 } from "@ant-design/icons-vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { Boot, IToolbarConfig } from "@wangeditor/editor";
@@ -163,15 +150,15 @@ interface CommentItem {
 }
 
 export default {
-  name: "Solution",
-  components: { Toolbar, LikeOutlined, EyeOutlined, Editor },
+  name: "Discussion",
+  components: { Toolbar, LikeFilled, LikeOutlined, EyeOutlined, Editor },
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
     // 获取路由参数
     const { query, params } = useRoute();
     debugger;
-    // 题解包含的信息
+    // 讨论包含的信息
     const account = ref("");
     const avatar = ref("");
     const title = ref("");
@@ -179,7 +166,7 @@ export default {
     const thumbNum = ref(0);
     const viewNum = ref(0);
     const date = ref("");
-    const tagList = ref([]);
+    const liked = ref(false);
     // 编辑器实例，必须用 shallowRef
     const contentRef = shallowRef();
     // 编辑器，工具栏配置
@@ -230,10 +217,10 @@ export default {
         cur_page.value = page;
         commentList.value.length = 0;
         axios
-            .get("/solutions/Getcomments", {
+            .get("/discussions/getComments", {
               params: {
                 page: cur_page.value,
-                solution_id: params.sln_id,
+                discussion_id: params.dis_id,
               },
             })
             .then(
@@ -253,24 +240,22 @@ export default {
 
     // ajax 异步获取后端数据
     onMounted(() => {
-      axios
-          .post(
-              "/solutions/getSolutionsById",
-              {
-                id: params.sln_id,
-              },
-              {
-                headers: {
-                  Authorization: store.state.token,
-                },
-              }
-          )
-          .then(
+      axios.get("/discussions/getDiscussionById",
+          {
+            params: {
+              discussion_id: params.dis_id,
+            },
+            headers: {
+              Authorization: store.state.token,
+            },
+          }
+          ).then(
               (res) => {
                 const success = res.data.success;
                 const message = res.data.message;
                 const data = res.data.data;
                 console.log(data.account);
+                liked.value = data._liked
                 account.value = data.account;
                 avatar.value = data.avatar;
                 nickname.value = data.nickname;
@@ -279,22 +264,19 @@ export default {
                 viewNum.value = data.view_num;
                 date.value = data.dateTime;
                 title.value = data.title;
-                if (data.tags !== "") tagList.value = data.tags.split("_");
-                else tagList.value = [];
+                debugger
               },
               (err) => {
                 console.log(err.data);
               }
           );
 
-      axios
-          .get("/solutions/Getcomments", {
+      axios.get("/discussions/getComments", {
             params: {
               page: cur_page.value,
-              solution_id: params.sln_id,
+              discussion_id: params.dis_id,
             },
-          })
-          .then(
+          }).then(
               (res) => {
                 commentList.value = res.data.data.commentList;
                 pagination.value.total = res.data.data.total_page * pageSize;
@@ -325,25 +307,18 @@ export default {
       commentRef.value = editor; // 记录 editor 实例，重要！
     };
 
-    // 编辑自己的题解
-    const onEdit = () => {
-      console.log(commentRef.value.getHtml());
-    };
-
     // 评论
     const onComment = () => {
-      axios
-          .post(
-              "/solutions/PublishComment",
+      axios.post(
+              "/discussions/commentDiscussion",
               {
                 content: comment.value,
-                solution_id: params.sln_id,
+                discussion_id: params.dis_id,
               },
               {
                 headers: { Authorization: store.state.token },
               }
-          )
-          .then(
+          ).then(
               (res) => {
                 debugger;
                 notification.open({
@@ -354,14 +329,12 @@ export default {
                 comment.value = "";
                 // TODO: 刷新评论？
                 cur_page.value = 1;
-                axios
-                    .get("/solutions/Getcomments", {
+                axios.get("/discussions/getComments", {
                       params: {
                         page: cur_page.value,
-                        solution_id: params.sln_id,
+                        discussion_id: params.dis_id,
                       },
-                    })
-                    .then(
+                    }).then(
                         (res) => {
                           commentList.value = res.data.data.commentList;
                           pagination.value.total = res.data.data.total_page * pageSize;
@@ -377,6 +350,26 @@ export default {
           );
     };
 
+    // 点赞
+    const onLike = () => {
+      axios.get(
+          "/discussions/likeDiscussion",
+          {
+            params:{
+              discussion_id: params.dis_id,
+            },
+            headers: { Authorization: store.state.token },
+          }
+      ).then(res=>{
+        console.log(res)
+        liked.value = !liked.value
+        if(liked.value) thumbNum.value += 1
+        else thumbNum.value -= 1
+      },err=>{
+        console.log(err)
+      })
+    }
+
     return {
       query,
       params,
@@ -387,12 +380,13 @@ export default {
       thumbNum,
       viewNum,
       date,
-      tagList,
+      liked,
       mode: "simple", // 编辑器模式，也可以是simple
       contentConfig,
       contentRef,
       content,
       commentConfig,
+      toolbarConfig,
       commentRef,
       comment,
       commentList,
@@ -400,18 +394,19 @@ export default {
       moment,
       contentCreated,
       commentCreated,
-      onEdit,
       onComment,
-
-      toolbarConfig,
+      onLike,
     };
   },
 };
 </script>
 
 <style scoped>
-.solution {
-  min-height: 48rem;
+.discussion {
+  width: 70%;
+  margin: auto;
+  /*min-height: 48rem;*/
+
   text-align: left;
   overflow-y: hidden;
   background: white;

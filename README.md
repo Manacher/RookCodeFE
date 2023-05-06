@@ -1,6 +1,8 @@
-# RookCodeFE
+# RookCodeFE Agartha Branch
 
 The front end part of rookcode, a website providing algorithm practice and problem discussion services.
+
+Powered by Vue3, antd-vue, vuex
 
 ### 构建项目依赖
 ```

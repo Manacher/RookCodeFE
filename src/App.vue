@@ -1,42 +1,37 @@
 <template>
-
-<!--  <div id="nav">-->
-<!--    <router-link to="/">Home</router-link>-->
-<!--    |-->
-<!--    <router-link to="/about">About</router-link>-->
-<!--  </div>-->
-<!--  <a-button type="primary">Primary Button</a-button>-->
-  <router-view/>
+  <rook-header v-if="ok"></rook-header>
+  <router-view />
+  <rook-footer v-if="ok"></rook-footer>
 </template>
 
-
 <script lang="ts">
-import axios from "axios";
-import {defineComponent, onMounted} from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
+import RookHeader from "@/components/rook-header.vue";
+import RookFooter from "@/components/rook-footer.vue";
 import store from "@/store";
 
 export default defineComponent({
+  name: "app",
+  components: {
+    RookHeader,
+    RookFooter,
+  },
   setup() {
-
+    let ok = ref(true);
     onMounted(() => {
-      console.log("axios test");
-      axios.get("/").then((res) => {
-        console.log("get resp:", res)
-      })
-    })
-
-    const userInfo={
-      token: "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxNjI0MzA5MzIxQHFxLmNvbSIsImNyZWF0ZWQiOjE2ODI0OTM5MDc3ODIsImV4cCI6MTcxODQ5MzkwN30.bVgBngvtb-bVWyYiD-wRdRK4c-nNW1mSojB6fL418RKhPPAuyJZqhUdOAcGIBMk8vW-lEmTfaejCoG_qkYKJaQ",
-      id: 28
-    }
-    //±£´ætoken
-    store.commit("login",userInfo);
-
-  }
-})
-
+      if (store.state.token === "") {
+        ok.value = false;
+      }
+    });
+    watch(store.state, (newVal, oldVal) => {
+      ok.value = true;
+    });
+    return {
+      ok,
+    };
+  },
+});
 </script>
-
 
 <style>
 #app {

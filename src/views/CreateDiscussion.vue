@@ -1,13 +1,5 @@
 <template>
-  <div class="create-solution">
-    <div style="background: #f7f7f7; height: 2.4rem">
-      <router-link :to="'/problems/' + params.pro_id"
-      ><a-button size="small" style="margin-top: 0.5rem"
-      >关闭</a-button
-      ></router-link
-      >
-    </div>
-
+  <div class="create-discussion">
     <div style="padding: 1rem">
       <a-input
           v-model:value="title"
@@ -15,14 +7,6 @@
           :bordered="false"
           style="font-size: xx-large"
       />
-      <a-select
-          v-model:value="selectTags"
-          mode="multiple"
-          style="width: 100%"
-          placeholder="添加编程语言、方法、知识点等标签"
-          :options="tagList"
-          :bordered="false"
-      ></a-select>
       <a-divider></a-divider>
       <div class="editor">
         <Toolbar
@@ -41,7 +25,7 @@
       <div class="submit">
         <a-space>
           <a-popconfirm
-              title="确定取消发布题解吗？您将丢失所有编辑记录。"
+              title="确定取消发布讨论吗？您将丢失所有编辑记录。"
               ok-text="确定"
               cancel-text="取消"
               @confirm="confirm"
@@ -49,7 +33,7 @@
           >
             <a-button>取消发布</a-button>
           </a-popconfirm>
-          <a-button type="primary" @click="onPublish">发布题解</a-button>
+          <a-button type="primary" @click="onPublish">发布讨论</a-button>
         </a-space>
       </div>
     </div>
@@ -73,7 +57,7 @@ import { CheckCircleOutlined } from "@ant-design/icons-vue";
 Boot.registerModule(markdownModule);
 
 export default {
-  name: "CreateSolution",
+  name: "CreateDiscussion",
   components: { Editor, Toolbar },
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -81,8 +65,6 @@ export default {
     // 获取路由参数
     const { params } = useRoute();
     const title = ref("");
-    const selectTags = ref([]);
-    const tagList = ref<SelectProps["options"]>([]);
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef();
     // 编辑器，工具栏配置
@@ -91,24 +73,7 @@ export default {
 
     // ajax 异步获取后端数据
     onMounted(() => {
-      axios.get("http://175.178.221.165:8081/solutions/getAllTags").then(
-          (res) => {
-            const success = res.data.success;
-            const message = res.data.message;
-            const data = res.data.data;
-            const list = data.split("_");
-            tagList.value = [];
-            for (let i = 0; i < list.length; i++) {
-              tagList.value.push({
-                value: list[i],
-                label: list[i],
-              });
-            }
-          },
-          (err) => {
-            console.log(err.data);
-          }
-      );
+      debugger
     });
 
     // 组件销毁时，也及时销毁编辑器
@@ -139,37 +104,25 @@ export default {
 
     // 发布题解
     const onPublish = () => {
-      const List2String = (list: never[]) => {
-        let str = "";
-        for (let data of list) {
-          str += data + "_";
-        }
-        return str;
-      };
-
-      axios
-          .post(
-              "http://175.178.221.165:8081/solutions/pubSolution",
+      axios.post(
+              "/discussions/pubDiscussion",
               {
                 content: editorRef.value.getHtml(),
-                questionId: Number(params.pro_id),
-                tags: List2String(selectTags.value),
                 title: title.value,
               },
               {
                 headers: { Authorization: store.state.token },
               }
-          )
-          .then(
+          ).then(
               (res) => {
                 // 发布成功
                 notification.open({
-                  message: "题解发布成功",
+                  message: "讨论发布成功",
                   description: "",
                   icon: () => h(CheckCircleOutlined, { style: "color: #008000" }),
                 });
                 router.push(
-                    "/problems/" + params.pro_id + "/solution/" + res.data.data
+                    "/discussion"
                 ); // TODO: id?
               },
               (err) => {
@@ -208,8 +161,6 @@ export default {
     return {
       params,
       title,
-      selectTags,
-      tagList,
       editorRef,
       content,
       mode: "default",
@@ -225,7 +176,7 @@ export default {
 </script>
 
 <style scoped>
-.create-solution {
+.create-discussion {
   text-align: left;
   background: #ffffff;
   /*padding: 1rem;*/
