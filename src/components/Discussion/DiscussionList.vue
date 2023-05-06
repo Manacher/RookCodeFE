@@ -23,7 +23,7 @@
       <template #renderItem="{ item }">
         <a-list-item
           class="discussion-list-item"
-          @click="onListItemClicked(item.ID)"
+          @click="onListItemClicked(item.id)"
           style="
             text-align: left;
             background-color: white;
@@ -68,7 +68,7 @@
               <span style="font-size: 0.8rem; color: #595959">
                 <comment-outlined />
                 <span style="padding-left: 8px; cursor: auto">
-                  {{ item.comment_num }}
+                  {{ item.com_num }}
                 </span>
               </span>
             </template>
@@ -94,7 +94,7 @@
     </a-list>
 
     <a-pagination
-      v-model:current="pagination"
+      v-model:current="pagination.current"
       :total="pagination.total"
       style="
         padding-bottom: 1rem;
@@ -104,6 +104,7 @@
         right: 0;
       "
       @change="tableChange"
+      defaultPageSize="15"
     >
       <template #itemRender="{ type, originalElement }">
         <a v-if="type === 'prev'">前一页</a>
@@ -115,9 +116,22 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios/index";
-
+import {message} from "ant-design-vue";
+import store from "@/store";
+import router from "@/router";
+//html文本处理函数
+function stripHtml(html: string): string {
+  const content = document.createElement('div');
+  content.innerHTML = html;
+  const text = content.innerText;
+  if (text.length > 100) {
+    return text.substr(0, 100) + '...';
+  } else {
+    return text;
+  }
+}
 export default {
   name: "DiscussionList",
 
@@ -128,74 +142,134 @@ export default {
       pageSize: 15,
     });
 
-    const discussion_list = ref([
-      {
-        id: 0,
-        avatar:
-          "https://assets.leetcode.cn/aliyun-lc-upload/uploaded_files/2021/03/73c9f099-abbe-4d94-853f-f8abffd459cd/leetcode.png?x-oss-process=image%2Fresize%2Ch_44%2Cw_44%2Fformat%2Cwebp",
-        title: "如何在「求职面试」中发布一篇帖子？",
-        description:
-          "为了更好地让大家看到你宝贵的面经和经验分享，我们为大家提供了一些关于如何在「求职面试」中发布一篇帖子的建议，快速掌握正确发帖姿势。 你的标题应当包含所面试的企业和职级，并尽可能按照以下格式编写： 举个",
-        view_num: 25100,
-        like_num: 128,
-        comment_num: 118,
-        is_liked: false,
-      },
-      {
-        id: 1,
-        avatar:
-          "https://assets.leetcode.cn/aliyun-lc-upload/users/jin-yan-x1/avatar_1677743212.png?x-oss-process=image%2Fresize%2Ch_44%2Cw_44%2Fformat%2Cwebp",
-        title: "面试经验｜华为OD，Java面经，东莞",
-        description: "123",
-        view_num: 123,
-        like_num: 123,
-        comment_num: 118,
-        is_liked: true,
-      },
-      {
-        id: 2,
-        avatar:
-          "https://assets.leetcode.cn/aliyun-lc-upload/users/cjw-e/avatar_1637496803.png?x-oss-process=image%2Fresize%2Ch_44%2Cw_44%2Fformat%2Cwebp",
-        title: "求助｜请问除了大厂外企还有哪些厂考算法？",
-        description: "123",
-        view_num: 123,
-        like_num: 123,
-        comment_num: 118,
-        is_liked: false,
-      },
-    ]);
-    let loading = ref(false);
+    onMounted(()=>{
+      getDisscussionData()
+    })
 
+    //列表
+    const discussion_list = ref<any>([])
+    let loading = ref(false);
     let inputValue = ref("");
 
     //页码改变的事件
-    let tableChange = (page: number) => {
+    //页码改变的事件
+    let tableChange = (page:number,pageSize:number) => {
       pagination.value.current = page;
-      console.log("tableChange", page);
+      pagination.value.pageSize=pageSize
+      getDisscussionData()
     };
 
+    //获取所有数据的接口
+    const getDisscussionData=()=>{
+      loading.value=true
+      axios.get("http://175.178.221.165:8081/discussions/getDiscussions",{
+        params:{
+          "page":pagination.value.current
+        } ,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization:store.state.token
+        } ,
+      }).then((res) =>{
+        //
+        if(res.data.success===true){
+          discussion_list.value = res.data.data.discussionList.map((item: any) => ({
+            id:item.id,
+            title:item.title,
+            description:item.description,
+            avatar:item.avatar,
+            like_num:item.like_num,
+            view_num:item.view_num,
+            com_num:item.comments_num,
+            is_liked:item._liked,
+          }));
+          for (let i=0;i<discussion_list.value.length;i++){
+            discussion_list.value[i].description=stripHtml(discussion_list.value[i].description)
+          }
+          pagination.value.total=res.data.data.total_cnt
+        }else{
+          message.error(res.data.message)
+        }
+      })
+      loading.value=false
+    }
+
+    //搜索函数
     let onSearch = () => {
-      console.log("onSearch", inputValue.value);
+      loading.value=true
+      axios.get("http://175.178.221.165:8081/discussions/findDiscussions",{
+        params:{
+          "title":inputValue.value,
+          "page":pagination.value.current
+        } ,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization:store.state.token
+        } ,
+      }).then((res) =>{
+        if(res.data.success===true){
+          discussion_list.value = res.data.data.discussionList.map((item: any) => ({
+            id:item.id,
+            title:item.title,
+            description:item.description,
+            avatar:item.avatar,
+            like_num:item.like_num,
+            view_num:item.view_num,
+            com_num:item.comments_cnt,
+            is_liked:item._liked,
+          }));
+          //这里还需要对文本的内容进行过滤
+          for (let i=0;i<discussion_list.value.length;i++){
+            discussion_list.value[i].description=stripHtml(discussion_list.value[i].description)
+          }
+          pagination.value.total=res.data.data.total_cnt
+        }else{
+          message.error(res.data.message)
+        }
+      })
+      loading.value=false
     };
 
-    let onListItemClicked = (id: number) => {
-      console.log("onListItemClicked", id);
-    };
-
+    //是否点赞
     let changeLikeStatus = (item: any) => {
-      if (item.is_liked) {
-        item.like_num--;
-      } else {
-        item.like_num++;
-      }
-      item.is_liked = !item.is_liked;
+      //点赞
+      axios.get("http://175.178.221.165:8081/discussions/likeDiscussion",{
+        params:{
+          "discussion_id":item.id
+        } ,
+        headers: {
+          Authorization:store.state.token
+        } ,
+      }).then((res) =>{
+        //
+        if(res.data.success===true){
+          //message.success(res.data.data)
+          if (item.is_liked) {
+            item.like_num--;
+          } else {
+            item.like_num++;
+          }
+          item.is_liked = !item.is_liked;
+        }else{
+          message.error('失败')
+        }
+
+      })
     };
 
+    //跳转到详情界面
+    let onListItemClicked = (id: number) => {
+      window.open('/discussion/detail/'+String(id), '_blank');
+    };
+
+    //创建讨论
     let onCreateClicked = () => {
       console.log("onCreateClicked");
+      router.push({path:'create-discussion'})
     };
 
     return {
+      getDisscussionData,
       loading,
       discussion_list,
       pagination,

@@ -140,6 +140,7 @@
         :total="total_cnt"
         style="padding-bottom: 1rem; padding-top: 1rem"
         @change="tableChange"
+        defaultPageSize="15"
     >
       <template #itemRender="{ type, originalElement }">
         <a v-if="type === 'prev'">前一页</a>
