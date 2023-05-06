@@ -78,11 +78,11 @@
                 style="font-size: 0.8rem; color: #595959"
               >
                 <a-tooltip title="点赞量">
-                  <template v-if="action === 'liked'">
-                    <LikeFilled @click="like" />
+                  <template v-if="item.like">
+                    <LikeFilled style="color: #009d57" />
                   </template>
                   <template v-else>
-                    <LikeOutlined @click="like" />
+                    <LikeOutlined />
                   </template>
                 </a-tooltip>
                 <span style="padding-left: 8px; cursor: auto">
@@ -124,11 +124,6 @@
               <span style="font-size: 0.9rem; color: #8c8c8c">
                 {{ item.descrp }}
               </span>
-            </template>
-            <template #datetime>
-              <!--              <a-tooltip :title="dayjs().format('YYYY-MM-DD HH:mm:ss')">-->
-              <!--                <span>{{ dayjs().fromNow() }}</span>-->
-              <!--              </a-tooltip>-->
             </template>
           </a-comment>
         </a-list-item>
@@ -306,12 +301,13 @@ export default defineComponent({
                 like_cnt: item.like_num,
                 view_cnt: item.view_num,
                 com_cnt: item.comments_cnt,
+                like: item.like,
               })
             );
 
-            for (var i = 0; i < solution_info_list.value.length; i++) {
-              var str = solution_info_list.value[i].descrp;
-              var new_str = stripHtml(str);
+            for (let i = 0; i < solution_info_list.value.length; i++) {
+              let str = solution_info_list.value[i].descrp;
+              let new_str = stripHtml(str);
               solution_info_list.value[i].descrp = new_str;
             }
             console.log(solution_info_list.value);

@@ -7,58 +7,82 @@
     </div>
 
     <div class="solution-main-area" style="padding: 1rem">
-      <div class="title">
-        <a-space>
-          <router-link :to="'/user/' + account">
-            <a-avatar :size="32" :src="avatar" />
-          </router-link>
-          <span
-            style="font-size: 1.2rem; margin-left: 0.5rem; color: #262626"
-            >{{ title }}</span
-          >
-        </a-space>
+      <div v-if="loading">
+        <a-skeleton avatar :paragraph="{ rows: 4 }" />
       </div>
 
-      <div class="action">
-        <a-space style="margin-top: 1rem; color: #8c8c8c">
-          <router-link :to="'/user/' + account">
-            <a href="" style="color: #8c8c8c">{{ nickname }}</a>
-          </router-link>
-
-          <span style="color: #e5e5e5">•</span>
-
-          <span style="margin-left: 0.2rem"
-            ><like-outlined style="margin-right: 0.2rem" />{{ thumbNum }}</span
-          >
-
-          <span style="color: #e5e5e5">•</span>
-
-          <span style="margin-left: 0.2rem"
-            ><eye-outlined style="margin-right: 0.2rem" />{{ viewNum }}</span
-          >
-
-          <span style="color: #e5e5e5">•</span>
-
-          <span style="margin-left: 0.2rem"
-            >发布于 {{ moment(date).fromNow() }}</span
-          >
-
-          <span style="color: #e5e5e5">•</span>
-
-          <span v-for="tag in tagList" :key="tag">
-            <a-tag
-              style="
-                border-radius: 0.5rem;
-                border: none;
-                background: #f2f3f4;
-                color: #262626;
-              "
-              >{{ tag }}</a-tag
+      <div v-else>
+        <div class="title">
+          <a-space>
+            <router-link :to="'/user/' + account">
+              <a-avatar :size="32" :src="avatar" />
+            </router-link>
+            <span
+              style="font-size: 1.2rem; margin-left: 0.5rem; color: #262626"
+              >{{ title }}</span
             >
-          </span>
-        </a-space>
+          </a-space>
+        </div>
+
+        <div class="action">
+          <a-space style="margin-top: 1rem; color: #8c8c8c">
+            <router-link :to="'/user/' + account">
+              <a href="" style="color: #8c8c8c">{{ nickname }}</a>
+            </router-link>
+
+            <span style="color: #e5e5e5">•</span>
+
+            <div
+              style="margin-left: 0.2rem; display: flex; flex-direction: row"
+            >
+              <div style="margin-bottom: 0.2rem">
+                <like-outlined
+                  v-if="!like"
+                  class="unlike-button"
+                  @click="onLikeClicked"
+                />
+                <like-filled
+                  class="like-button"
+                  v-else
+                  @click="onLikeClicked"
+                />
+              </div>
+
+              <div style="margin-top: 0.1rem">
+                {{ thumbNum }}
+              </div>
+            </div>
+
+            <span style="color: #e5e5e5">•</span>
+
+            <span style="margin-left: 0.2rem"
+              ><eye-outlined style="margin-right: 0.4rem" />{{ viewNum }}</span
+            >
+
+            <span style="color: #e5e5e5">•</span>
+
+            <span style="margin-left: 0.2rem"
+              >发布于 {{ moment(date).fromNow() }}</span
+            >
+
+            <span style="color: #e5e5e5">•</span>
+
+            <span v-for="tag in tagList" :key="tag">
+              <a-tag
+                style="
+                  border-radius: 0.5rem;
+                  border: none;
+                  background: #f2f3f4;
+                  color: #262626;
+                "
+                >{{ tag }}</a-tag
+              >
+            </span>
+          </a-space>
+        </div>
+        <a-divider style="margin-bottom: 0"></a-divider>
       </div>
-      <a-divider style="margin-bottom: 0"></a-divider>
+
       <Editor
         v-model="content"
         :defaultConfig="contentConfig"
@@ -101,6 +125,7 @@
           class="comment-list"
           item-layout="horizontal"
           style="overflow-y: auto; height: 63vh; padding-bottom: 1rem"
+          :loading="commentLoading"
         >
           <template #renderItem="{ item }">
             <a-list-item>
@@ -144,9 +169,10 @@ import { h, onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import store from "@/store";
-import { notification } from "ant-design-vue";
+import { message, notification } from "ant-design-vue";
 import moment from "moment/moment";
 import { DomEditor } from "@wangeditor/editor";
+import { likeOrUnlike } from "@/components/Problem/problemPageHttp";
 
 moment.locale("zh-cn");
 
@@ -166,7 +192,6 @@ export default {
   name: "Solution",
   components: { Toolbar, LikeOutlined, EyeOutlined, Editor },
 
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
     // 获取路由参数
     const { query, params } = useRoute();
@@ -185,6 +210,10 @@ export default {
     // 编辑器，工具栏配置
     const contentConfig = { readOnly: true, scroll: false };
     const content = ref("");
+
+    const like = ref(false);
+    let loading = ref(true);
+    let commentLoading = ref(true);
 
     // 评论当前页号(从1开始)
     const cur_page = ref(1);
@@ -227,6 +256,7 @@ export default {
     // commentList的分页设置
     const pagination = ref({
       onChange: (page: number) => {
+        commentLoading.value = true;
         cur_page.value = page;
         commentList.value.length = 0;
         axios
@@ -240,9 +270,11 @@ export default {
             (res) => {
               commentList.value = res.data.data.commentList;
               pagination.value.total = res.data.data.total_page * pageSize;
+              commentLoading.value = false;
             },
             (err) => {
-              console.log(err.data);
+              message.error(err.data);
+              commentLoading.value = false;
             }
           );
       },
@@ -253,6 +285,7 @@ export default {
 
     // ajax 异步获取后端数据
     onMounted(() => {
+      loading.value = true;
       axios
         .post(
           "/solutions/getSolutionsById",
@@ -279,11 +312,14 @@ export default {
             viewNum.value = data.view_num;
             date.value = data.dateTime;
             title.value = data.title;
+            like.value = data.like;
             if (data.tags !== "") tagList.value = data.tags.split("_");
             else tagList.value = [];
+            loading.value = false;
           },
           (err) => {
             console.log(err.data);
+            loading.value = false;
           }
         );
 
@@ -298,9 +334,11 @@ export default {
           (res) => {
             commentList.value = res.data.data.commentList;
             pagination.value.total = res.data.data.total_page * pageSize;
+            commentLoading.value = false;
           },
           (err) => {
             console.log(err.data);
+            commentLoading.value = false;
           }
         );
     });
@@ -377,6 +415,45 @@ export default {
         );
     };
 
+    let showInfo = (success: boolean, info: string) => {
+      if (success) {
+        notification.success({
+          message: "",
+          description: info,
+          duration: 0.5,
+        });
+      } else {
+        notification.error({
+          message: "",
+          description: info,
+          duration: 0.5,
+        });
+      }
+    };
+
+    let onLikeClicked = () => {
+      if (like.value) {
+        likeOrUnlike(params.sln_id as string).then((res: any) => {
+          if (res.success) {
+            showInfo(true, "取消点赞成功");
+          } else {
+            showInfo(false, res.message);
+          }
+        });
+        thumbNum.value--;
+      } else {
+        likeOrUnlike(params.sln_id as string).then((res: any) => {
+          if (res.success) {
+            showInfo(true, "点赞成功");
+          } else {
+            showInfo(false, res.message);
+          }
+        });
+        thumbNum.value++;
+      }
+      like.value = !like.value;
+    };
+
     return {
       query,
       params,
@@ -404,6 +481,10 @@ export default {
       onComment,
 
       toolbarConfig,
+      like,
+      onLikeClicked,
+      loading,
+      commentLoading,
     };
   },
 };
@@ -434,6 +515,34 @@ export default {
 .comment-submit {
   text-align: right;
   padding: 0.2rem;
+}
+
+.like-button {
+  margin-right: 0.4rem;
+  color: white;
+  background-color: #00c36c;
+  border-radius: 1rem;
+  padding: 0.3rem;
+  font-size: 0.7rem;
+}
+
+.like-button:hover {
+  cursor: pointer;
+}
+
+.unlike-button {
+  margin-right: 0.4rem;
+  color: #8c8c8c;
+  background-color: #efefef;
+  border-radius: 1rem;
+  padding: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.unlike-button:hover {
+  cursor: pointer;
+  background-color: #e0f4e7;
+  color: #2db55d;
 }
 
 .comment-list::-webkit-scrollbar {
