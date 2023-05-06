@@ -1,9 +1,8 @@
 <template>
   <rook-header v-if="ok"></rook-header>
-  <router-view/>
+  <router-view />
   <rook-footer v-if="ok"></rook-footer>
 </template>
-
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
@@ -12,30 +11,27 @@ import RookFooter from "@/components/rook-footer.vue";
 import store from "@/store";
 
 export default defineComponent({
-  name: 'app',
-  components:{
+  name: "app",
+  components: {
     RookHeader,
     RookFooter,
   },
   setup() {
-    let ok=ref(true)
-    onMounted(()=>{
-      if(store.state.token===''){
-        ok.value=false
+    let ok = ref(true);
+    onMounted(() => {
+      if (store.state.token === "") {
+        ok.value = false;
       }
-
-    })
-    watch(store.state, (newVal, oldVal)=> {
-      ok.value=true
-    })
-    return{
-      ok
-    }
-  }
-})
-
+    });
+    watch(store.state, (newVal, oldVal) => {
+      ok.value = true;
+    });
+    return {
+      ok,
+    };
+  },
+});
 </script>
-
 
 <style>
 #app {
@@ -58,6 +54,4 @@ export default defineComponent({
 #nav a.router-link-exact-active {
   color: #42b983;
 }
-
-
 </style>

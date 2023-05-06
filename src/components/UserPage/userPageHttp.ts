@@ -104,3 +104,41 @@ export async function getUserFolloweeList(pageNum: number, pageSize: number) {
   });
   return resp;
 }
+
+export async function getUserFollowerNum() {
+  let resp;
+  await axios({
+    method: "get",
+    url: "/follows/GetFolloweeAndFollowerCount",
+    headers: { Authorization: store.state.token },
+  }).then((res) => {
+    resp = res.data;
+  });
+  return resp;
+}
+
+export async function followUser(account: string) {
+  let resp;
+  await axios({
+    method: "post",
+    url: "/follows/FollowOthers",
+    data: { followerAccount: account },
+    headers: { Authorization: store.state.token },
+  }).then((res) => {
+    resp = res.data;
+  });
+  return resp;
+}
+
+export async function unfollowUser(account: string) {
+  let resp;
+  await axios({
+    method: "post",
+    url: "/follows/UnFollowOthers",
+    data: { followerAccount: account },
+    headers: { Authorization: store.state.token },
+  }).then((res) => {
+    resp = res.data;
+  });
+  return resp;
+}

@@ -9,7 +9,10 @@
       <div style="color: #262626">{{ followInfo.follower }}</div>
     </div>
 
-    <a-divider type="vertical" style="height: 2rem" />
+    <a-divider
+      type="vertical"
+      style="height: 1.8rem; color: #e5e5e5; margin-top: 0.6rem"
+    />
 
     <div
       class="subscribe-item"
@@ -21,11 +24,7 @@
     </div>
   </div>
 
-  <a-modal
-    v-model:visible="visible"
-    :footer="null"
-    style="border-radius: 2rem; width: 40rem"
-  >
+  <a-modal v-model:visible="visible" style="width: 40rem" :footer="null">
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane key="1" :tab="`关注了 ${followInfo.follower}`">
         <FollowerList :isFollower="true" style="height: 37rem" />
@@ -40,6 +39,8 @@
 <script lang="ts">
 import { onMounted, ref } from "vue";
 import FollowerList from "@/components/UserPage/FollowerList.vue";
+import { getUserFollowerNum } from "@/components/UserPage/userPageHttp";
+import { message } from "ant-design-vue";
 
 export default {
   name: "UserSubscribe",
@@ -50,25 +51,50 @@ export default {
       followee: 0,
     });
 
-    let visible = ref(true);
+    let visible = ref(false);
     let activeKey = ref("1");
+    let modalInit = false;
 
     let onFollowerListClicked = () => {
-      console.log("follower list clicked");
+      activeKey.value = "1";
       visible.value = true;
+      if (!modalInit) {
+        setModalStyle();
+        modalInit = true;
+      }
     };
 
     let onFolloweeListClicked = () => {
-      console.log("followee list clicked");
+      activeKey.value = "2";
       visible.value = true;
+      if (!modalInit) {
+        setModalStyle();
+        modalInit = true;
+      }
+    };
+
+    let setModalStyle = () => {
+      let content = document.querySelector(".ant-modal-content") as HTMLElement;
+      content.style.borderRadius = "0.7rem";
+      let body = document.querySelector(".ant-modal-body") as HTMLElement;
+      body.style.padding = "1.5rem 0 0 1.5rem";
+    };
+
+    let initFollowerNum = () => {
+      getUserFollowerNum().then((res: any) => {
+        if (res.success) {
+          let data = res.data;
+          followInfo.value.follower = data.followerNum;
+          followInfo.value.followee = data.followeeNum;
+          // console.log("followerNum", res.data);
+        } else {
+          message.error(res.message);
+        }
+      });
     };
 
     onMounted(() => {
-      let content = document.querySelector(".ant-modal-content") as HTMLElement;
-      content.style.borderRadius = "0.7rem";
-
-      let body = document.querySelector(".ant-modal-body") as HTMLElement;
-      body.style.padding = "1.5rem 0 0 1.5rem";
+      initFollowerNum();
     });
 
     return {
@@ -93,6 +119,10 @@ export default {
 
 .subscribe-item:hover {
   cursor: pointer;
+}
+
+.ant-modal-content {
+  border-radius: 0.7rem;
 }
 
 /*.ant-modal-content {*/

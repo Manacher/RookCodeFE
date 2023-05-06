@@ -2,13 +2,28 @@
   <div class="user-detail-area">
     <a-space direction="vertical" :size="4" style="width: 100%">
       <UserSubscribe />
-
       <button
         class="edit-button"
         @click="onEditClicked"
         v-if="userDetailData.isSelf"
       >
         编辑个人信息
+      </button>
+
+      <button
+        class="unfollow-button"
+        @click="cancelFollow"
+        v-if="!userDetailData.isSelf && userDetailData.follow"
+      >
+        取消关注
+      </button>
+
+      <button
+        class="follow-button"
+        @click="follow"
+        v-else-if="!userDetailData.isSelf && !userDetailData.follow"
+      >
+        <plus-outlined /> <span style="margin-left: 0.2rem">关注</span>
       </button>
 
       <div class="info-detail-item" style="margin-top: 1.2rem">
@@ -143,6 +158,8 @@ import { ref, watch } from "vue";
 import { message, Modal } from "ant-design-vue";
 import UserSubscribe from "@/components/UserPage/UserFollower.vue";
 import {
+  followUser,
+  unfollowUser,
   uploadUserInfo,
   UserInfoUploadBody,
 } from "@/components/UserPage/userPageHttp";
@@ -160,6 +177,8 @@ export default {
       like: 0,
       langs: [],
       isSelf: false,
+      follow: false,
+      account: "",
     });
 
     let editInfo = ref({
@@ -182,6 +201,8 @@ export default {
         userDetailData.value.like = props.detailInfo.like;
         userDetailData.value.langs = props.detailInfo.langs;
         userDetailData.value.isSelf = props.detailInfo.isSelf;
+        userDetailData.value.follow = props.detailInfo.follow;
+        userDetailData.value.account = props.detailInfo.account;
       }
     );
 
@@ -255,6 +276,24 @@ export default {
       return false;
     };
 
+    let follow = () => {
+      userDetailData.value.follow = true;
+      followUser(userDetailData.value.account).then((res: any) => {
+        if (!res.success) {
+          message.error(res.message);
+        }
+      });
+    };
+
+    let cancelFollow = () => {
+      userDetailData.value.follow = false;
+      unfollowUser(userDetailData.value.account).then((res: any) => {
+        if (!res.success) {
+          message.error(res.message);
+        }
+      });
+    };
+
     return {
       userDetailData,
       modalVisible,
@@ -266,6 +305,9 @@ export default {
       uploading,
       beforeUpload,
       editInfo,
+
+      follow,
+      cancelFollow,
     };
   },
 };
@@ -291,6 +333,37 @@ export default {
 
 .edit-button:hover {
   background-color: #ebf5ee;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+
+.unfollow-button {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.4rem 4.8rem 0.4rem 4.8rem;
+  background-color: #f2f3f4;
+  color: #565656;
+  font-size: 0.9rem;
+}
+
+.unfollow-button:hover {
+  cursor: pointer;
+  background-color: #e5e6e8 !important;
+  transition: ease-in-out 0.2s;
+}
+
+.follow-button {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.4rem 5rem 0.4rem 5rem;
+  background-color: #eff9f2;
+  color: #2db55d;
+}
+
+.follow-button:hover {
+  cursor: pointer;
+  background-color: #ebf5ee !important;
+  transition: ease-in-out 0.2s;
 }
 
 .info-detail-item {

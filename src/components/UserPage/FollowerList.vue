@@ -64,16 +64,32 @@
           <div>
             <button
               class="follow-button"
-              style="background-color: #f2f3f4; color: #595959"
-              v-if="isFollower"
+              v-if="isFollower && item.mutual && item.follow"
+              @click="cancelFollow(item, isFollower)"
             >
               互相关注
             </button>
 
             <button
               class="follow-button"
-              style="background-color: #2db55d; color: #fff"
+              v-else-if="!isFollower && item.mutual"
+              @click="cancelFollow(item, isFollower)"
+            >
+              互相关注
+            </button>
+
+            <button
+              class="follow-button"
+              v-else-if="isFollower && item.follow"
+              @click="cancelFollow(item, isFollower)"
+            >
+              已关注
+            </button>
+
+            <button
+              class="unfollow-button"
               v-else
+              @click="follow(item, isFollower)"
             >
               关注
             </button>
@@ -89,14 +105,18 @@ import { defineComponent, nextTick, onMounted, ref } from "vue";
 import {
   getUserFollowerList,
   getUserFolloweeList,
+  followUser,
+  unfollowUser,
 } from "@/components/UserPage/userPageHttp";
 import { message } from "ant-design-vue";
-
+import { useRouter } from "vue-router";
 interface listData {
   account: string;
   avatar: string;
   description: string;
   nickname: string;
+  mutual: boolean;
+  follow?: boolean;
   loading?: boolean;
 }
 
@@ -109,7 +129,7 @@ export default defineComponent({
     const loading = ref(false);
     const data = ref<listData[]>([]);
     const list = ref<listData[]>([]);
-
+    const router = useRouter();
     const pagination = ref({
       current: 0,
       total: 1,
@@ -122,7 +142,17 @@ export default defineComponent({
         if (res.success) {
           let resData = res.data;
           pagination.value.total = resData.pageTotalNum;
-          const newData = data.value.concat(resData.followList);
+          let listData = resData.followList.map((item: any) => {
+            return {
+              account: item.account,
+              avatar: item.avatar,
+              description: item.description,
+              nickname: item.nickname,
+              mutual: item.mutual,
+              follow: true,
+            };
+          });
+          const newData = data.value.concat(listData);
           data.value = newData;
           list.value = newData;
           loading.value = false;
@@ -161,7 +191,7 @@ export default defineComponent({
       onLoadMore();
     });
 
-    const onLoadMore = () => {
+    let onLoadMore = () => {
       loading.value = true;
       pagination.value.current++;
       list.value = data.value.concat(
@@ -171,6 +201,7 @@ export default defineComponent({
           avatar: "",
           description: "",
           nickname: "",
+          mutual: false,
         }))
       );
       if (props.isFollower) {
@@ -181,7 +212,31 @@ export default defineComponent({
     };
 
     let onItemClick = (account: string) => {
-      console.log("onItemClick", account);
+      window.open("/user/" + account);
+    };
+
+    let cancelFollow = (item: any, isFollower: boolean) => {
+      item.follow = false;
+      if (!isFollower) {
+        item.mutual = false;
+      }
+      unfollowUser(item.account).then((res: any) => {
+        if (!res.success) {
+          message.error(res.message);
+        }
+      });
+    };
+
+    let follow = (item: any, isFollower: boolean) => {
+      item.follow = true;
+      if (!isFollower) {
+        item.mutual = true;
+      }
+      followUser(item.account).then((res: any) => {
+        if (!res.success) {
+          message.error(res.message);
+        }
+      });
     };
 
     return {
@@ -191,6 +246,8 @@ export default defineComponent({
       pagination,
       onLoadMore,
       onItemClick,
+      cancelFollow,
+      follow,
     };
   },
 });
@@ -199,15 +256,38 @@ export default defineComponent({
 <style scoped>
 .follower-list {
   max-height: 37rem;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 .follow-button {
   border: none;
-  border-radius: 0.3rem;
+  border-radius: 0.4rem;
   padding: 0.25rem 0.8rem 0.25rem 0.8rem;
+  background-color: #f2f3f4;
+  color: #595959;
 }
+
+.follow-button:hover {
+  cursor: pointer;
+  background-color: #e5e6e8;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.unfollow-button {
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.15rem 0.8rem 0.15rem 0.8rem;
+  background-color: #2db55d;
+  color: #fff;
+}
+
+.unfollow-button:hover {
+  cursor: pointer;
+  background-color: #269a4f;
+  transition: background-color 0.2s ease-in-out;
+}
+
 .follow-list-item:hover {
-  background-color: #f7f7f8 !important;
+  background-color: #fbfbfb !important;
   transition: background-color 0.3s ease-in-out !important;
 }
 
