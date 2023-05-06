@@ -1,7 +1,10 @@
 <template>
   <div class="user-detail-area">
     <a-space direction="vertical" :size="4" style="width: 100%">
-      <UserSubscribe />
+      <UserSubscribe
+        :account="userDetailData.account"
+        :loading="detailInfo.isLoading"
+      />
       <button
         class="edit-button"
         @click="onEditClicked"

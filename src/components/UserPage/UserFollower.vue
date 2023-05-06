@@ -27,17 +27,25 @@
   <a-modal v-model:visible="visible" style="width: 40rem" :footer="null">
     <a-tabs v-model:activeKey="activeKey">
       <a-tab-pane key="1" :tab="`关注了 ${followInfo.follower}`">
-        <FollowerList :isFollower="true" style="height: 37rem" />
+        <FollowerList
+          :isFollower="true"
+          :account="account"
+          style="height: 37rem"
+        />
       </a-tab-pane>
       <a-tab-pane key="2" :tab="`关注者 ${followInfo.followee}`">
-        <FollowerList :isFollower="false" style="height: 37rem" />
+        <FollowerList
+          :isFollower="false"
+          :account="account"
+          style="height: 37rem"
+        />
       </a-tab-pane>
     </a-tabs>
   </a-modal>
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import FollowerList from "@/components/UserPage/FollowerList.vue";
 import { getUserFollowerNum } from "@/components/UserPage/userPageHttp";
 import { message } from "ant-design-vue";
@@ -45,7 +53,8 @@ import { message } from "ant-design-vue";
 export default {
   name: "UserSubscribe",
   components: { FollowerList },
-  setup() {
+  props: ["account", "loading"],
+  setup(props: any, context: any) {
     let followInfo = ref({
       follower: 0,
       followee: 0,
@@ -59,7 +68,9 @@ export default {
       activeKey.value = "1";
       visible.value = true;
       if (!modalInit) {
-        setModalStyle();
+        setTimeout(() => {
+          setModalStyle();
+        }, 100);
         modalInit = true;
       }
     };
@@ -68,7 +79,9 @@ export default {
       activeKey.value = "2";
       visible.value = true;
       if (!modalInit) {
-        setModalStyle();
+        setTimeout(() => {
+          setModalStyle();
+        }, 100);
         modalInit = true;
       }
     };
@@ -81,21 +94,26 @@ export default {
     };
 
     let initFollowerNum = () => {
-      getUserFollowerNum().then((res: any) => {
+      getUserFollowerNum(props.account).then((res: any) => {
+        console.log("init follower num", res);
         if (res.success) {
           let data = res.data;
+          console.log("init follower num", data);
           followInfo.value.follower = data.followerNum;
           followInfo.value.followee = data.followeeNum;
-          // console.log("followerNum", res.data);
         } else {
           message.error(res.message);
         }
       });
     };
 
-    onMounted(() => {
-      initFollowerNum();
-    });
+    // loading变化代表account已被获取，调用初始化函数
+    watch(
+      () => props.loading,
+      (newValue, oldValue) => {
+        initFollowerNum();
+      }
+    );
 
     return {
       followInfo,

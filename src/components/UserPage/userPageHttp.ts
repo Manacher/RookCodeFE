@@ -81,11 +81,20 @@ export async function getUserPublishList(account: string, page: number) {
   return resp;
 }
 
-export async function getUserFollowerList(pageNum: number, pageSize: number) {
+export async function getUserFollowerList(
+  account: string,
+  pageNum: number,
+  pageSize: number
+) {
   let resp;
   await axios({
-    method: "get",
-    url: "/follows/GetFollowerList/" + pageNum + "/" + pageSize,
+    method: "post",
+    url: "/follows/GetFollowerList/",
+    data: {
+      account: account,
+      pageNum: pageNum,
+      pageSize: pageSize,
+    },
     headers: { Authorization: store.state.token },
   }).then((res) => {
     resp = res.data;
@@ -93,11 +102,20 @@ export async function getUserFollowerList(pageNum: number, pageSize: number) {
   return resp;
 }
 
-export async function getUserFolloweeList(pageNum: number, pageSize: number) {
+export async function getUserFolloweeList(
+  account: string,
+  pageNum: number,
+  pageSize: number
+) {
   let resp;
   await axios({
-    method: "get",
-    url: "/follows/GetFolloweeList/" + pageNum + "/" + pageSize,
+    method: "post",
+    url: "/follows/GetFolloweeList/",
+    data: {
+      account: account,
+      pageNum: pageNum,
+      pageSize: pageSize,
+    },
     headers: { Authorization: store.state.token },
   }).then((res) => {
     resp = res.data;
@@ -105,11 +123,13 @@ export async function getUserFolloweeList(pageNum: number, pageSize: number) {
   return resp;
 }
 
-export async function getUserFollowerNum() {
+export async function getUserFollowerNum(account: string) {
+  console.log("my account", account);
   let resp;
   await axios({
-    method: "get",
+    method: "post",
     url: "/follows/GetFolloweeAndFollowerCount",
+    data: { account: account },
     headers: { Authorization: store.state.token },
   }).then((res) => {
     resp = res.data;
@@ -122,7 +142,7 @@ export async function followUser(account: string) {
   await axios({
     method: "post",
     url: "/follows/FollowOthers",
-    data: { followerAccount: account },
+    data: { account: account },
     headers: { Authorization: store.state.token },
   }).then((res) => {
     resp = res.data;
@@ -135,7 +155,49 @@ export async function unfollowUser(account: string) {
   await axios({
     method: "post",
     url: "/follows/UnFollowOthers",
-    data: { followerAccount: account },
+    data: { account: account },
+    headers: { Authorization: store.state.token },
+  }).then((res) => {
+    resp = res.data;
+  });
+  return resp;
+}
+
+export async function getUserFollowerListV2(
+  account: string,
+  pageNum: number,
+  pageSize: number
+) {
+  let resp;
+  await axios({
+    method: "post",
+    url: "/follows/GetFollowerListV2/",
+    data: {
+      account: account,
+      pageNum: pageNum,
+      pageSize: pageSize,
+    },
+    headers: { Authorization: store.state.token },
+  }).then((res) => {
+    resp = res.data;
+  });
+  return resp;
+}
+
+export async function getUserFolloweeListV2(
+  account: string,
+  pageNum: number,
+  pageSize: number
+) {
+  let resp;
+  await axios({
+    method: "post",
+    url: "/follows/GetFolloweeListV2/",
+    data: {
+      account: account,
+      pageNum: pageNum,
+      pageSize: pageSize,
+    },
     headers: { Authorization: store.state.token },
   }).then((res) => {
     resp = res.data;

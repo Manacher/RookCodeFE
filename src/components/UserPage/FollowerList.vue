@@ -64,7 +64,7 @@
           <div>
             <button
               class="follow-button"
-              v-if="isFollower && item.mutual && item.follow"
+              v-if="item.mutual"
               @click="cancelFollow(item, isFollower)"
             >
               互相关注
@@ -72,15 +72,7 @@
 
             <button
               class="follow-button"
-              v-else-if="!isFollower && item.mutual"
-              @click="cancelFollow(item, isFollower)"
-            >
-              互相关注
-            </button>
-
-            <button
-              class="follow-button"
-              v-else-if="isFollower && item.follow"
+              v-else-if="item.follow"
               @click="cancelFollow(item, isFollower)"
             >
               已关注
@@ -103,10 +95,12 @@
 <script lang="ts">
 import { defineComponent, nextTick, onMounted, ref } from "vue";
 import {
-  getUserFollowerList,
-  getUserFolloweeList,
   followUser,
   unfollowUser,
+  getUserFollowerListV2,
+  getUserFolloweeListV2,
+  getUserFollowerList,
+  getUserFolloweeList,
 } from "@/components/UserPage/userPageHttp";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
@@ -121,15 +115,14 @@ interface listData {
 }
 
 export default defineComponent({
-  props: ["isFollower"],
+  props: ["isFollower", "account"],
   name: "FollowerList",
   setup(props: any, context: any) {
     console.log("isFollower", props.isFollower);
-
+    console.log("account", props.account);
     const loading = ref(false);
     const data = ref<listData[]>([]);
     const list = ref<listData[]>([]);
-    const router = useRouter();
     const pagination = ref({
       current: 0,
       total: 1,
@@ -138,7 +131,7 @@ export default defineComponent({
 
     let loadFollowerData = (pageNum: number, pageSize: number) => {
       loading.value = true;
-      getUserFollowerList(pageNum, pageSize).then((res: any) => {
+      getUserFollowerList(props.account, pageNum, pageSize).then((res: any) => {
         if (res.success) {
           let resData = res.data;
           pagination.value.total = resData.pageTotalNum;
@@ -149,7 +142,7 @@ export default defineComponent({
               description: item.description,
               nickname: item.nickname,
               mutual: item.mutual,
-              follow: true,
+              follow: item.followed,
             };
           });
           const newData = data.value.concat(listData);
@@ -169,11 +162,21 @@ export default defineComponent({
 
     let loadFolloweeData = (pageNum: number, pageSize: number) => {
       loading.value = true;
-      getUserFolloweeList(pageNum, pageSize).then((res: any) => {
+      getUserFolloweeList(props.account, pageNum, pageSize).then((res: any) => {
         if (res.success) {
           let resData = res.data;
           pagination.value.total = resData.pageTotalNum;
-          const newData = data.value.concat(resData.followList);
+          let listData = resData.followList.map((item: any) => {
+            return {
+              account: item.account,
+              avatar: item.avatar,
+              description: item.description,
+              nickname: item.nickname,
+              mutual: item.mutual,
+              follow: item.followed,
+            };
+          });
+          const newData = data.value.concat(listData);
           data.value = newData;
           list.value = newData;
           loading.value = false;
@@ -215,11 +218,9 @@ export default defineComponent({
       window.open("/user/" + account);
     };
 
-    let cancelFollow = (item: any, isFollower: boolean) => {
+    let cancelFollow = (item: any) => {
       item.follow = false;
-      if (!isFollower) {
-        item.mutual = false;
-      }
+      item.mutual = false;
       unfollowUser(item.account).then((res: any) => {
         if (!res.success) {
           message.error(res.message);
@@ -227,11 +228,9 @@ export default defineComponent({
       });
     };
 
-    let follow = (item: any, isFollower: boolean) => {
+    let follow = (item: any) => {
       item.follow = true;
-      if (!isFollower) {
-        item.mutual = true;
-      }
+      item.mutual = true;
       followUser(item.account).then((res: any) => {
         if (!res.success) {
           message.error(res.message);
