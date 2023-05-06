@@ -1,96 +1,121 @@
-
 // TODO: 修改名称、接口
 
 <template>
   <div class="discussion">
-    <div class="discussion-main-area" style="padding: 1rem">
-      <div class="title">
-        <a-space>
-          <router-link :to="'/user/' + account">
-            <a-avatar :size="32" :src="avatar" />
-          </router-link>
-          <span
-              style="font-size: 1.2rem; margin-left: 0.5rem; color: #262626"
-          >{{ title }}</span
-          >
-        </a-space>
-      </div>
+    <div class="discussion-main-area">
+      <div class="content-area">
+        <a-skeleton avatar :paragraph="{ rows: 4 }" active v-if="initLoading" />
 
-      <div class="action">
-        <a-space style="margin-top: 1rem; color: #8c8c8c">
-          <router-link :to="'/user/' + account">
-            <a href="" style="color: #8c8c8c">{{ nickname }}</a>
-          </router-link>
+        <div v-else>
+          <div class="title">
+            <a-space>
+              <router-link :to="'/user/' + account">
+                <a-avatar :size="32" :src="avatar" />
+              </router-link>
+              <span
+                style="font-size: 1.2rem; margin-left: 0.5rem; color: #262626"
+                >{{ title }}</span
+              >
+            </a-space>
+          </div>
 
-          <span style="color: #e5e5e5">•</span>
+          <div class="action">
+            <a-space style="margin-top: 1rem; color: #8c8c8c">
+              <router-link :to="'/user/' + account">
+                <a href="" style="color: #8c8c8c">{{ nickname }}</a>
+              </router-link>
 
-          <span style="margin-left: 0.2rem" @click="onLike">
-            <like-outlined style="margin-right: 0.2rem" v-if="!liked"/>
-            <like-filled style="margin-right: 0.2rem" v-if="liked"/>
-            {{ thumbNum }}
-          </span>
+              <span style="color: #e5e5e5">•</span>
 
-          <span style="color: #e5e5e5">•</span>
+              <span
+                style="margin-left: 0.2rem; display: flex; flex-direction: row"
+                @click="onLike"
+              >
+                <div style="margin-bottom: 0.2rem">
+                  <like-outlined v-if="!liked" class="unlike-button" />
+                  <like-filled class="like-button" v-else />
+                </div>
 
-          <span style="margin-left: 0.2rem"
-          ><eye-outlined style="margin-right: 0.2rem" />{{ viewNum }}</span>
+                {{ thumbNum }}
+              </span>
 
-          <span style="color: #e5e5e5">•</span>
+              <span style="color: #e5e5e5">•</span>
 
-          <span style="margin-left: 0.2rem"
-          >发布于 {{ moment(date).fromNow() }}</span>
+              <span style="margin-left: 0.2rem"
+                ><eye-outlined style="margin-right: 0.2rem" />{{
+                  viewNum
+                }}</span
+              >
 
-          <span style="color: #e5e5e5">•</span>
+              <span style="color: #e5e5e5">•</span>
 
-        </a-space>
-      </div>
-      <a-divider style="margin-bottom: 0"></a-divider>
-      <Editor
-          v-model="content"
-          :defaultConfig="contentConfig"
-          :mode="mode"
-          @onCreated="contentCreated"
-      />
-      <a-divider></a-divider>
+              <span style="margin-left: 0.2rem"
+                >发布于 {{ moment(date).fromNow() }}</span
+              >
 
-      <span style="font-size: 1rem; color: #595959">评论 >_</span>
+              <span style="color: #e5e5e5">•</span>
+            </a-space>
+          </div>
 
-      <div class="comment">
-        <div class="comment-edit" style="border: solid 0.1rem lightgray">
+          <a-divider style="margin-bottom: 0"></a-divider>
           <Editor
+            v-model="content"
+            :defaultConfig="contentConfig"
+            :mode="mode"
+            @onCreated="contentCreated"
+          />
+        </div>
+      </div>
+
+      <div style="padding-left: 0.5rem; padding-right: 0.5rem">
+        <span style="font-size: 1rem; color: #595959">评论 >_</span>
+
+        <div class="comment">
+          <div class="comment-edit">
+            <Editor
               v-model="comment"
               :defaultConfig="commentConfig"
               :mode="mode"
               @onCreated="commentCreated"
-          />
-          <Toolbar
+            />
+            <Toolbar
               :editor="commentRef"
               :mode="mode"
               :defaultConfig="toolbarConfig"
-          />
-        </div>
-        <div class="comment-submit">
-          <a-button
+              style="border-radius: 1rem"
+            />
+          </div>
+          <div class="comment-submit">
+            <a-button
               size="small"
               type="primary"
               @click="onComment"
               style="position: absolute; bottom: 0.8rem; right: 0.4rem"
-          >评论</a-button
-          >
+              >评论</a-button
+            >
+          </div>
         </div>
       </div>
 
       <div class="commentList" style="text-align: left">
         <a-list
-            :data-source="commentList"
-            :pagination="pagination"
-            class="comment-list"
-            item-layout="horizontal"
-            style="overflow-y: auto; /*height: 63vh;*/ padding-bottom: 1rem"
+          :data-source="commentList"
+          :pagination="pagination"
+          class="comment-list"
+          item-layout="horizontal"
+          style="overflow-y: auto; padding: 0.5rem"
+          :loading="commentLoading"
         >
           <template #renderItem="{ item }">
-            <a-list-item>
-              <a-comment :author="item.nickname">
+            <a-list-item
+              style="
+                background-color: white;
+                border-radius: 0.6rem;
+                margin-top: 0.8rem;
+                box-shadow: 0 0 0.5rem 0.1rem #e6e6e6;
+              "
+            >
+              <a-comment :author="item.nickname" style="padding-left: 1rem">
                 <template #avatar>
                   <router-link :to="'/user/' + item.account">
                     <a-avatar :size="32" :src="item.avatar" />
@@ -98,10 +123,9 @@
                 </template>
                 <template #content>
                   <Editor
-                      v-model="item.content"
-                      :defaultConfig="contentConfig"
-                      :mode="mode"
-                      style="width: 45rem"
+                    v-model="item.content"
+                    :defaultConfig="contentConfig"
+                    :mode="mode"
                   />
                 </template>
                 <template #datetime>
@@ -157,7 +181,6 @@ export default {
   setup() {
     // 获取路由参数
     const { query, params } = useRoute();
-    debugger;
     // 讨论包含的信息
     const account = ref("");
     const avatar = ref("");
@@ -197,7 +220,7 @@ export default {
         key: "group-image",
         title: "图片", // 必填
         iconSvg:
-            '<svg viewBox="0 0 1024 1024"><path d="M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z"></path></svg>',
+          '<svg viewBox="0 0 1024 1024"><path d="M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z"></path></svg>',
         menuKeys: ["insertImage", "uploadImage"],
       },
       {
@@ -207,6 +230,9 @@ export default {
       },
     ];
 
+    let initLoading = ref(true);
+    let commentLoading = ref(true);
+
     // 评论列表数据
     const commentList = ref([]);
     // 每页评论个数
@@ -214,77 +240,85 @@ export default {
     // commentList的分页设置
     const pagination = ref({
       onChange: (page: number) => {
+        commentLoading.value = true;
         cur_page.value = page;
         commentList.value.length = 0;
         axios
-            .get("/discussions/getComments", {
-              params: {
-                page: cur_page.value,
-                discussion_id: params.dis_id,
-              },
-            })
-            .then(
-                (res) => {
-                  commentList.value = res.data.data.commentList;
-                  pagination.value.total = res.data.data.total_page * pageSize;
-                },
-                (err) => {
-                  console.log(err.data);
-                }
-            );
+          .get("/discussions/getComments", {
+            params: {
+              page: cur_page.value,
+              discussion_id: params.dis_id,
+            },
+          })
+          .then(
+            (res) => {
+              commentList.value = res.data.data.commentList;
+              pagination.value.total = res.data.data.total_page * pageSize;
+              commentLoading.value = false;
+            },
+            (err) => {
+              console.log(err.data);
+              commentLoading.value = false;
+            }
+          );
       },
       pageSize: pageSize,
-      total: 100,
+      total: 1,
       showSizeChanger: false,
     });
 
     // ajax 异步获取后端数据
     onMounted(() => {
-      axios.get("/discussions/getDiscussionById",
-          {
-            params: {
-              discussion_id: params.dis_id,
-            },
-            headers: {
-              Authorization: store.state.token,
-            },
+      axios
+        .get("/discussions/getDiscussionById", {
+          params: {
+            discussion_id: params.dis_id,
+          },
+          headers: {
+            Authorization: store.state.token,
+          },
+        })
+        .then(
+          (res) => {
+            const success = res.data.success;
+            const message = res.data.message;
+            const data = res.data.data;
+            console.log(data.account);
+            liked.value = data._liked;
+            account.value = data.account;
+            avatar.value = data.avatar;
+            nickname.value = data.nickname;
+            content.value = data.content;
+            thumbNum.value = data.like_num;
+            viewNum.value = data.view_num;
+            date.value = data.dateTime;
+            title.value = data.title;
+            initLoading.value = false;
+          },
+          (err) => {
+            console.log(err.data);
+            initLoading.value = false;
           }
-          ).then(
-              (res) => {
-                const success = res.data.success;
-                const message = res.data.message;
-                const data = res.data.data;
-                console.log(data.account);
-                liked.value = data._liked
-                account.value = data.account;
-                avatar.value = data.avatar;
-                nickname.value = data.nickname;
-                content.value = data.content;
-                thumbNum.value = data.like_num;
-                viewNum.value = data.view_num;
-                date.value = data.dateTime;
-                title.value = data.title;
-                debugger
-              },
-              (err) => {
-                console.log(err.data);
-              }
-          );
+        );
 
-      axios.get("/discussions/getComments", {
-            params: {
-              page: cur_page.value,
-              discussion_id: params.dis_id,
-            },
-          }).then(
-              (res) => {
-                commentList.value = res.data.data.commentList;
-                pagination.value.total = res.data.data.total_page * pageSize;
-              },
-              (err) => {
-                console.log(err.data);
-              }
-          );
+      axios
+        .get("/discussions/getComments", {
+          params: {
+            page: cur_page.value,
+            discussion_id: params.dis_id,
+          },
+        })
+        .then(
+          (res) => {
+            commentList.value = res.data.data.commentList;
+            pagination.value.total = res.data.data.total_page * pageSize;
+            commentLoading.value = false;
+          },
+          (err) => {
+            console.log(err.data);
+            commentLoading.value = false;
+          }
+        );
     });
 
     // 组件销毁时，也及时销毁编辑器
@@ -309,66 +343,91 @@ export default {
 
     // 评论
     const onComment = () => {
-      axios.post(
-              "/discussions/commentDiscussion",
-              {
-                content: comment.value,
-                discussion_id: params.dis_id,
-              },
-              {
-                headers: { Authorization: store.state.token },
-              }
-          ).then(
-              (res) => {
-                debugger;
-                notification.open({
-                  message: "评论成功",
-                  description: "",
-                  icon: () => h(CheckCircleOutlined, { style: "color: #008000" }),
-                });
-                comment.value = "";
-                // TODO: 刷新评论？
-                cur_page.value = 1;
-                axios.get("/discussions/getComments", {
-                      params: {
-                        page: cur_page.value,
-                        discussion_id: params.dis_id,
-                      },
-                    }).then(
-                        (res) => {
-                          commentList.value = res.data.data.commentList;
-                          pagination.value.total = res.data.data.total_page * pageSize;
-                        },
-                        (err) => {
-                          console.log(err.data);
-                        }
-                    );
-              },
-              (err) => {
-                console.log(err);
-              }
-          );
+      axios
+        .post(
+          "/discussions/commentDiscussion",
+          {
+            content: comment.value,
+            discussion_id: params.dis_id,
+          },
+          {
+            headers: { Authorization: store.state.token },
+          }
+        )
+        .then(
+          (res) => {
+            notification.open({
+              message: "评论成功",
+              description: "",
+              icon: () => h(CheckCircleOutlined, { style: "color: #008000" }),
+            });
+            comment.value = "";
+            // TODO: 刷新评论？
+            cur_page.value = 1;
+            axios
+              .get("/discussions/getComments", {
+                params: {
+                  page: cur_page.value,
+                  discussion_id: params.dis_id,
+                },
+              })
+              .then(
+                (res) => {
+                  commentList.value = res.data.data.commentList;
+                  pagination.value.total = res.data.data.total_page * pageSize;
+                },
+                (err) => {
+                  console.log(err.data);
+                }
+              );
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+    };
+
+    let showInfo = (success: boolean, info: string) => {
+      if (success) {
+        notification.success({
+          message: "",
+          description: info,
+          duration: 0.5,
+        });
+      } else {
+        notification.error({
+          message: "",
+          description: info,
+          duration: 0.5,
+        });
+      }
     };
 
     // 点赞
     const onLike = () => {
-      axios.get(
-          "/discussions/likeDiscussion",
-          {
-            params:{
-              discussion_id: params.dis_id,
-            },
-            headers: { Authorization: store.state.token },
+      axios
+        .get("/discussions/likeDiscussion", {
+          params: {
+            discussion_id: params.dis_id,
+          },
+          headers: { Authorization: store.state.token },
+        })
+        .then(
+          (res) => {
+            liked.value = !liked.value;
+            if (liked.value) {
+              thumbNum.value += 1;
+              showInfo(true, "点赞成功");
+            } else {
+              thumbNum.value -= 1;
+              showInfo(true, "取消点赞成功");
+            }
+          },
+          (err) => {
+            showInfo(false, err);
           }
-      ).then(res=>{
-        console.log(res)
-        liked.value = !liked.value
-        if(liked.value) thumbNum.value += 1
-        else thumbNum.value -= 1
-      },err=>{
-        console.log(err)
-      })
-    }
+        );
+    };
 
     return {
       query,
@@ -396,6 +455,8 @@ export default {
       commentCreated,
       onComment,
       onLike,
+      initLoading,
+      commentLoading,
     };
   },
 };
@@ -403,19 +464,22 @@ export default {
 
 <style scoped>
 .discussion {
-  width: 70%;
-  margin: auto;
-  /*min-height: 48rem;*/
+  background: #f7f8fa;
+}
 
+.discussion-main-area {
+  margin-left: 20rem;
+  width: 50rem;
   text-align: left;
   overflow-y: hidden;
-  background: white;
 }
 
-.title {
-}
-
-.action {
+.content-area {
+  margin: 1rem 0.5rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 0 0 0.5rem 0.08rem #e6e6e6;
 }
 
 .comment {
@@ -424,11 +488,41 @@ export default {
 }
 
 .comment-edit {
+  background-color: white;
+  box-shadow: 0 0 0.5rem 0.08rem #e6e6e6;
 }
 
 .comment-submit {
   text-align: right;
   padding: 0.2rem;
+}
+
+.like-button {
+  margin-right: 0.4rem;
+  color: white;
+  background-color: #00c36c;
+  border-radius: 1rem;
+  padding: 0.3rem;
+  font-size: 0.7rem;
+}
+
+.like-button:hover {
+  cursor: pointer;
+}
+
+.unlike-button {
+  margin-right: 0.4rem;
+  color: #8c8c8c;
+  background-color: #efefef;
+  border-radius: 1rem;
+  padding: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.unlike-button:hover {
+  cursor: pointer;
+  background-color: #e0f4e7;
+  color: #2db55d;
 }
 
 .comment-list::-webkit-scrollbar {

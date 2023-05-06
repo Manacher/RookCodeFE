@@ -145,7 +145,7 @@ export default {
 
     //列表
     const discussion_list = ref<any>([]);
-    let loading = ref(false);
+    let loading = ref(true);
     let inputValue = ref("");
 
     //页码改变的事件
@@ -188,11 +188,12 @@ export default {
               );
             }
             pagination.value.total = res.data.data.total_cnt;
+            loading.value = false;
           } else {
             message.error(res.data.message);
+            loading.value = false;
           }
         });
-      loading.value = false;
     };
 
     //搜索函数
@@ -233,11 +234,12 @@ export default {
                 );
               }
               pagination.value.total = res.data.data.total_cnt;
+              loading.value = false;
             } else {
               message.error(res.data.message);
+              loading.value = false;
             }
           });
-        loading.value = false;
       }
     };
 
@@ -277,7 +279,6 @@ export default {
 }
 
 .top-area {
-  /*float: right;*/
   position: absolute;
   right: 0;
 }
