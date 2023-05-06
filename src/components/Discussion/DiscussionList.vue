@@ -43,11 +43,10 @@
                 <template v-if="item.is_liked">
                   <LikeFilled
                     style="color: #00c36c"
-                    @click="changeLikeStatus(item)"
                   />
                 </template>
                 <template v-else>
-                  <LikeOutlined @click="changeLikeStatus(item)" />
+                  <LikeOutlined  />
                 </template>
 
                 <span style="padding-left: 8px; cursor: auto">
@@ -153,12 +152,10 @@ export default {
 
     //页码改变的事件
     //页码改变的事件
-    let tableChange = (page:number,pageSize:number) => {
+    let tableChange = (page:number) => {
       pagination.value.current = page;
-      pagination.value.pageSize=pageSize
       getDisscussionData()
     };
-
     //获取所有数据的接口
     const getDisscussionData=()=>{
       loading.value=true
@@ -196,66 +193,47 @@ export default {
 
     //搜索函数
     let onSearch = () => {
-      loading.value=true
-      axios.get("http://175.178.221.165:8081/discussions/findDiscussions",{
-        params:{
-          "title":inputValue.value,
-          "page":pagination.value.current
-        } ,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization:store.state.token
-        } ,
-      }).then((res) =>{
-        if(res.data.success===true){
-          discussion_list.value = res.data.data.discussionList.map((item: any) => ({
-            id:item.id,
-            title:item.title,
-            description:item.description,
-            avatar:item.avatar,
-            like_num:item.like_num,
-            view_num:item.view_num,
-            com_num:item.comments_cnt,
-            is_liked:item._liked,
-          }));
-          //这里还需要对文本的内容进行过滤
-          for (let i=0;i<discussion_list.value.length;i++){
-            discussion_list.value[i].description=stripHtml(discussion_list.value[i].description)
+      if(inputValue.value===''){
+        getDisscussionData()
+      }
+      else{
+        loading.value=true
+        axios.get("http://175.178.221.165:8081/discussions/findDiscussions",{
+          params:{
+            "title":inputValue.value,
+            "page":pagination.value.current
+          } ,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization:store.state.token
+          } ,
+        }).then((res) =>{
+          if(res.data.success===true){
+            discussion_list.value = res.data.data.discussionList.map((item: any) => ({
+              id:item.id,
+              title:item.title,
+              description:item.description,
+              avatar:item.avatar,
+              like_num:item.like_num,
+              view_num:item.view_num,
+              com_num:item.comments_cnt,
+              is_liked:item._liked,
+            }));
+            //这里还需要对文本的内容进行过滤
+            for (let i=0;i<discussion_list.value.length;i++){
+              discussion_list.value[i].description=stripHtml(discussion_list.value[i].description)
+            }
+            pagination.value.total=res.data.data.total_cnt
+          }else{
+            message.error(res.data.message)
           }
-          pagination.value.total=res.data.data.total_cnt
-        }else{
-          message.error(res.data.message)
-        }
-      })
-      loading.value=false
+        })
+        loading.value=false
+      }
+
+
     };
 
-    //是否点赞
-    let changeLikeStatus = (item: any) => {
-      //点赞
-      axios.get("http://175.178.221.165:8081/discussions/likeDiscussion",{
-        params:{
-          "discussion_id":item.id
-        } ,
-        headers: {
-          Authorization:store.state.token
-        } ,
-      }).then((res) =>{
-        //
-        if(res.data.success===true){
-          //message.success(res.data.data)
-          if (item.is_liked) {
-            item.like_num--;
-          } else {
-            item.like_num++;
-          }
-          item.is_liked = !item.is_liked;
-        }else{
-          message.error('失败')
-        }
-
-      })
-    };
 
     //跳转到详情界面
     let onListItemClicked = (id: number) => {
@@ -277,7 +255,6 @@ export default {
       tableChange,
       onSearch,
       onListItemClicked,
-      changeLikeStatus,
       onCreateClicked,
     };
   },
