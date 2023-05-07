@@ -1,65 +1,75 @@
 <template>
   <div class="header">
-
     <div class="logo">
-        <span>
-             RookCode
-        </span>
+      <span> RookCode </span>
     </div>
 
     <div class="right-item">
       <div>
-        <a-avatar :size="32"
-                  :src=userInfo.avatar
-                  @click="onCenterClicked"
-                  id="center-avatar"/>
+        <a-avatar
+          :size="32"
+          :src="userInfo.avatar"
+          @click="onCenterClicked"
+          id="center-avatar"
+        />
 
-        <transition name='fade'>
-
-          <a-card hoverable class="center-card" v-show="cardShow" id="center-card">
-
-            <a-card-meta :title=userInfo.nickname :description=userInfo.account class="center-card-header">
-              <template #avatar>
-                <a-avatar :size="40"
-                          :src=userInfo.avatar
-                />
-              </template>
-            </a-card-meta>
-
-            <template #actions>
-
-              <div class="center-card-action-item">
-
-                <router-link :to="`/user/${userInfo.account}`" v-on:click="onCardClicked">
-                  <img src="../assets/center.png" class="center-card-item-img"/>
-                  <span>主页</span>
-                </router-link>
-              </div>
-
-              <div>
-                <a-popconfirm title="确认退出登陆吗,登录状态将被清除？" ok-text="是" cancel-text="否"
-                @confirm="logout">
-
-                  <a href="#" style="margin-right: 1rem">
-                    <img src="../assets/exit.png"
-                         style="height: 1rem; width: 1rem; margin-bottom: 0.2rem; margin-right: 0.3rem"/>
-                    <span>退出</span>
-                  </a>
-                </a-popconfirm>
-              </div>
+        <!--        <transition name="fade">-->
+        <a-card
+          hoverable
+          class="center-card"
+          v-show="cardShow"
+          id="center-card"
+        >
+          <a-card-meta
+            :title="userInfo.nickname"
+            :description="userInfo.account"
+            class="center-card-header"
+          >
+            <template #avatar>
+              <a-avatar :size="40" :src="userInfo.avatar" />
             </template>
+          </a-card-meta>
 
-          </a-card>
+          <template #actions>
+            <div class="center-card-action-item">
+              <div v-on:click="onCardClicked">
+                <img src="../assets/center.png" class="center-card-item-img" />
+                <span>主页</span>
+              </div>
+            </div>
 
-        </transition>
+            <div>
+              <a-popconfirm
+                title="确认退出登陆吗,登录状态将被清除？"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="logout"
+              >
+                <a href="#" style="margin-right: 1rem">
+                  <img
+                    src="../assets/exit.png"
+                    style="
+                      height: 1rem;
+                      width: 1rem;
+                      margin-bottom: 0.2rem;
+                      margin-right: 0.3rem;
+                    "
+                  />
+                  <span>退出</span>
+                </a>
+              </a-popconfirm>
+            </div>
+          </template>
+        </a-card>
+        <!--        </transition>-->
       </div>
     </div>
 
     <a-menu
-        v-model:selectedKeys="navKeys"
-        mode="horizontal"
-        class="menu"
-        style="padding-top: 0.5rem;"
+      v-model:selectedKeys="navKeys"
+      mode="horizontal"
+      class="menu"
+      style="padding-top: 0.5rem"
     >
       <a-menu-item key="/" style="padding-bottom: 0.5rem">
         <router-link to="/">首页</router-link>
@@ -69,43 +79,34 @@
         <router-link to="/discussion">讨论</router-link>
       </a-menu-item>
     </a-menu>
-
   </div>
 
-  <div class="header-placeholder">
-
-  </div>
-
-
+  <div class="header-placeholder"></div>
 </template>
 
 <script lang="ts">
-
-import {computed, onMounted, ref, watch} from "vue";
-import store, {UserInfo} from "@/store";
+import { computed, onMounted, ref, watch } from "vue";
+import store, { UserInfo } from "@/store";
 import axios from "axios";
-import {message} from "ant-design-vue";
-import {useRoute} from "vue-router";
+import { message } from "ant-design-vue";
+import { useRoute } from "vue-router";
 import router from "@/router";
-
-
 
 export default {
   name: "rook-header",
   setup() {
-
     let userInfo = ref({
       account: "account",
       nickname: "",
       avatar: "",
-    })
+    });
 
     let getInfo = () => {
       axios({
-        method: 'get',
-        url: '/header',
+        method: "get",
+        url: "/header",
         headers: {
-          'Authorization': store.state.token,
+          Authorization: store.state.token,
         },
       }).then((res) => {
         let data = res.data;
@@ -115,14 +116,12 @@ export default {
           userInfo.value.avatar = data.avatar;
           userInfo.value.account = data.account;
 
-          console.log("userInfo: ", userInfo.value)
+          console.log("userInfo: ", userInfo.value);
         } else {
-          message.error("网页Header请求出错")
+          message.error("网页Header请求出错");
         }
-      })
-    }
-
-
+      });
+    };
 
     // TODO 手动设置登陆token
     // let info:UserInfo = {
@@ -133,35 +132,36 @@ export default {
     // console.log("account and token", store.state.token, store.state.account)
 
     let currentPath = window.location.pathname;
-    let navKeys = ref(['/']);
-    navKeys.value = [currentPath]
+    let navKeys = ref(["/"]);
+    navKeys.value = [currentPath];
 
     let cardShow = ref(false);
     let centerCard: any;
 
     // dom元素加载完毕后获取节点
     onMounted(() => {
-      centerCard = document.querySelector('#center-card')
+      centerCard = document.querySelector("#center-card");
       // 设置card样式
-      let cardDetail = document.querySelector('.ant-card-meta-detail') as HTMLElement
-      cardDetail.style.paddingLeft = '0.5rem'
+      let cardDetail = document.querySelector(
+        ".ant-card-meta-detail"
+      ) as HTMLElement;
+      cardDetail.style.paddingLeft = "0.5rem";
       getInfo();
-    })
+    });
 
     // 个人头像点击事件，当卡片未显示时，点击头像让卡片出现，并添加鼠标监听事件
     let onCenterClicked = () => {
       if (!cardShow.value) {
         cardShow.value = true;
         setTimeout(() => {
-          document.addEventListener('click', watchNextClick)
-        }, 100)
+          document.addEventListener("click", watchNextClick);
+        }, 100);
       }
-    }
+    };
 
     // 监听点开个人中心卡片后的下一次点击事件，若点击的不是个人中心卡片内容则令卡片消失，并移除监听事件
     let watchNextClick = (e: any) => {
       if (centerCard) {
-
         if (!centerCard.contains(e.target)) {
           // todo 该逻辑之后可完善，即点击弹出卡片的非是、否区域也会直接令卡片消失的问题
           // let popCard = document.querySelector('.ant-popover-inner-content')
@@ -169,49 +169,52 @@ export default {
           //   return
           // }
           cardShow.value = false;
-          document.removeEventListener('click', watchNextClick)
+          document.removeEventListener("click", watchNextClick);
         }
       }
-    }
+    };
 
     let onCardClicked = () => {
-      document.removeEventListener('click', watchNextClick)
+      document.removeEventListener("click", watchNextClick);
       cardShow.value = false;
-      navKeys.value = ['/user/' + userInfo.value.account]
-    }
+      navKeys.value = ["/user/" + userInfo.value.account];
+      // window.open("/user/" + userInfo.value.account);
+      setTimeout(() => {
+        window.open("/user/" + userInfo.value.account);
+      }, 50);
+    };
 
     let route = useRoute();
     const routePath = computed(() => {
-      return route.path.split("/")[1]
+      return route.path.split("/")[1];
     });
 
     watch(routePath, (newVal, oldVal) => {
-      if (newVal !== '') {
-        navKeys.value = [newVal]
+      if (newVal !== "") {
+        navKeys.value = [newVal];
       } else {
-        navKeys.value = ['/']
+        navKeys.value = ["/"];
       }
 
-      let logo = document.querySelector('.logo') as HTMLElement
-      if (newVal === 'problems') {
-        logo.classList.add('logo-problem')
+      let logo = document.querySelector(".logo") as HTMLElement;
+      if (newVal === "problems") {
+        logo.classList.add("logo-problem");
       } else {
-        logo.classList.remove('logo-problem')
+        logo.classList.remove("logo-problem");
       }
-
-    })
+    });
     //点击个人头像，退出登录
-    const logout=(e:any)=>{
-      const userInfo={
-        token:'',
-       account:'',
-      }
+    const logout = (e: any) => {
+      const userInfo = {
+        token: "",
+        account: "",
+      };
       //保存token
-      store.commit("loginSafe",userInfo);
+      store.commit("loginSafe", userInfo);
       //清楚本地数据，跳转到登录界面
-      localStorage.clear()
-      router.go(0)
-    }
+      localStorage.clear();
+      router.go(0);
+    };
 
     return {
       logout,
@@ -220,25 +223,22 @@ export default {
       userInfo,
       onCenterClicked,
       onCardClicked,
-    }
-  }
-}
+    };
+  },
+};
 </script>
 
 <style scoped>
-
 .header {
   background-color: white;
   caret-color: rgba(0, 0, 0, 0);
   user-select: none;
   font-size: 1rem;
-  /*padding-top: 1rem;*/
-  /*margin-bottom: 1rem;*/
   z-index: 1;
 }
 
 .menu {
-  lineHeight: 4rem;
+  lineheight: 4rem;
   font-size: 1.2rem;
   color: #5c5c5c;
 }
@@ -283,13 +283,15 @@ export default {
   text-align: left;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s
-}
+/*.fade-enter-active,*/
+/*.fade-leave-active {*/
+/*  transition: opacity 0.3s;*/
+/*}*/
 
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
+/*.fade-enter,*/
+/*.fade-leave-to {*/
+/*  opacity: 0;*/
+/*}*/
 
 .center-card-header {
   font-size: 0.8rem;
@@ -303,14 +305,12 @@ export default {
   height: 3rem;
 }
 
-
 .center-card-action-item img {
   vertical-align: middle;
   margin-right: 0.3rem;
   height: 1rem;
   width: 1rem;
 }
-
 
 .center-card-action-item span {
   vertical-align: middle;
@@ -371,6 +371,4 @@ export default {
     right: 1.5rem;
   }
 }
-
-
 </style>
