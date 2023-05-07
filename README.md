@@ -1,8 +1,6 @@
-# RookCodeFE Agartha Branch
+# RookCodeFE V1.0
 
-The front end part of rookcode, a website providing algorithm practice and problem discussion services.
-
-Powered by Vue3, antd-vue, vuex
+RookCode算法刷题网站用户前端，使用vue3，vuex，vue-router，antd-vue，wangEditor，codemirror，echarts，v-calendar等构建
 
 ### 构建项目依赖
 ```
@@ -19,7 +17,3 @@ npm run serve-dev
 npm run build-dev
 ```
 
-### 代码校验
-```
-npm run lint
-```
