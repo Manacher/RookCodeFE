@@ -76,7 +76,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/discussion/detail/:dis_id",
     name: "discussion",
     meta: { requiresAuth: true },
-    component: () => import("../views/Discussion.vue"),
+    component: () => import("../views/DiscussionDetail.vue"),
   },
   {
     path: "/create-discussion",

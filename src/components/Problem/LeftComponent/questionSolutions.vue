@@ -1,5 +1,5 @@
 <template>
-  <div :style="myStyle" class="main_box">
+  <div :style="myStyle" class="main_box" ref="wrapperRef">
     <div class="top-area" style="padding: 0 1rem 0 1rem">
       <div style="display: flex; flex-direction: row">
         <a-input-search
@@ -147,7 +147,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, nextTick, onMounted, ref } from "vue";
 import { FrontPageData } from "@/api/frontPageUtil";
 import axios from "axios";
 import {
@@ -187,6 +187,8 @@ function stripHtml(html: string): string {
 export default defineComponent({
   components: { MessageOutlined, UserOutlined, LikeOutlined, EditOutlined },
   setup() {
+    const wrapperRef = ref();
+
     const { params } = useRoute(); // 获取路由参数
     const myStyle = ref({ height: "" });
     onMounted(() => {
@@ -270,8 +272,6 @@ export default defineComponent({
       tagStr: string
     ) => {
       loading.value = true;
-      //发送请求
-      //渲染数据
       axios
         .post(
           "http://175.178.221.165:8081/solutions/findSolutions",
@@ -313,12 +313,19 @@ export default defineComponent({
             }
             console.log(solution_info_list.value);
             loading.value = false;
+            nextTick(() => {
+              if (wrapperRef.value) {
+                wrapperRef.value.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }
+            });
           }
         });
     };
 
     let onItemClicked = (id: number) => {
-      console.log("item clicked", id);
       router.push(`/problems/${params.pro_id}/solution/${id}`);
     };
 
@@ -353,6 +360,7 @@ export default defineComponent({
 
       loading,
       onItemClicked,
+      wrapperRef,
     };
   },
 });

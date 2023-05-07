@@ -189,6 +189,10 @@ export default {
             }
             pagination.value.total = res.data.data.total_cnt;
             loading.value = false;
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
           } else {
             message.error(res.data.message);
             loading.value = false;
@@ -235,6 +239,10 @@ export default {
               }
               pagination.value.total = res.data.data.total_cnt;
               loading.value = false;
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
             } else {
               message.error(res.data.message);
               loading.value = false;
@@ -274,7 +282,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  margin-left: 20rem;
+  margin-left: 18%;
   width: 50rem;
 }
 

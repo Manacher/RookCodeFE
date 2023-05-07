@@ -1,5 +1,6 @@
 <template>
   <div class="discussion-main-area">
+    <a-back-top />
     <DiscussionList />
   </div>
 </template>

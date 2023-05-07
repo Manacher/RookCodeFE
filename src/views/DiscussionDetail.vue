@@ -468,7 +468,7 @@ export default {
 }
 
 .discussion-main-area {
-  margin-left: 20rem;
+  margin-left: 18%;
   width: 50rem;
   text-align: left;
   overflow-y: hidden;

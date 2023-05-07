@@ -1,5 +1,5 @@
 <template>
-  <div class="solution">
+  <div class="solution" ref="mainRef">
     <div class="solution-top-area" style="background: #f7f7f7; height: 2.4rem">
       <router-link :to="'/problems/' + params.pro_id">
         <a-button size="small" style="margin-top: 0.5rem">关闭 </a-button>
@@ -93,7 +93,7 @@
 
       <span style="font-size: 1rem; color: #595959">评论 >_</span>
 
-      <div class="comment">
+      <div class="comment" ref="commentListRef">
         <div class="comment-edit" style="border: solid 0.1rem lightgray">
           <Editor
             v-model="comment"
@@ -165,7 +165,7 @@ import {
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { Boot, IToolbarConfig } from "@wangeditor/editor";
 import markdownModule from "@wangeditor/plugin-md";
-import { h, onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
+import { h, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import store from "@/store";
@@ -195,7 +195,6 @@ export default {
   setup() {
     // 获取路由参数
     const { query, params } = useRoute();
-    debugger;
     // 题解包含的信息
     const account = ref("");
     const avatar = ref("");
@@ -222,6 +221,9 @@ export default {
     // 编辑器，工具栏配置
     const commentConfig = { readOnly: false, scroll: false };
     const comment = ref("");
+
+    const mainRef = ref();
+    const commentListRef = ref();
 
     const toolbarConfig: Partial<IToolbarConfig> = {};
     toolbarConfig.toolbarKeys = [
@@ -271,7 +273,17 @@ export default {
               commentList.value = res.data.data.commentList;
               pagination.value.total = res.data.data.total_page * pageSize;
               commentLoading.value = false;
+              const contentRect = commentListRef.value.getBoundingClientRect();
+              nextTick(() => {
+                if (mainRef.value) {
+                  mainRef.value.scrollTo({
+                    top: contentRect.y,
+                    behavior: "smooth",
+                  });
+                }
+              });
             },
+
             (err) => {
               message.error(err.data);
               commentLoading.value = false;
@@ -282,13 +294,6 @@ export default {
       total: 100,
       showSizeChanger: false,
     });
-
-    let setPaginationStyle = () => {
-      let paginationDom = document.querySelector(
-        "#ant-pagination"
-      ) as HTMLElement;
-      paginationDom.style.paddingBottom = "1rem";
-    };
 
     // ajax 异步获取后端数据
     onMounted(() => {
@@ -391,7 +396,6 @@ export default {
         )
         .then(
           (res) => {
-            debugger;
             notification.open({
               message: "评论成功",
               description: "",
@@ -493,6 +497,8 @@ export default {
       onLikeClicked,
       loading,
       commentLoading,
+      mainRef,
+      commentListRef,
     };
   },
 };

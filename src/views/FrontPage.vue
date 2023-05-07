@@ -1,55 +1,45 @@
 <template>
   <a-layout class="front-page-main-area">
-
+    <a-back-top />
     <a-layout-content class="layout-content">
       <a-row>
-
         <a-col :span="18">
-          <FrontBanner/>
-          <ProblemList style="margin-top: 1rem"/>
+          <FrontBanner />
+          <ProblemList style="margin-top: 1rem" />
         </a-col>
 
         <a-col :span="6">
           <div class="right-side">
-            <ProgressDisplay style="width: 20rem"/>
-            <CheckInCalendar style="width: 20rem; margin-top: 2rem"/>
+            <ProgressDisplay style="width: 20rem" />
+            <CheckInCalendar style="width: 20rem; margin-top: 2rem" />
           </div>
-
         </a-col>
-
       </a-row>
-
     </a-layout-content>
-
-
   </a-layout>
 </template>
 <script lang="ts">
-import {defineComponent} from 'vue';
+import { defineComponent } from "vue";
 import FrontBanner from "@/components/FrontPage/FrontBanner.vue";
 import ProblemList from "@/components/FrontPage/ProblemList.vue";
 import ProgressDisplay from "@/components/FrontPage/ProgressDisplay.vue";
 import CheckInCalendar from "@/components/FrontPage/CheckInCalendar.vue";
 
-
 export default defineComponent({
   components: {
     FrontBanner,
     ProblemList,
-   ProgressDisplay,
+    ProgressDisplay,
     CheckInCalendar,
   },
 
   setup() {
-    return {
-
-    };
+    return {};
   },
 });
 </script>
 <style scoped>
-
-.front-page-main-area{
+.front-page-main-area {
   min-width: 88rem;
   /*106.5*/
 }
@@ -89,10 +79,9 @@ export default defineComponent({
   }
 }
 
-@media screen and  (max-width: 93rem) {
+@media screen and (max-width: 93rem) {
   .layout-content {
     padding: 2rem 1rem 0 1rem;
   }
 }
-
 </style>
