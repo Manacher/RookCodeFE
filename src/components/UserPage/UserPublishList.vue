@@ -31,7 +31,11 @@
             <div class="publish-list-action-item" style="width: 4rem">
               {{ item.date }}
             </div>
-            <a @click="onEditClicked(item.question_id, item.id)">编辑</a>
+            <a
+              @click="onEditClicked(item.question_id, item.id)"
+              v-if="myAccount === account"
+              >编辑</a
+            >
           </a-space>
         </template>
         <div>
@@ -47,6 +51,7 @@ import { ref } from "vue";
 import { getUserPublishList } from "@/components/UserPage/userPageHttp";
 import moment from "moment/moment";
 import { message } from "ant-design-vue";
+import store from "@/store";
 
 interface publishListData {
   title: string;
@@ -84,6 +89,8 @@ export default {
     });
 
     let publishList = ref<publishListData[]>([]);
+    let myAccount = ref("");
+    myAccount.value = store.state.account;
 
     let handleQuery = (page: number) => {
       loading.value = true;
@@ -117,6 +124,10 @@ export default {
             });
           });
           loading.value = false;
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         } else {
           message.error(res.message);
           loading.value = false;
@@ -138,6 +149,7 @@ export default {
       pagination,
       publishList,
       loading,
+      myAccount,
       onTitleClicked,
       onEditClicked,
     };

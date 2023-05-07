@@ -91,6 +91,10 @@ export default {
             });
           });
           loading.value = false;
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         } else {
           message.error(res.message);
           loading.value = false;
