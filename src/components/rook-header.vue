@@ -190,12 +190,8 @@ export default {
     });
 
     watch(routePath, (newVal, oldVal) => {
-      if (newVal !== "") {
-        navKeys.value = [newVal];
-      } else {
-        navKeys.value = ["/"];
-      }
-
+      let path = ("/" + routePath.value) as string;
+      navKeys.value = [path];
       let logo = document.querySelector(".logo") as HTMLElement;
       if (newVal === "problems") {
         logo.classList.add("logo-problem");
