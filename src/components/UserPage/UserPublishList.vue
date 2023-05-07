@@ -32,7 +32,7 @@
               {{ item.date }}
             </div>
             <a
-              @click="onEditClicked(item.question_id, item.id)"
+              @click.stop="onEditClicked(item.question_id, item.id)"
               v-if="myAccount === account"
               >编辑</a
             >
