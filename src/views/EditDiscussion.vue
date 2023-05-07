@@ -24,15 +24,15 @@
       </div>
       <div class="submit">
         <a-space>
-          <!--          <a-popconfirm
-                        title="确定删除这篇题解吗？删除后不可恢复。"
-                        ok-text="确定"
-                        cancel-text="取消"
-                        @confirm="confirmDelete"
-                        @cancel="cancelDelete"
-                    >
-                      <a-button type="primary" danger>删除</a-button>
-                    </a-popconfirm>-->
+          <a-popconfirm
+            title="确定删除这篇题解吗？删除后不可恢复。"
+            ok-text="确定"
+            cancel-text="取消"
+            @confirm="confirmDelete"
+            @cancel="cancelDelete"
+          >
+            <a-button type="primary" danger>删除</a-button>
+          </a-popconfirm>
           <a-button type="primary" @click="onUpdate">更新话题</a-button>
         </a-space>
       </div>
@@ -129,45 +129,38 @@ export default {
 
     // 确定删除
     const confirmDelete = (e: MouseEvent) => {
-      //TODO
-      axios
-        .post(
-          "/discussions/deleteDiscussion",
-          {
-            id: params.sln_id,
-          },
-          {
-            headers: { Authorization: store.state.token },
-          }
-        )
-        .then(
-          (res) => {
-            console.log(res.data);
-            notification.open({
-              message: "题解删除成功",
-              description: "",
-              icon: () => h(CheckCircleOutlined, { style: "color: #008000" }),
-            });
+      axios({
+        method: "delete",
+        url: "/discussions/deleteDiscussion/" + params.dis_id,
+        headers: { Authorization: store.state.token },
+      }).then(
+        (res) => {
+          console.log(res.data);
+          notification.open({
+            message: "题解删除成功",
+            description: "",
+            icon: () => h(CheckCircleOutlined, { style: "color: #008000" }),
+          });
 
-            let secondsToGo = 1;
-            const modal = Modal.success({
-              title: "删除成功",
-              content: `题解删除成功，即将关闭页面`,
-            });
-            const interval = setInterval(() => {
-              secondsToGo -= 1;
-            }, 1000);
-            setTimeout(() => {
-              clearInterval(interval);
-              modal.destroy();
-              // location.reload()
-              window.close();
-            }, secondsToGo * 1000);
-          },
-          (err) => {
-            console.log(err);
-          }
-        );
+          let secondsToGo = 1;
+          const modal = Modal.success({
+            title: "删除成功",
+            content: `讨论删除成功，即将关闭页面`,
+          });
+          const interval = setInterval(() => {
+            secondsToGo -= 1;
+          }, 1000);
+          setTimeout(() => {
+            clearInterval(interval);
+            modal.destroy();
+            // location.reload()
+            window.close();
+          }, secondsToGo * 1000);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     };
 
     // 取消删除

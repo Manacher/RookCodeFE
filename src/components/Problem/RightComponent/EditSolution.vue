@@ -91,23 +91,24 @@ export default {
 
     // ajax 异步获取后端数据
     onMounted(() => {
-      axios
-        .post("http://175.178.221.165:8081//solutions/getSolutionsById", {
-          id: params.sln_id,
-        })
-        .then(
-          (res) => {
-            const success = res.data.success;
-            const message = res.data.message;
-            const data = res.data.data;
-            content.value = data.content;
-            title.value = data.title;
-            selectTags.value = data.tags.split("_");
-          },
-          (err) => {
-            console.log(err.data);
-          }
-        );
+      axios({
+        method: "post",
+        url: "/solutions/getSolutionsById",
+        data: { id: params.sln_id },
+        headers: { Authorization: store.state.token },
+      }).then(
+        (res) => {
+          const success = res.data.success;
+          const message = res.data.message;
+          const data = res.data.data;
+          content.value = data.content;
+          title.value = data.title;
+          selectTags.value = data.tags.split("_");
+        },
+        (err) => {
+          console.log(err.data);
+        }
+      );
 
       axios.get("http://175.178.221.165:8081/solutions/getAllTags").then(
         (res) => {

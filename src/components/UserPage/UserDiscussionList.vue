@@ -34,9 +34,9 @@
               {{ item.comments_num }}
             </div>
 
-            <!--            <div class="publish-list-action-item" style="width: 4rem">-->
-            <!--              {{ item.date }}-->
-            <!--            </div>-->
+            <div class="publish-list-action-item" style="width: 4rem">
+              {{ item.date }}
+            </div>
 
             <a @click="onEditClicked(item.id)" v-if="myAccount === account"
               >编辑</a
@@ -69,6 +69,7 @@ interface DiscussionListData {
   view_num: number;
   like_num: number;
   comments_num: number;
+  date: string;
 }
 
 interface DiscussionRespData {
@@ -122,6 +123,7 @@ export default {
               view_num: val.view_num,
               like_num: val.like_num,
               comments_num: val.comments_num,
+              date: moment(val.dateTime).fromNow(),
             });
           });
           loading.value = false;
