@@ -84,6 +84,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
     component: () => import("../views/CreateDiscussion.vue"),
   },
+  {
+    path: "/edit-discussion/:dis_id",
+    name: "edit-discussion",
+    meta: { requiresAuth: true },
+    component: () => import("../views/EditDiscussion.vue"),
+  },
 ];
 
 const router = createRouter({

@@ -13,7 +13,9 @@
       >
         <a-button
           @click="onLoadMore"
-          v-if="pagination.current !== pagination.total"
+          v-if="
+            pagination.current !== pagination.total && pagination.total !== 0
+          "
           >加载更多</a-button
         >
       </div>

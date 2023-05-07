@@ -204,3 +204,15 @@ export async function getUserFolloweeListV3(
   });
   return resp;
 }
+
+export async function getUserDiscussionList(account: string, page: number) {
+  let resp;
+  await axios({
+    method: "get",
+    url: "/user/discussionList",
+    params: { account: account, page: page },
+  }).then((res) => {
+    resp = res.data;
+  });
+  return resp;
+}
