@@ -163,7 +163,7 @@ export async function unfollowUser(account: string) {
   return resp;
 }
 
-export async function getUserFollowerListV2(
+export async function getUserFollowerListV3(
   account: string,
   pageNum: number,
   pageSize: number
@@ -171,7 +171,7 @@ export async function getUserFollowerListV2(
   let resp;
   await axios({
     method: "post",
-    url: "/follows/GetFollowerListV2/",
+    url: "/follows/GetFollowerListV3/",
     data: {
       account: account,
       pageNum: pageNum,
@@ -184,7 +184,7 @@ export async function getUserFollowerListV2(
   return resp;
 }
 
-export async function getUserFolloweeListV2(
+export async function getUserFolloweeListV3(
   account: string,
   pageNum: number,
   pageSize: number
@@ -192,7 +192,7 @@ export async function getUserFolloweeListV2(
   let resp;
   await axios({
     method: "post",
-    url: "/follows/GetFolloweeListV2/",
+    url: "/follows/GetFolloweeListV3/",
     data: {
       account: account,
       pageNum: pageNum,

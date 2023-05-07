@@ -64,25 +64,29 @@
           <div>
             <button
               class="follow-button"
-              v-if="item.mutual"
-              @click="cancelFollow(item, isFollower)"
+              v-if="item.following && item.followed"
+              @click="cancelFollow(item)"
             >
               互相关注
             </button>
 
             <button
               class="follow-button"
-              v-else-if="item.follow"
-              @click="cancelFollow(item, isFollower)"
+              v-else-if="item.following && !item.followed"
+              @click="cancelFollow(item)"
             >
               已关注
             </button>
 
             <button
               class="unfollow-button"
-              v-else
-              @click="follow(item, isFollower)"
+              v-else-if="!item.following && item.followed"
+              @click="follow(item)"
             >
+              回关
+            </button>
+
+            <button class="unfollow-button" v-else @click="follow(item)">
               关注
             </button>
           </div>
@@ -97,20 +101,17 @@ import { defineComponent, nextTick, onMounted, ref } from "vue";
 import {
   followUser,
   unfollowUser,
-  getUserFollowerListV2,
-  getUserFolloweeListV2,
-  getUserFollowerList,
-  getUserFolloweeList,
+  getUserFollowerListV3,
+  getUserFolloweeListV3,
 } from "@/components/UserPage/userPageHttp";
 import { message } from "ant-design-vue";
-import { useRouter } from "vue-router";
 interface listData {
   account: string;
   avatar: string;
   description: string;
   nickname: string;
-  mutual: boolean;
-  follow?: boolean;
+  followed: boolean;
+  following: boolean;
   loading?: boolean;
 }
 
@@ -131,63 +132,67 @@ export default defineComponent({
 
     let loadFollowerData = (pageNum: number, pageSize: number) => {
       loading.value = true;
-      getUserFollowerList(props.account, pageNum, pageSize).then((res: any) => {
-        if (res.success) {
-          let resData = res.data;
-          pagination.value.total = resData.pageTotalNum;
-          let listData = resData.followList.map((item: any) => {
-            return {
-              account: item.account,
-              avatar: item.avatar,
-              description: item.description,
-              nickname: item.nickname,
-              mutual: item.mutual,
-              follow: item.followed,
-            };
-          });
-          const newData = data.value.concat(listData);
-          data.value = newData;
-          list.value = newData;
+      getUserFollowerListV3(props.account, pageNum, pageSize).then(
+        (res: any) => {
+          if (res.success) {
+            let resData = res.data;
+            pagination.value.total = resData.pageTotalNum;
+            let listData = resData.followList.map((item: any) => {
+              return {
+                account: item.account,
+                avatar: item.avatar,
+                description: item.description,
+                nickname: item.nickname,
+                following: item.following,
+                followed: item.followed,
+              };
+            });
+            const newData = data.value.concat(listData);
+            data.value = newData;
+            list.value = newData;
+            loading.value = false;
+            nextTick(() => {
+              window.dispatchEvent(new Event("resize"));
+            });
+          } else {
+            loading.value = false;
+            message.error(res.message);
+          }
           loading.value = false;
-          nextTick(() => {
-            window.dispatchEvent(new Event("resize"));
-          });
-        } else {
-          loading.value = false;
-          message.error(res.message);
         }
-        loading.value = false;
-      });
+      );
     };
 
     let loadFolloweeData = (pageNum: number, pageSize: number) => {
       loading.value = true;
-      getUserFolloweeList(props.account, pageNum, pageSize).then((res: any) => {
-        if (res.success) {
-          let resData = res.data;
-          pagination.value.total = resData.pageTotalNum;
-          let listData = resData.followList.map((item: any) => {
-            return {
-              account: item.account,
-              avatar: item.avatar,
-              description: item.description,
-              nickname: item.nickname,
-              mutual: item.mutual,
-              follow: item.followed,
-            };
-          });
-          const newData = data.value.concat(listData);
-          data.value = newData;
-          list.value = newData;
-          loading.value = false;
-          nextTick(() => {
-            window.dispatchEvent(new Event("resize"));
-          });
-        } else {
-          loading.value = false;
-          message.error(res.message);
+      getUserFolloweeListV3(props.account, pageNum, pageSize).then(
+        (res: any) => {
+          if (res.success) {
+            let resData = res.data;
+            pagination.value.total = resData.pageTotalNum;
+            let listData = resData.followList.map((item: any) => {
+              return {
+                account: item.account,
+                avatar: item.avatar,
+                description: item.description,
+                nickname: item.nickname,
+                following: item.following,
+                followed: item.followed,
+              };
+            });
+            const newData = data.value.concat(listData);
+            data.value = newData;
+            list.value = newData;
+            loading.value = false;
+            nextTick(() => {
+              window.dispatchEvent(new Event("resize"));
+            });
+          } else {
+            loading.value = false;
+            message.error(res.message);
+          }
         }
-      });
+      );
     };
 
     onMounted(() => {
@@ -204,7 +209,8 @@ export default defineComponent({
           avatar: "",
           description: "",
           nickname: "",
-          mutual: false,
+          following: false,
+          followed: false,
         }))
       );
       if (props.isFollower) {
@@ -219,21 +225,21 @@ export default defineComponent({
     };
 
     let cancelFollow = (item: any) => {
-      item.follow = false;
-      item.mutual = false;
       unfollowUser(item.account).then((res: any) => {
         if (!res.success) {
           message.error(res.message);
+        } else {
+          item.following = false;
         }
       });
     };
 
     let follow = (item: any) => {
-      item.follow = true;
-      item.mutual = true;
       followUser(item.account).then((res: any) => {
         if (!res.success) {
           message.error(res.message);
+        } else {
+          item.following = true;
         }
       });
     };
