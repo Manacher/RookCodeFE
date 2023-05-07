@@ -122,7 +122,7 @@ export default {
                   icon: () => h(CheckCircleOutlined, { style: "color: #008000" }),
                 });
                 router.push(
-                    "/discussion"
+                    "/discussion/detail/"+res.data.data
                 ); // TODO: id?
               },
               (err) => {

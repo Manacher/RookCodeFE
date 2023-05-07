@@ -1,13 +1,5 @@
 <template>
-  <div class="edit-solution">
-    <div style="background: #f7f7f7; height: 2.4rem">
-      <router-link :to="'/problems/' + params.pro_id"
-      ><a-button size="small" style="margin-top: 0.5rem"
-      >关闭</a-button
-      ></router-link
-      >
-    </div>
-
+  <div class="edit-discussion">
     <div style="padding: 1rem">
       <a-input
           v-model:value="title"
@@ -15,14 +7,6 @@
           :bordered="false"
           style="font-size: xx-large"
       />
-      <a-select
-          v-model:value="selectTags"
-          mode="multiple"
-          style="width: 100%"
-          placeholder="添加编程语言、方法、知识点等标签"
-          :options="tagList"
-          :bordered="false"
-      ></a-select>
       <a-divider></a-divider>
       <div class="editor">
         <Toolbar
@@ -40,7 +24,7 @@
       </div>
       <div class="submit">
         <a-space>
-          <a-popconfirm
+<!--          <a-popconfirm
               title="确定删除这篇题解吗？删除后不可恢复。"
               ok-text="确定"
               cancel-text="取消"
@@ -48,8 +32,8 @@
               @cancel="cancelDelete"
           >
             <a-button type="primary" danger>删除</a-button>
-          </a-popconfirm>
-          <a-button type="primary" @click="onUpdate">更新题解</a-button>
+          </a-popconfirm>-->
+          <a-button type="primary" @click="onUpdate">更新话题</a-button>
         </a-space>
       </div>
     </div>
@@ -73,7 +57,7 @@ import {CheckCircleOutlined, CloseCircleOutlined} from "@ant-design/icons-vue";
 Boot.registerModule(markdownModule);
 
 export default {
-  name: "EditSolution",
+  name: "EditDiscussion",
   components: { Editor, Toolbar },
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -81,8 +65,6 @@ export default {
     // 获取路由参数
     const { params } = useRoute();
     const title = ref("");
-    const selectTags = ref([]);
-    const tagList = ref<SelectProps["options"]>([]);
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef();
     // 编辑器，工具栏配置
@@ -92,15 +74,15 @@ export default {
     // ajax 异步获取后端数据
     onMounted(() => {
       axios
-          .post("/solutions/getSolutionsById",
+          .get("/discussions/getDiscussionById",
               {
-                id: params.sln_id,
-              },
-              {
+                params:{
+                  discussion_id: params.dis_id,
+                },
                 headers: {
                   Authorization: store.state.token,
                 },
-              }
+              },
           )
           .then(
               (res) => {
@@ -110,32 +92,12 @@ export default {
                 const data = res.data.data;
                 content.value = data.content;
                 title.value = data.title;
-                selectTags.value = data.tags.split("_");
               },
               (err) => {
                 debugger
                 console.log(err.data);
               }
           );
-
-      axios.get("/solutions/getAllTags").then(
-          (res) => {
-            const success = res.data.success;
-            const message = res.data.message;
-            const data = res.data.data;
-            const list = data.split("_");
-            tagList.value = [];
-            for (let i = 0; i < list.length; i++) {
-              tagList.value.push({
-                value: list[i],
-                label: list[i],
-              });
-            }
-          },
-          (err) => {
-            console.log(err.data);
-          }
-      );
     });
 
     // 组件销毁时，也及时销毁编辑器
@@ -156,7 +118,7 @@ export default {
     // 确定取消更新
     const confirmQuit = (e: MouseEvent) => {
       //TODO
-      router.push(`/problems/${params.pro_id}`);
+      //router.push(`/problems/${params.pro_id}`);
     };
 
     // 继续更新
@@ -169,7 +131,7 @@ export default {
       //TODO
       axios
           .post(
-              "http://175.178.221.165:8081/solutions/deleteSolution",
+              "/discussions/deleteDiscussion",
               {
                 id: params.sln_id,
               },
@@ -212,23 +174,14 @@ export default {
       console.log(e);
     };
 
-    // 确定修改题解
+    // 确定修改讨论
     const onUpdate = () => {
-      const List2String = (list: never[]) => {
-        let str = "";
-        for (let data of list) {
-          str += data + "_";
-        }
-        return str;
-      };
-
       axios
           .post(
-              "/solutions/updateSolution",
+              "/discussions/updateDiscussion",
               {
                 content: content.value,
-                solution_id: Number(params.sln_id),
-                tags: List2String(selectTags.value),
+                id: Number(params.dis_id),
                 title: title.value,
               },
               {
@@ -240,12 +193,12 @@ export default {
                 debugger
                 if(res.data.success){
                   notification.open({
-                    message: "题解更新成功",
+                    message: "讨论更新成功",
                     description: "",
                     icon: () => h(CheckCircleOutlined, { style: "color: #008000" }),
                   });
                   router.push(
-                      "/problems/" + params.pro_id + "/solution/" + res.data.data.id_new
+                      "/discussion/detail/"+params.dis_id
                   );
                 }
                 else {
@@ -290,8 +243,6 @@ export default {
 
     return {
       title,
-      selectTags,
-      tagList,
       editorRef,
       content,
       mode: "default",
@@ -310,7 +261,7 @@ export default {
 </script>
 
 <style scoped>
-.edit-solution {
+.edit-discussion {
   margin: auto;
   text-align: left;
   background: white;

@@ -91,6 +91,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true },
     component:() => import(/* webpackChunkName: "about" */ "../views/CreateDiscussion.vue")
   },
+  {
+    path: "/edit-discussion/:dis_id",
+    name: "edit-discussion",
+    meta: { requiresAuth: true },
+    component:() => import(/* webpackChunkName: "about" */ "../views/EditDiscussion.vue")
+  },
 ];
 
 const router = createRouter({
