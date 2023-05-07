@@ -53,10 +53,10 @@
               <a-button
                 type="primary"
                 block
-                style="border-radius: 0px"
+                style="border-radius: 0px; font-size: 0.8rem"
                 @click="sendCode"
                 >{{
-                  counter === 0 ? "发送验证码" : counter + "秒之后再试"
+                  counter === 0 ? "发送验证码" : counter + "s之后再试"
                 }}</a-button
               >
             </a-form-item>

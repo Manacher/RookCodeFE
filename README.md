@@ -14,6 +14,6 @@ npm run serve-dev
 
 ### 打包项目
 ```
-npm run build-dev
+npm run build-prod
 ```
 
