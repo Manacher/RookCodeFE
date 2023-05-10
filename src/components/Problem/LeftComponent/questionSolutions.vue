@@ -32,8 +32,17 @@
         >
           题解标签：
         </div>
+        <a-select
+          v-model:value="selectTags"
+          mode="multiple"
+          style="width: 70%"
+          placeholder="选择标签"
+          :options="tagList"
+          :bordered="false"
+          @change="treeChange"
+        ></a-select>
 
-        <a-tree-select
+<!--        <a-tree-select
           v-model:value="tagSelected"
           :field-names="{
             children: 'children',
@@ -51,7 +60,7 @@
             font-size: 1rem;
           "
           @change="treeChange"
-        ></a-tree-select>
+        ></a-tree-select>-->
       </div>
     </div>
 
@@ -159,6 +168,7 @@ import {
 import { useRoute } from "vue-router";
 import router from "@/router";
 import store from "@/store";
+import {SelectProps} from "ant-design-vue";
 
 type solutionType = {
   ID: number;
@@ -197,7 +207,31 @@ export default defineComponent({
       //获取屏幕高度
       //TODO: 注释了所有高度、宽度设置
       //myStyle.value.height=window.outerHeight-100+"px";
+
+      //获取标签
+      axios.get("http://175.178.221.165:8081/solutions/getAllTags").then(
+        (res) => {
+          const success = res.data.success;
+          const message = res.data.message;
+          const data = res.data.data;
+          const list = data.split("_");
+          tagList.value = [];
+          for (let i = 0; i < list.length; i++) {
+            tagList.value.push({
+              value: list[i],
+              label: list[i],
+            });
+          }
+        },
+        (err) => {
+          console.log(err.data);
+        }
+      );
     });
+
+    //标签
+    const selectTags = ref([]);
+    const tagList = ref<SelectProps["options"]>([]);
 
     //当前的页码
     const current = ref(1);
@@ -225,17 +259,21 @@ export default defineComponent({
       );
     };
     /*选择标签*/
-    const treeChange = (value: any, label: any, extra: any) => {
-      console.log(value);
-      var new_str = "";
-      for (var i = 0; i < value.length; i++) {
-        if (i != value.length - 1) {
-          new_str += value[i] + "_";
-        } else {
-          new_str += value[i];
-        }
+    const treeChange = (value: any, option: any) => {
+      if(value==''){
+        tag_str.value = '';
       }
-      tag_str.value = new_str;
+      else{
+        var new_str = "";
+        for (var i = 0; i < value.length; i++) {
+          if (i != value.length - 1) {
+            new_str += value[i] + "_";
+          } else {
+            new_str += value[i];
+          }
+        }
+        tag_str.value = new_str;
+      }
       //调用函数
       getDataAndLoad(
         current.value,
@@ -330,6 +368,11 @@ export default defineComponent({
     };
 
     return {
+
+      //标签
+      selectTags,
+      tagList,
+
       // 路由参数
       params,
       //题解标签

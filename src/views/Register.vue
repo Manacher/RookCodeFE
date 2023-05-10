@@ -140,19 +140,17 @@ export default defineComponent({
       }
     };
 
-    /*密码校验*/
+    //密码校验
     let validatePass = async (_rule: Rule, value: string) => {
       if (value === "") {
         return Promise.reject("请输入密码！");
-      } else {
-        if (formState.checkPass !== "") {
-          let pass = new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,15}$/);
-          if (!pass.test(value)) {
-            return Promise.reject(
-              "密码长度需为6到15位，且应该为数字加字母的组合！"
-            );
-          }
-          /*formRef.value.validateFields('checkPass');*/
+      }
+      else {
+        let pass = new RegExp(/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,15}$/);
+        if (!pass.test(value)) {
+          return Promise.reject(
+            "密码长度需为6到15位数字加字母的组合！"
+          );
         }
         return Promise.resolve();
       }
@@ -172,8 +170,8 @@ export default defineComponent({
     /*为对应的框设置自定义验证参数*/
     const rules: Record<string, Rule[]> = {
       email: [{ required: true, validator: validaEmail, trigger: "change" }],
-      /*pass: [{ required: true, validator: validatePass, trigger: 'change' }],
-      checkPass: [{ required: true,validator: validatePass2, trigger: 'change' }],*/
+      pass: [{ required: true, validator: validatePass, trigger: 'change' }],
+      checkPass: [{ required: true,validator: validatePass2, trigger: 'change' }],
     };
     const layout = {
       labelCol: { span: 4 },
